@@ -28,4 +28,4 @@
     isRecording.value = false;
   }
 };  </script>
-  
+  ../utils/audioRecognition.ignore

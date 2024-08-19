@@ -9,5 +9,9 @@
     "paths": {
       "@/*": ["src/*"]
     }
-  }
+  },
+  "exclude": [
+    // ... other exclusions ...
+    "**/*.ignore.ts"
+  ]
 }
