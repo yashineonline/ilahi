@@ -1,7 +1,21 @@
 
 priority
-to make zoom functionality an util and then add to SongDisplay, right now it is at bottom of it
-songList hyperlink of all songs to SongDisplay
+the code is not able to recognize where a song begins and ends. 
+The reference for beginning of a song should be Y:
+After Y: there is the title of the song. 
+
+Then there are stanzas, sometimes stanzas resemble each other. the code should not bother about that but just consider it as stanza. 
+
+The lyrics end where T: is mentioned. After that, if there is text, this is the translation. 
+The translation ends whre Y: is mentioned. 
+
+When producing the song output, there should be a blank line between stanzas, between title and first stanza, between last stanza and beginning of translation, 
+
+And the words Lyrics, Translation, YouTube should be used instead of T: , Y: when displaying the final on the site and in the pdf. 
+
+and the title, lyrics, everything should be displayed in the center of the site, 
+
+now show me step by step where to make changes for all of these. 
 
 question
 why the link of the new build links up to the one that is supposed to be the other repo? find out
