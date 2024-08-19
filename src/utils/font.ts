@@ -1,0 +1,1 @@
+export const font = "DejaVuSans"; // Replace with actual font data

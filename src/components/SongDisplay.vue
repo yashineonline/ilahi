@@ -35,7 +35,7 @@
     <div v-else>Loading song...</div>
   </div>
   <div class="mt-4 text-center text-sm">
-    This app is maintained by the AQRT. Your donations are most welcome. 
+    This app is maintained by the AQRT. 
     <a href="https://aqrtsufi.org" target="_blank" class="text-blue-600 hover:underline">Visit aqrtsufi.org</a>
   </div>
 </template>
@@ -67,9 +67,17 @@ const showTranslation = () => {
 
 const generatePDF = async () => {
   if (currentSong.value) {
-    await generateSingleSongPDF(currentSong.value, qrCodeDataUrl.value)
+    try {
+      await generateSingleSongPDF(currentSong.value, qrCodeDataUrl.value || '');
+      console.log('PDF generated successfully');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
+  } else {
+    console.error('Current song not available');
   }
 }
+
 
 const loadQRCode = async () => {
   if (currentSong.value?.youtubeLink) {
