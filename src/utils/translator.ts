@@ -11,7 +11,7 @@ export async function translateText(text: string): Promise<string> {
       max_tokens: 100,
     }, {
       headers: {
-        'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+        'Authorization': `Bearer ${process.env.VITE_OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
     });
