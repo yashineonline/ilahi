@@ -21,7 +21,7 @@ const routes = [
     component: SongList
   },
   {
-    path: '/player/:id',
+    path: '/player/:title',
     name: 'SongDisplay',
     component: SongDisplay
   }
