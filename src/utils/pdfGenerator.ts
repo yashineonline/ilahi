@@ -10,7 +10,7 @@ jsPDF.API.events.push(['addFonts', function() {
 
 export function generateSingleSongPDF(song: SongData, qrCodeDataUrl: string): void {
   const doc = new jsPDF();
-  doc.setFont('DejaVuSans');
+  doc.setFont('helvetica', 'normal', 'DejaVuSans');
 
   doc.setFontSize(16);
   doc.text(song.title, 20, 20);
@@ -54,7 +54,7 @@ export function generateSingleSongPDF(song: SongData, qrCodeDataUrl: string): vo
 
 export async function generateFullBookPDF(songs: SongData[]): Promise<void> {
   const doc = new jsPDF();
-  doc.setFont('DejaVuSans');
+  doc.setFont('helvetica', 'normal','DejaVuSans');
   let pageNumber = 1;
   
   // Add cover page

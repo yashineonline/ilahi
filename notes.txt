@@ -1,10 +1,10 @@
 
 priority
-center the words
+center the words, also missing
 see what is wrong for pdf, 
 why it does not display right there
-add spacing between stanzas
-same for translation
+add spacing between stanzas, this did not work
+same for translation, spacing missing
 
 
 
