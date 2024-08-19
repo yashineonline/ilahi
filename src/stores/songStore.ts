@@ -1,3 +1,4 @@
+// songStore.ts
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { processSongsFile, SongData } from '../utils/songProcessor'
@@ -19,6 +20,7 @@ export const useSongStore = defineStore('song', () => {
     } catch (error) {
       console.error('Error loading songs:', error);
       songs.value = [];
+      
     }
   }
 

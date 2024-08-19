@@ -7,7 +7,7 @@ export interface SongData {
 }
 
 export function processSongsFile(fileContent: string): SongData[] {
-  const songSections = fileContent.split(/\n\s*\n\s*\n/).filter(section => section.trim().length > 0);
+  const songSections = fileContent.split('Y:').filter(section => section.trim().length > 0);
 
   const splitStanzas = (text: string): string[][] => {
     return text.split('\n\n').map(stanza => stanza.trim().split('\n'));
@@ -15,25 +15,28 @@ export function processSongsFile(fileContent: string): SongData[] {
 
   const songs = songSections.map(section => {
     const lines = section.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-    const title = lines[0];
-    const youtubeLink = lines.find(line => line.startsWith('Y:'))?.replace('Y:', '').trim() || 'Coming soon!';
+    
+    // Find the title (first non-empty line)
+    const titleIndex = lines.findIndex(line => line.length > 0);
+    const title = lines[titleIndex];
 
-    const lyricsStart = lines.findIndex(line => line === 'L:') + 1;
-    const translationStart = lines.findIndex(line => line === 'T:') + 1;
+    // Find where the lyrics start (first non-empty line after the title)
+    const lyricsStartIndex = lines.slice(titleIndex + 1).findIndex(line => line.length > 0) + titleIndex + 1;
 
-    const lyricsText = lines.slice(lyricsStart, translationStart > 0 ? translationStart - 1 : undefined)
-      .filter(line => line !== 'L:')
-      .join('\n');
+    // Find where the translation starts
+    const translationStart = lines.findIndex(line => line === 'T:');
 
-    const translationText = translationStart > 0
-      ? lines.slice(translationStart).filter(line => line !== 'T:').join('\n')
-      : '';
-
+    // Extract lyrics
+    const lyricsText = lines.slice(lyricsStartIndex, translationStart !== -1 ? translationStart : undefined).join('\n');
     const lyrics = splitStanzas(lyricsText);
+    // Extract translation if it exists
+    const translationText = translationStart !== -1
+    ? lines.slice(translationStart + 1).join('\n')
+    : '';
     const translation = translationStart !== -1 ? splitStanzas(translationText) : [];
-
-    return { title, lyrics, translation, youtubeLink, isUnderEdit: false };
-  });
-
-  return songs.sort((a, b) => a.title.localeCompare(b.title));
+    // Extract YouTube link if present
+    const youtubeLink = lines.find(line => line.toLowerCase().includes('youtube'))?.split(':')[1]?.trim() || '';
+return { title, lyrics, translation, youtubeLink, isUnderEdit: false };
+});
+return songs.sort((a, b) => a.title.localeCompare(b.title));
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-4">
+  <div class="container mx-auto p-4" v-if="currentSong">
     <h1 class="text-4xl font-bold mb-4 text-center text-green-600">{{ currentSong.title }}</h1>
     <div v-if="currentSong">
       <div class="lyrics bg-gray-100 p-6 rounded-lg shadow-lg text-center" :style="{ fontSize: `${fontSize}px` }">
@@ -14,7 +14,8 @@
           <p v-for="line in stanza" :key="line" class="mb-1">{{ line }}</p>
         </div>
       </div>
-      <div class="youtube-link mt-4 text-center">
+      <div v-if="currentSong.youtubeLink" class="youtube-link mt-4 text-center">
+        <h2 class="text-2xl font-semibold mb-4">YouTube</h2>
         <a :href="currentSong.youtubeLink" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">
           Watch on YouTube
         </a>
@@ -40,16 +41,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watchEffect } from 'vue'
+import { useRoute } from 'vue-router'
 import { useSongStore } from '../stores/songStore'
 import { generateSingleSongPDF } from '../utils/pdfGenerator'
 import { generateQRCode } from '../utils/qrCodeGenerator'
-import { useZoom } from '../utils/Zoom'
+import { useZoom } from '../utils/zoom'
 
+const route = useRoute()
 const songStore = useSongStore()
-const currentSong = computed(() => songStore.songs[0])
 const showTranslationFlag = ref(false)
 const qrCodeDataUrl = ref('')
+
+const currentSong = computed(() => {
+  const decodedTitle = decodeURIComponent(route.params.title as string)
+  return songStore.songs.find(song => song.title === decodedTitle)
+})
 
 // Use the zoom utility
 const { fontSize, increaseFont, decreaseFont } = useZoom()
@@ -64,9 +71,21 @@ const generatePDF = async () => {
   }
 }
 
-onMounted(async () => {
+const loadQRCode = async () => {
   if (currentSong.value?.youtubeLink) {
     qrCodeDataUrl.value = await generateQRCode(currentSong.value.youtubeLink)
+  }
+}
+
+onMounted(async () => {
+  if (songStore.songs.length === 0) {
+    await songStore.fetchSongs()
+  }
+})
+
+watchEffect(() => {
+  if (currentSong.value) {
+    loadQRCode()
   }
 })
 </script>

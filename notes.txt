@@ -1,5 +1,14 @@
 
 priority
+center the words
+see what is wrong for pdf, 
+why it does not display right there
+add spacing between stanzas
+same for translation
+
+
+
+
 the code is not able to recognize where a song begins and ends. 
 The reference for beginning of a song should be Y:
 After Y: there is the title of the song. 
@@ -16,6 +25,162 @@ And the words Lyrics, Translation, YouTube should be used instead of T: , Y: whe
 and the title, lyrics, everything should be displayed in the center of the site, 
 
 now show me step by step where to make changes for all of these. 
+
+sign in feature to add ilahi songs
+and youtube links and translation
+
+people can click on a button to suggest or give an ilahi
+or to request an ilahi that is not there
+
+youtube goes to links of other songs similar, 
+various suggestions
+and people can suggest too
+
+show a model of what pdf page looks like
+and it builds ours like that
+
+people can generate their pdf with their own design
+put a couple of design with flowers 
+nature mountain etc 
+
+and then to help singing
+generate one with the alternative word style
+
+call it singing assistance tool
+
+put a button to join whatsapp group to learn singing with a community
+
+people should be able to sign in
+and get notifications when more songs are added
+and when the translation is done
+and when the youtube links are added
+and when the ilahis are added
+and when the pdf is generated
+and when the pdf is downloaded
+and when the pdf is shared
+and when the pdf is printed
+and when the pdf is deleted
+
+Here are some additional ideas for your song app:
+
+1. Playlist Creation: Allow users to create and save custom playlists of their favorite songs.
+
+2. Audio Playback: Integrate audio playback functionality, so users can listen to the songs directly within the app.
+
+3. Pronunciation Guide: Add a feature that provides pronunciation guides for the Turkish lyrics, possibly with audio clips.
+
+4. Community Annotations: Allow users to add notes or explanations to specific lines or words in the songs, creating a collaborative learning environment.
+
+5. Themed Collections: Organize songs into themed collections (e.g., by occasion, mood, or historical period).
+
+6. Offline Mode: Implement offline functionality so users can access songs and translations without an internet connection.
+
+7. Social Sharing: Add buttons to easily share songs or playlists on social media platforms.
+
+8. Progress Tracking: Implement a feature for users to mark songs as learned or favorite, tracking their progress.
+
+9. Multilingual Support: Expand the app to support multiple languages for the interface and translations.
+
+10. Interactive Quizzes: Create quizzes based on song lyrics or translations to help users learn and engage with the content.
+
+11. Collaborative Translation: Allow community members to contribute translations or suggest improvements to existing ones.
+
+12. Virtual Singing Rooms: Implement a feature where users can join virtual rooms to sing together in real-time.
+
+13. Song of the Day: Highlight a different song each day on the app's homepage.
+
+14. Customizable PDF Designs: Allow users to choose from various design templates when generating PDFs.
+
+15. Integration with Music Streaming Services: Allow users to link their accounts from popular music streaming services to access additional features.
+
+16. Gamification Elements: Introduce points, badges, or levels to encourage user engagement and learning.
+
+17. Accessibility Features: Implement screen reader support and other accessibility features to make the app usable for people with disabilities.
+17. Accessibility Features: Implement screen reader support and other accessibility features to make the app usable for people with disabilities. This should be a high priority for the app to ensure inclusivity.
+
+1. Playlist Creation: Allow users to create and save custom playlists of their favorite songs.
+
+2. Audio Playback: Integrate audio playback functionality, so users can listen to the songs directly within the app.
+
+3. Pronunciation Guide: Add a feature that provides pronunciation guides for the Turkish lyrics, possibly with audio clips.
+
+4. Community Annotations: Allow users to add notes or explanations to specific lines or words in the songs, creating a collaborative learning environment.
+
+5. Themed Collections: Organize songs into themed collections (e.g., by occasion, mood, or historical period).
+
+6. Offline Mode: Implement offline functionality so users can access songs and translations without an internet connection.
+
+7. Social Sharing: Add buttons to easily share songs or playlists on social media platforms.
+
+8. Progress Tracking: Implement a feature for users to mark songs as learned or favorite, tracking their progress.
+
+9. Multilingual Support: Expand the app to support multiple languages for the interface and translations.
+
+10. Interactive Quizzes: Create quizzes based on song lyrics or translations to help users learn and engage with the content.
+
+11. Collaborative Translation: Allow community members to contribute translations or suggest improvements to existing ones.
+
+12. Virtual Singing Rooms: Implement a feature where users can join virtual rooms to sing together in real-time.
+
+13. Song of the Day: Highlight a different song each day on the app's homepage.
+
+14. Customizable PDF Designs: Allow users to choose from various design templates when generating PDFs.
+
+15. Integration with Music Streaming Services: Allow users to link their accounts from popular music streaming services to access additional features.
+
+16. Gamification Elements: Introduce points, badges, or levels to encourage user engagement and learning.
+
+
+18. Song History and Cultural Context: Provide background information on the songs, including their history and cultural significance.
+
+19. Rhythm and Meter Guide: Include information about the rhythmic structure and meter of each song to aid in learning.
+
+1. Accessibility Features: Implement screen reader support and other accessibility features to make the app usable for people with disabilities. This should be a high priority for the app to ensure inclusivity.
+
+2. Playlist Creation: Allow users to create and save custom playlists of their favorite songs.
+
+3. Audio Playback: Integrate audio playback functionality, so users can listen to the songs directly within the app.
+
+4. Pronunciation Guide: Add a feature that provides pronunciation guides for the Turkish lyrics, possibly with audio clips.
+
+5. Community Annotations: Allow users to add notes or explanations to specific lines or words in the songs, creating a collaborative learning environment.
+
+6. Themed Collections: Organize songs into themed collections (e.g., by occasion, mood, or historical period).
+
+7. Offline Mode: Implement offline functionality so users can access songs and translations without an internet connection.
+
+8. Social Sharing: Add buttons to easily share songs or playlists on social media platforms.
+
+9. Progress Tracking: Implement a feature for users to mark songs as learned or favorite, tracking their progress.
+
+10. Multilingual Support: Expand the app to support multiple languages for the interface and translations.
+
+11. Interactive Quizzes: Create quizzes based on song lyrics or translations to help users learn and engage with the content.
+
+12. Collaborative Translation: Allow community members to contribute translations or suggest improvements to existing ones.
+
+13. Virtual Singing Rooms: Implement a feature where users can join virtual rooms to sing together in real-time.
+
+14. Song of the Day: Highlight a different song each day on the app's homepage.
+
+15. Customizable PDF Designs: Allow users to choose from various design templates when generating PDFs.
+
+16. Integration with Music Streaming Services: Allow users to link their accounts from popular music streaming services to access additional features.
+
+17. Gamification Elements: Introduce points, badges, or levels to encourage user engagement and learning.
+
+18. Song History and Cultural Context: Provide background information on the songs, including their history and cultural significance.
+
+19. Rhythm and Meter Guide: Include information about the rhythmic structure and meter of each song to aid in learning.
+
+20. Mobile App Version: Develop a mobile app version for iOS and Android platforms for easier access on smartphones and tablets.
+
+21. Author Information: Add a feature to display the author of each song and who put it to music. For songs with unknown authors or composers, allow users to suggest this information for community verification.
+
+These ideas can be prioritized based on user feedback and development resources available.
+
+
+
 
 question
 why the link of the new build links up to the one that is supposed to be the other repo? find out
