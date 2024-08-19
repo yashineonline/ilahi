@@ -10,7 +10,7 @@
   <script setup lang="ts">
   import { ref } from 'vue';
   import { useSongStore } from '../stores/songStore';
-  import { recordAudio, identifySong } from '../utils/audioRecognition';
+  <!-- import { recordAudio, identifySong } from '../utils/audioRecognition'; -->
   
   const isRecording = ref(false);
   const result = ref('');
