@@ -1,0 +1,31 @@
+{
+  "name": "ilahi-app",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "vue-tsc -b && vite build && cp dist/index.html dist/404.html",
+    "dev": "vite",
+    "preview": "vite preview",
+    "start-server": "node server.mjs"
+  },
+  "dependencies": {
+    "@types/cors": "^2.8.17",
+    "cors": "^2.8.5",
+    "jspdf": "^2.5.1",
+    "pinia": "^2.2.2",
+    "qrcode": "^1.5.4",
+    "register-service-worker": "^1.7.2",
+    "vue": "^3.4.37",
+    "vue-router": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.5",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "@vue/cli-plugin-pwa": "~5.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.1",
+    "vue-tsc": "^2.0.29"
+  },
+  "type": "module"
+}

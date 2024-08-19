@@ -1,0 +1,70 @@
+
+priority
+to make zoom functionality an util and then add to SongDisplay, right now it is at bottom of it
+songList hyperlink of all songs to SongDisplay
+
+question
+why the link of the new build links up to the one that is supposed to be the other repo? find out
+convert pdf to txt or extract words from pdf and recognize where song begins and ends
+
+next steps:
+Here's a prioritized list of features you've mentioned, with estimated timelines:
+
+Accurate display of words on site and PDF (Already implemented, 0 hours)
+Publish app using GitHub Pages (1 hour)
+Add page numbers to full book PDF (30 minutes)
+Include donation statement in single song PDF and SongDisplay component (30 minutes)
+Implement zoom functionality for lyrics (1-2 hours)
+Add line-by-line translation feature with GPT integration (3-4 hours)
+Implement toggle for translation feature (1 hour)
+Enhance UI with Tailwind CSS and DaisyUI (2-3 hours)
+Total estimated time: 9-12 hours
+
+Here's a step-by-step guide for deployment and implementing the features, in order of priority:
+
+Deploy to GitHub Pages:
+
+Create a new repository on GitHub
+Push your local code to the new repository
+Enable GitHub Pages in the repository settings
+Configure your build process for GitHub Pages
+Fix song parsing and sorting issues:
+
+Refine the processSongsFile function to correctly differentiate between titles and lyrics
+Implement proper song separation logic
+Add page numbers to full book PDF:
+
+Modify the generateFullBookPDF function to include page numbers
+Include donation statements:
+
+Add the AQRT donation statement to single song PDFs
+Include the donation message in the SongDisplay component
+Implement translation display:
+
+Add translations to single song PDFs
+Include all available translations in the full book PDF
+Create search functionality:
+
+Develop a search component with input field
+Implement search logic with Turkish character normalization
+Integrate search results display
+Implement zoom functionality for lyrics:
+
+Add zoom controls to the SongDisplay component
+Implement zoom logic for text size adjustment
+Develop line-by-line translation feature:
+
+Create a component for displaying line translations
+Implement GPT integration for translations
+Add toggle for enabling/disabling this feature
+Enhance UI with Tailwind CSS and DaisyUI:
+
+Apply consistent styling across components
+Improve overall layout and user experience
+Implement song discovery by humming:
+
+Research and integrate an AI-based audio recognition API
+Create an interface for users to record or input hummed melodies
+Develop matching algorithm to find songs based on hummed input
+This comprehensive plan covers all discussed features and adds the song discovery by humming as an advanced feature. Each step builds upon the previous ones, gradually enhancing the app's functionality and user experience.
+
