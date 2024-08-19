@@ -12,6 +12,7 @@
   },
   "exclude": [
     // ... other exclusions ...
-    "**/*.ignore.ts"
+    "**/*.ignore.ts",
+     "**/*.ignore.vue",
   ]
 }

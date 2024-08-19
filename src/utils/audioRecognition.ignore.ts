@@ -1,3 +1,7 @@
+// <!-- This utility is temporarily ignored during build. -->
+// <!-- TODO: Implement proper functionality before re-enabling. -->
+
+
 export async function recordAudio(): Promise<Blob> {
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   const mediaRecorder = new MediaRecorder(stream);
