@@ -22,8 +22,8 @@ export default defineConfig({
   // Add this section to ignore files
   optimizeDeps: {
     exclude: [
-      '**/*.ignore.ts', 
-      '**/*.ignore.vue',
+      // '**/*.ignore.ts', 
+      // '**/*.ignore.vue',
     
     ]
   }
