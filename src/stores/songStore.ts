@@ -4,6 +4,7 @@ import { processSongsFile, SongData } from '../utils/songProcessor'
 
 export const useSongStore = defineStore('song', () => {
   const songs = ref<SongData[]>([])
+  const filteredSongs = ref<SongData[]>([]);
 
   async function fetchSongs() {
     try {
@@ -21,5 +22,5 @@ export const useSongStore = defineStore('song', () => {
     }
   }
 
-  return { songs, fetchSongs }
+  return { songs, filteredSongs, fetchSongs }
 })

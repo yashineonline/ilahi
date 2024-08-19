@@ -12,14 +12,16 @@
   
   <script setup lang="ts">
   import { ref } from 'vue';
+  import { storeToRefs } from 'pinia';
   import { useSongStore } from '../stores/songStore';
   import { searchSongs } from '../utils/search';
   
   const songStore = useSongStore();
+  const { songs, filteredSongs } = storeToRefs(songStore);
   const searchQuery = ref('');
   
   const search = () => {
-    songStore.setFilteredSongs(searchSongs(songStore.songs, searchQuery.value));
+    filteredSongs.value = searchSongs(songs.value, searchQuery.value);
   };
   </script>
   
