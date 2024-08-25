@@ -1,3 +1,5 @@
+// This file will be ignored during build
+
 <template>
     <div class="mt-4">
       <button @click="startRecording" class="btn btn-primary" :disabled="isRecording">

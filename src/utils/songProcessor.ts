@@ -1,4 +1,5 @@
 import { SongData } from './types';
+import * as unorm from 'unorm';
 
 export function processStanzas(stanzas: string[][]): string[][] {
   return stanzas.map(stanza => 
@@ -20,7 +21,6 @@ export function renderSong(song: SongData, options: { fontSize: number, showTran
   const textColor = theme === 'light' ? 'text-gray-800' : 'text-gray-200';
   
   let html = `<section class="lyrics mb-6" style="font-size: ${fontSize}px;">
-    <h2 class="text-2xl font-semibold mb-4 ${textColor}">Lyrics</h2>
     ${renderStanzas(song.lyrics, textColor)}
   </section>`;
 
@@ -34,7 +34,7 @@ export function renderSong(song: SongData, options: { fontSize: number, showTran
   if (song.youtubeLink) {
     html += `<section class="youtube-link mb-6 text-center">
       <h2 class="text-2xl font-semibold mb-4 ${textColor}">YouTube</h2>
-      <a href="${song.youtubeLink}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+      <a href="${unorm.nfc(song.youtubeLink)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
         Watch on YouTube
       </a>
     </section>`;
@@ -49,7 +49,7 @@ function renderStanzas(stanzas: string[][], textColor: string): string {
     console.log(`Stanza ${index}:`, JSON.stringify(stanza, null, 2));
     return `
       <div class="mb-8 pb-4 border-b border-gray-300" data-stanza-index="${index}">
-        ${stanza.map((line, lineIndex) => `<p class="mb-1 ${textColor}" data-line-index="${lineIndex}">${line}</p>`).join('')}
+        ${stanza.map((line, lineIndex) => `<p class="mb-1 ${textColor}" data-line-index="${lineIndex}">${unorm.nfc(line)}</p>`).join('')}
       </div>
     `;
   }).join('');
@@ -59,18 +59,19 @@ export function processSongsFile(fileContent: string): SongData[] {
   const songSections = fileContent.split('Y:').filter(section => section.trim().length > 0);
 
   const splitStanzas = (text: string): string[][] => {
-    const lines = text.split('\n');
+    const lines = unorm.nfc(text).split('\n');
     const result: string[][] = [];
     let currentStanza: string[] = [];
 
     for (const line of lines) {
-      if (line.trim() === '') {
+      const trimmedLine = line.trim();
+      if (trimmedLine === '') {
         if (currentStanza.length > 0) {
           result.push(currentStanza);
           currentStanza = [];
         }
       } else {
-        currentStanza.push(line.trim());
+        currentStanza.push(trimmedLine);
       }
     }
 
@@ -83,7 +84,7 @@ export function processSongsFile(fileContent: string): SongData[] {
   };
 
   const songs = songSections.map(section => {
-    const lines = section.split('\n').map(line => line.trim());
+    const lines = unorm.nfc(section).split('\n').map(line => line.trim());
 
     const titleIndex = lines.findIndex(line => line.length > 0);
     const title = lines[titleIndex];
@@ -107,5 +108,11 @@ export function processSongsFile(fileContent: string): SongData[] {
   });
 
   console.log('Processed songs:', songs);
-  return songs.sort((a, b) => a.title.localeCompare(b.title));
+  return songs.sort((a, b) => a.title.localeCompare(b.title, 'tr'));
 }
+
+export function getProcessedSongsCount(fileContent: string): number {
+  const songs = processSongsFile(fileContent);
+  return songs.length;
+}
+

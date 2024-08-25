@@ -1,21 +1,23 @@
 <template>
   <div :class="['container', 'mx-auto', 'p-4', 'flex', 'flex-col', 'items-center', themeStore.theme === 'dark' ? 'bg-gray-800' : 'bg-white']">
-    <router-link to="/songs" class="btn btn-secondary mb-4 self-start">Back to Song List</router-link>
+    <div class="w-full flex justify-between items-center mb-4">
+      <div class="flex flex-col space-y-2 w-full">
+        <router-link to="/songs" class="btn btn-secondary self-start">Back to Ilahi List</router-link>
+        <div class="flex justify-end space-x-2">
+          <button class="btn btn-primary" @click="showTranslation" :aria-pressed="showTranslationFlag">
+            {{ showTranslationFlag ? 'Hide' : 'Show' }} Translation
+          </button>
+          <button class="btn btn-accent" @click="generatePDF">Generate PDF</button>
+          <button class="btn btn-outline" @click="decreaseFont">Smaller</button>
+          <button class="btn btn-outline" @click="increaseFont">Bigger</button>
+        </div>
+      </div>
+    </div>
     <div v-if="currentSong" class="w-full max-w-3xl">
       <h1 class="text-3xl font-bold mb-4 text-center">{{ currentSong.title }}</h1>
       <div class="mb-6" v-html="renderedSong"></div>
       <div class="qr-code mb-6 flex justify-center" aria-hidden="true">
         <img v-if="qrCodeDataUrl" :src="qrCodeDataUrl" alt="" class="w-48 h-48" />
-      </div>
-      <div class="buttons mb-6 flex justify-center space-x-4" role="group" aria-label="Song actions">
-        <button class="btn btn-primary focus:ring-2 focus:ring-offset-2 focus:ring-primary" @click="showTranslation" :aria-pressed="showTranslationFlag">
-          {{ showTranslationFlag ? 'Hide' : 'Show' }} Translation
-        </button>
-        <button class="btn btn-accent focus:ring-2 focus:ring-offset-2 focus:ring-accent" @click="generatePDF">Generate PDF</button>
-      </div>
-      <div class="zoom-controls mb-6 flex justify-center space-x-4" role="group" aria-label="Font size controls">
-        <button class="btn btn-sm btn-outline focus:ring-2 focus:ring-offset-2 focus:ring-primary" @click="decreaseFont" aria-label="Decrease font size">A-</button>
-        <button class="btn btn-sm btn-outline focus:ring-2 focus:ring-offset-2 focus:ring-primary" @click="increaseFont" aria-label="Increase font size">A+</button>
       </div>
     </div>
     <div v-else-if="!loading" class="text-center text-xl text-base-content" aria-live="polite">Song not found</div>
