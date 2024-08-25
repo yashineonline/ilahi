@@ -14,7 +14,7 @@ import { downloadPDF } from '../utils/pdfBookUtils';
 const songStore = useSongStore();
 
 const downloadFullBook = async () => {
-  const pdfBytes = await generateFullBookPDF(songStore.songs);
+  const { pdfBytes } = await generateFullBookPDF(songStore.songs);
   await downloadPDF(pdfBytes, 'AQRT_Ilahi_Book.pdf');
 };
 </script>
