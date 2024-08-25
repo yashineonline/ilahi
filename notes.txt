@@ -1,3 +1,65 @@
+there should be a printable pdf in which there is qr code
+and the pdf not for print can have the youtube link, 
+but does not need to have the qr code
+
+
+if i do this there will be mistake in 3 ofher files that are importing SongData from songProcessor, and actually only 1 place should import, not all 3, so review and improve the code throughout such that only SongRendering should be importing the song data from songProcessor, not the pdfBook singlesongBook fullsongBook, they should be sourcing their info from the songRendering, right? if what i am saying is not correct way to improve my song app, then tell me a better way, review all files of @src closely, do not skip a single line in all the files, before responding about this in a concise manner, provide steps to make changes throughout, and also i have seen last time i did run dev that the app looks nice except many places the text is in white so it is not visible, is that correct? and the generate full book button in the navigationbar not sure it fully works to actually download the pdf book. 
+
+before continuing add one item to the list of actions, 
+on SongDisplay, there should be a button for More about this ilahi...
+And that should only open a new page if alternative words are provided for that particular song. this should be last on the list, we will not implement it now. add this point then let's continue with what is next
+
+Here's a detailed summary of the 11 steps for improving the Ilahi App PDF generation:
+Create a new utility file for song rendering:
+Status: Completed
+File: src/utils/songRenderer.ts
+Purpose: Centralizes song rendering logic for consistent display across the app
+Update SongDisplay.vue:
+Status: Completed
+File: src/components/SongDisplay.vue
+Changes: Utilizes the new songRenderer.ts for displaying songs
+Refactor singleSongPDF.ts:
+Status: Partially completed
+File: src/utils/singleSongPDF.ts
+Remaining tasks: Ensure proper centering of content and handling of long titles
+Update fullSongBookPDF.ts:
+Status: Implemented
+File: src/utils/fullSongBookPDF.ts
+Purpose: Generates a complete PDF book with all songs, including cover page and table of contents
+Enhance PDF accessibility:
+Status: Partially implemented
+Tasks: Add more semantic structure, ensure proper reading order, and include alternative text for images
+6. Update pdfBookUtils.ts:
+Status: Implemented
+File: src/utils/pdfBookUtils.ts
+Purpose: Contains utility functions for creating cover pages, table of contents, and adding page numbers
+Implement centered content:
+Status: Partially implemented
+Areas to improve: Ensure consistent centering across all PDF generation functions
+Add decorative elements to PDF:
+Status: Not yet implemented
+Tasks: Design and add decorative elements to enhance the visual appeal of the PDFs
+Optimize PDF size:
+Status: Not yet implemented
+Tasks: Implement compression techniques and optimize image sizes for smaller file sizes
+Set up image storage:
+Status: Not yet implemented
+Tasks: Create a system for storing and managing decorative images for use in PDFs
+11. Implement user input for decorative images:
+Status: Not yet implemented
+Tasks: Create a user interface for uploading and selecting decorative images for PDFs
+Key components and their current state:
+1. src/utils/fullSongBookPDF.ts:
+src/utils/singleSongPDF.ts:
+src/utils/pdfBookUtils.ts:
+src/components/FullBookDownloader.vue:
+These components form the core of the PDF generation functionality. The next steps should focus on improving accessibility, adding decorative elements, optimizing PDF size, and implementing image storage and user input for customization.
+
+
+Ctrl+K to generate a command • Ctrl+/ to autocomplete
+
+
+
 
 priority
 center the words, also missing
@@ -5,6 +67,22 @@ see what is wrong for pdf,
 why it does not display right there
 add spacing between stanzas, this did not work
 same for translation, spacing missing
+
+let's start again, 
+@singleSongPDF.ts @SongDisplay.vue @pdfBookUtils.ts 
+singleSongPDF maybe is not well defined. 
+maybe we need one more util file?
+because:
+on SongDisplay, the song shouuld be displayed on the site/app itself, not just in a pdf. That song is built where for now? 
+and then singleSongPDF is the one that takes this song and prints it as required into a pdf
+and pdfBook then compiles as necessary to get full book of songs, we should not assume 1 song takes one page. @fullSongBookPDF.ts the single song pdf may need page numbers too. And the pdf generated should be readable for blind people too with accessibility pdf tool. 
+
+Then we will also need a button that helps singing
+
+@src @utils @components see if anything else will need adjustment accordingly, remember to factor in accessibility all over, add more steps to the above as you find more things that need fixing, is there a way to make the pdf light? i want content centered as well on home, everywhere where it looks nicer. on the right and left i want to be able to generate roses, either using some GPT, or pictures that i will input somewhere, can git hold pictures too? 
+at start i just want the pdf to have a nice frame of small small roses and tulips combined, people should also have options when generating the pdf to choose between a couple of different frames. 
+
+
 
 
 
@@ -247,3 +325,14 @@ Create an interface for users to record or input hummed melodies
 Develop matching algorithm to find songs based on hummed input
 This comprehensive plan covers all discussed features and adds the song discovery by humming as an advanced feature. Each step builds upon the previous ones, gradually enhancing the app's functionality and user experience.
 
+22 Aug 2024
+notes from owner:
+To put purpose of ilahi
+the philosophy of the Sufism
+
+disclaimer GPT
+plus no translated work is equal to original
+
+it should translate as concept 
+
+link to complete song for sirna ala

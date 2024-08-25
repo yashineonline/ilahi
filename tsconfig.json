@@ -7,6 +7,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "composite": false,
+    "allowSyntheticDefaultImports": true,
     "module": "ESNext",
     "moduleResolution": "Node",
     "paths": {

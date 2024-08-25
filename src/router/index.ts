@@ -3,12 +3,18 @@ import Home from '../views/Home.vue'
 import SongList from '../components/SongList.vue'
 import SongDisplay from '../components/SongDisplay.vue'
 import BookView from '../views/BookView.vue'
+import AboutView from '../views/AboutView.vue'
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/about',
+    name: 'About',
+    component: AboutView
   },
   {
     path: '/book',
