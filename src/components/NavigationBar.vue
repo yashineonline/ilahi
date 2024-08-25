@@ -2,7 +2,7 @@
   <nav :class="['navbar shadow-lg', themeStore.theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800']" aria-label="Main navigation">
     <div class="container mx-auto px-4">
       <div class="flex-1">
-        <router-link to="/songs" class="btn btn-ghost btn-sm rounded-btn">View Ilahi List Here</router-link>        
+        <router-link to="/songs" class="btn btn-ghost normal-case text-xl">View Ilahi List Here</router-link>        
       </div>
       <div class="flex-none">
         <ul class="menu menu-horizontal px-1">
