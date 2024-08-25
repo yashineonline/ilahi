@@ -1,3 +1,15 @@
+play audio only of youtube
+for accessibility so they can follow the words on the app
+and only hear the audio from youtube
+
+or tap on the youtube link and it opens in youtube app
+
+[10:25, 25/08/2024] Lea Gassab Istanbul: Chorus color
+
+Pdf without translation
+[10:53, 25/08/2024] Lea Gassab Istanbul: Transition beteween turkish and translation
+
+
 <template>
   <div class="container mx-auto p-4">
     <h1 class="text-4xl font-bold mb-6 text-center text-green-800">{{ EXPLANATION_TEXT.title }}</h1>

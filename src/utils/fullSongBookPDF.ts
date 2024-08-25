@@ -61,12 +61,25 @@ export async function generateFullBookPDF(songs: SongData[], isCustom: boolean =
     color: rgb(0, 0, 0),
   });
 
+  // Second image (Page 5)
+  log('Creating third image');
+  const thirdImage = await embedImage(pdfDoc, 'https://raw.githubusercontent.com/yashineonline/ilahi/main/names.png');
+  const thirdImagePage = pdfDoc.addPage();
+  thirdImagePage.drawImage(thirdImage, {
+    x: 0,
+    y: 0,
+    width: width,
+    height: height,
+  });
+
+
+
   log('Creating table of contents');
   const tocPages = await createTableOfContents(pdfDoc, font, songs);
 
   let currentPage = 1;
   const songPageNumbers: number[] = [];
-  const allPages = [coverPage, originalCoverPage, secondImagePage, zikrQuotePage, ...tocPages];
+  const allPages = [coverPage, originalCoverPage, secondImagePage, zikrQuotePage, thirdImagePage, ...tocPages];
 
   for (const song of songs) {
     log(`Processing song: ${song.title}`);
@@ -83,7 +96,7 @@ export async function generateFullBookPDF(songs: SongData[], isCustom: boolean =
   // const pagesToSkip = 1 + poemPages.length + explanationPages.
   // length + tocPages.length;
   // const pagesToSkip = 1 + placeholderPages.length + tocPages.length;
-  const pagesToSkip = 4 + tocPages.length; 
+  const pagesToSkip = 5 + tocPages.length; 
 
   log('Adding page numbers and draft statement');
   addPageNumbersAndFooters(allPages, font, 1, pagesToSkip);
