@@ -1,11 +1,16 @@
 // songStore.ts
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { processSongsFile, SongData } from '../utils/songProcessor'
+import { searchSongs } from '../utils/search'
 
 export const useSongStore = defineStore('song', () => {
   const songs = ref<SongData[]>([])
-  const filteredSongs = ref<SongData[]>([]);
+  const searchQuery = ref('')
+
+  const filteredSongs = computed(() => {
+    return searchSongs(songs.value, searchQuery.value)
+  })
 
   async function fetchSongs() {
     try {
@@ -24,5 +29,9 @@ export const useSongStore = defineStore('song', () => {
     }
   }
 
-  return { songs, filteredSongs, fetchSongs }
+  function setSearchQuery(query: string) {
+    searchQuery.value = query
+  }
+
+  return { songs, filteredSongs, fetchSongs, setSearchQuery }
 })

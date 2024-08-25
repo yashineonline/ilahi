@@ -1,15 +1,32 @@
 <template>
-  <div>
-    <h1>Welcome to Ilahi App</h1>
-    <p>Explore our collection of sacred songs</p>
-    <router-link to="/songs">View Song List</router-link>
+  <div class="container mx-auto p-4">
+    <h1 class="text-4xl font-bold mb-6 text-center text-green-800">Welcome to Ilahi App</h1>
+    <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
+      <p class="text-xl mb-4">Explore our collection of sacred Sufi songs and hymns.</p>
+      <p class="mb-4">The Ilahi App provides a comprehensive library of spiritual songs, complete with translations and audio links.</p>
+      <div class="flex justify-center">
+        <router-link to="/songs" class="btn btn-primary">View Song List</router-link>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-white shadow-lg rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4">Features</h2>
+        <ul class="list-disc list-inside">
+          <li>Browse a vast collection of Ilahis</li>
+          <li>View lyrics and translations</li>
+          <li>Listen to audio recordings</li>
+          <li>Generate PDF versions of songs</li>
+        </ul>
+      </div>
+      <div class="bg-white shadow-lg rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4">About AQRT</h2>
+        <p>The Ilahi App is maintained by the Ansari Qadiri Rifai Tariqa (AQRT), dedicated to preserving and sharing Sufi spiritual traditions.</p>
+        <a href="https://aqrtsufi.org" target="_blank" rel="noopener noreferrer" class="btn btn-secondary mt-4">Learn More</a>
+      </div>
+    </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-  name: 'Home'
-})
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
 </script>
