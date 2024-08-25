@@ -10,24 +10,18 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src')
     }
   },
-  // to ignore the files that are ignored
   build: {
+    outDir: 'docs', // Added this line
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html')
       }
-      // external: [/\.ignore\.(ts|vue)$/]
     }
   },
-  // Add this section to ignore files
   optimizeDeps: {
     exclude: [
       // '**/*.ignore.ts', 
       // '**/*.ignore.vue',
-    
     ]
   }
 })
-
-
-
