@@ -17,7 +17,10 @@ export const useSongStore = defineStore('song', () => {
   const fetchSongs = async (forceRefresh = false) => {
     try {
       const cacheOption = forceRefresh ? 'no-store' : 'default'
-      const response = await fetch('https://raw.githubusercontent.com/yashineonline/ilahi/main/ilahi.txt', {
+      const corsProxy = 'https://cors-anywhere.herokuapp.com/';
+  const url = 'https://raw.githubusercontent.com/yashineonline/ilahi/main/ilahi.txt';
+  
+      const response = await fetch(corsProxy + url, {
         cache: cacheOption,
         headers: forceRefresh ? { 'Cache-Control': 'no-cache' } : {}
       })
