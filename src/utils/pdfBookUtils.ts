@@ -11,7 +11,7 @@ export async function createCoverPage(pdfDoc: PDFLib, font: PDFFont, title: stri
     'Ansari Qadiri Rifai Tariqa',
     'Ilahi Book',
     isCustom ? 'Customized Version' : '',
-    'Generated and Downloaded from Ilahi App',
+    'Generated and Downloaded from Ilahi Book App',
     `Draft Copy of ${currentDate}`,
     'For any queries, email aqrtsufi@gmail.com'
   ].filter(line => line !== '');

@@ -23,6 +23,7 @@
     "unorm": "^1.6.0",
     "vue": "^3.4.37",
     "vue-router": "^4.4.3",
+    "vue3-youtube": "^0.1.9",
     "vuedraggable": "^2.24.3"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 <template>
   <div :class="['min-h-screen flex flex-col', themeStore.theme === 'dark' ? 'dark-theme' : 'light-theme']">
     <header class="bg-green-600 text-white p-4">
-      <h1 class="text-2xl font-bold">Ilahi App</h1>
+      <h1 class="text-2xl font-bold">Ilahi Book App</h1>
     </header>
     <NavigationBar />
     <main class="flex-grow container mx-auto p-4">

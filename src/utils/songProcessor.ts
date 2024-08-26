@@ -31,13 +31,15 @@ export function renderSong(song: SongData, options: { fontSize: number, showTran
     </section>`;
   }
 
-  if (song.youtubeLink) {
-    html += `<section class="youtube-link mb-6 text-center">
-      <h2 class="text-2xl font-semibold mb-4 ${textColor}">YouTube</h2>
-      <a href="${unorm.nfc(song.youtubeLink)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-        Watch on YouTube
-      </a>
-    </section>`;
+  if (song.audioLink) {
+    if (song.audioLink.includes('youtube.com') || song.audioLink.includes('youtu.be')) {
+      html += `<section class="youtube-link mb-6 text-center">
+        <h2 class="text-2xl font-semibold mb-4 ${textColor}">YouTube</h2>
+        <a href="${unorm.nfc(song.audioLink)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+          Watch on YouTube
+        </a>
+      </section>`;
+    }
   }
 
   return html;
@@ -84,27 +86,32 @@ export function processSongsFile(fileContent: string): SongData[] {
   };
 
   const songs = songSections.map(section => {
-    const lines = unorm.nfc(section).split('\n').map(line => line.trim());
+    const lines = unorm.nfc(section).split('\n');
 
-    const titleIndex = lines.findIndex(line => line.length > 0);
-    const title = lines[titleIndex];
+    let audioLink = '';
+    let titleIndex = 0;
 
-    const lyricsStartIndex = lines.slice(titleIndex + 1).findIndex(line => line.length > 0) + titleIndex + 1;
+    // Check if the first line contains any valid URL
+    const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+    if (urlRegex.test(lines[0].trim())) {
+      audioLink = lines[0].trim();
+      titleIndex = 1;
+    }
 
-    const translationStart = lines.findIndex(line => line === 'T:');
+    const title = lines[titleIndex].trim().toUpperCase();
+
+    const lyricsStartIndex = lines.slice(titleIndex + 1).findIndex(line => line.trim().length > 0) + titleIndex + 1;
+    const translationStart = lines.findIndex(line => line.trim() === 'T:');
 
     const lyricsText = lines.slice(lyricsStartIndex, translationStart !== -1 ? translationStart : undefined).join('\n');
     const lyrics = splitStanzas(lyricsText);
-    console.log('Processed lyrics:', lyrics);
 
     const translationText = translationStart !== -1
       ? lines.slice(translationStart + 1).join('\n')
       : '';
     const translation = translationStart !== -1 ? splitStanzas(translationText) : [];
-    console.log('Processed translation:', translation);
 
-    const youtubeLink = lines.find(line => line.toLowerCase().includes('youtube'))?.split(':')[1]?.trim() || '';
-    return { title, lyrics, translation, youtubeLink, isUnderEdit: false };
+    return { title, lyrics, translation, audioLink, isUnderEdit: false };
   });
 
   console.log('Processed songs:', songs);
@@ -115,4 +122,3 @@ export function getProcessedSongsCount(fileContent: string): number {
   const songs = processSongsFile(fileContent);
   return songs.length;
 }
-
