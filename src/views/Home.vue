@@ -1,9 +1,9 @@
 <template>
   <div class="container mx-auto p-4">
-    <h1 class="text-4xl font-bold mb-6 text-center text-green-800">Welcome to Ilahi App</h1>
+    <h1 class="text-4xl font-bold mb-6 text-center text-green-800">Welcome to Ilahi Book App</h1>
     <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
       <p class="text-xl mb-4">Explore our collection of Sacred Sufi Songs and Hymns.</p>
-      <p class="mb-4">The intention of this Ilahi App is to eventually provide a comprehensive library of spiritual songs, complete with translations and audio links.</p>
+      <p class="mb-4">The intention of this Ilahi Book App is to eventually provide a comprehensive library of spiritual songs, complete with translations and audio links.</p>
       <div class="flex justify-center">
         <router-link to="/songs" class="btn btn-primary">View Ilahi List</router-link>
       </div>
@@ -21,8 +21,8 @@
       </div>
       <div class="bg-white shadow-lg rounded-lg p-6">
         <h2 class="text-2xl font-semibold mb-4">About AQRT</h2>
-        <p>The Ilahi App is maintained by the Ansari Qadiri Rifai Tariqa (AQRT), dedicated to preserving and sharing Sufi spiritual traditions.</p>
-        <a href="https://aqrtsufi.org" target="_blank" rel="noopener noreferrer" class="btn btn-secondary mt-4">Learn More</a>
+        <p>The Ilahi Book App is maintained by the Ansari Qadiri Rifai Tariqa (AQRT), dedicated to preserving and sharing Sufi spiritual traditions.</p>
+        <a href="https://aqrtsufi.org" target="_blank" rel="noopener noreferrer" class="btn btn-secondary mt-4">Learn more about AQRT</a>
       </div>
     </div>
   </div>

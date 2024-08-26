@@ -1,3 +1,87 @@
+fix the Search on the Home Page
+and remove where it appears twice
+
+
+However, you might want to consider the following:
+For Google Drive integration:
+You may need to use the Google Drive API. This doesn't require additional installation, but you'll need to set up API credentials.
+For general audio playback:
+HTML5 audio APIs are sufficient for most cases and are already available in modern browsers.
+For more advanced audio manipulation:
+If you need advanced audio processing, you might consider libraries like Howler.js or Tone.js, but these aren't necessary for basic playback.
+To implement audio playback from various sources, including Google Drive, you can:
+Use the <audio> HTML5 element for basic playback.
+Create a custom component that handles different audio sources.
+Use the Fetch API or Axios to retrieve audio file metadata if needed.
+Here's a basic approach to modify the existing code to handle various audio sources:
+Update the SongData interface in src/utils/types.ts:
+
+export function processSongsFile(fileContent: string): SongData[] {
+  const songSections = fileContent.split('Y:').filter(section => section.trim().length > 0);
+
+  const splitStanzas = (text: string): string[][] => {
+    const lines = unorm.nfc(text).split('\n');
+    const result: string[][] = [];
+    let currentStanza: string[] = [];
+
+    for (const line of lines) {
+      const trimmedLine = line.trim();
+      if (trimmedLine === '') {
+        if (currentStanza.length > 0) {
+          result.push(currentStanza);
+          currentStanza = [];
+        }
+      } else {
+        currentStanza.push(trimmedLine);
+      }
+    }
+
+    if (currentStanza.length > 0) {
+      result.push(currentStanza);
+    }
+
+    console.log('Split stanzas result:', JSON.stringify(result, null, 2));
+    return result;
+  };
+  const songs = songSections.map(section => {
+  const songs = songSections.map(section => {
+    const lines = unorm.nfc(section).split('\n').map(line => line.trim());
+    let youtubeLink = '';
+    const titleIndex = lines.findIndex(line => line.length > 0);
+    const title = lines[titleIndex];
+    // Check if the first line contains a YouTube link
+    const lyricsStartIndex = lines.slice(titleIndex + 1).findIndex(line => line.length > 0) + titleIndex + 1;
+    if (lines[0].includes('youtube.com') || lines[0].includes('youtu.be')) {
+    const translationStart = lines.findIndex(line => line === 'T:');
+      titleIndex = 1;
+    const lyricsText = lines.slice(lyricsStartIndex, translationStart !== -1 ? translationStart : undefined).join('\n');
+    const lyrics = splitStanzas(lyricsText);
+    console.log('Processed lyrics:', lyrics);
+    console.log('Processed lyrics:', lyrics);
+    const translationText = translationStart !== -1
+      ? lines.slice(translationStart + 1).join('\n')
+      : '';
+    const translation = translationStart !== -1 ? splitStanzas(translationText) : [];
+    console.log('Processed translation:', translation);
+    console.log('Processed translation:', translation);
+    const youtubeLink = lines.find(line => line.toLowerCase().includes('youtube'))?.split(':')[1]?.trim() || '';
+    return { title, lyrics, translation, youtubeLink, isUnderEdit: false };
+  });
+    const translation = translationStart !== -1 ? splitStanzas(translationText) : [];
+...
+  console.log('Processed songs:', songs);
+  return songs.sort((a, b) => a.title.localeCompare(b.title, 'tr'));
+  });
+}
+...
+  console.log('Processed songs:', songs);
+
+
+
+@SongDisplay.vue @src @SongList.vue 
+consider whatever is necessary in my files and i want to move the youtube option onto SongDisplay
+and i want to know if there is an option to have a music set button that they click on that plays the youtube so only its audio come through, no need to see the video of it, and also they can pause, forward, rewind, slow it down, fasten it, or have it a specific section of the youtube iteratively
+
 play audio only of youtube
 for accessibility so they can follow the words on the app
 and only hear the audio from youtube

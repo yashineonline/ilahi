@@ -10,14 +10,47 @@
           <button class="btn btn-accent" @click="generatePDF">Generate PDF</button>
           <button class="btn btn-outline" @click="decreaseFont">Smaller</button>
           <button class="btn btn-outline" @click="increaseFont">Bigger</button>
+          <button v-if="currentSong?.audioLink" class="btn btn-primary" @click="toggleMusicPlayer">
+            {{ hideMusicPlayer ? 'Show' : 'Hide' }} Music Player
+          </button>
+          <button v-if="currentSong?.audioLink" class="btn btn-secondary" @click="showQRCode">
+            Get QR Code
+          </button>
         </div>
       </div>
     </div>
     <div v-if="currentSong" class="w-full max-w-3xl">
       <h1 class="text-3xl font-bold mb-4 text-center">{{ currentSong.title }}</h1>
+      <div v-if="showMusicPlayer && currentSong.audioLink" class="mt-4 w-full max-w-3xl mb-6">
+        <h2 class="text-2xl font-semibold mb-2">Music Player</h2>
+        <youtube-player
+          v-if="isYoutubeLink(currentSong.audioLink)"
+          :video-id="getYoutubeVideoId(currentSong.audioLink)"
+          :player-vars="{ autoplay: 0, controls: 1 }"
+          @ready="onPlayerReady"
+        />
+        <audio-player
+          v-else
+          :audio-src="currentSong.audioLink"
+          @player-ready="onAudioPlayerReady"
+        />
+        <div class="mt-2 flex justify-center space-x-2">
+          <button @click="playPause" class="btn btn-primary">{{ isPlaying ? 'Pause' : 'Play' }}</button>
+          <button @click="seekBackward" class="btn btn-secondary">-10s</button>
+          <button @click="seekForward" class="btn btn-secondary">+10s</button>
+          <button @click="decreaseSpeed" class="btn btn-secondary">Slower</button>
+          <button @click="increaseSpeed" class="btn btn-secondary">Faster</button>
+        </div>
+      </div>
       <div class="mb-6" v-html="renderedSong"></div>
-      <div class="qr-code mb-6 flex justify-center" aria-hidden="true">
-        <img v-if="qrCodeDataUrl" :src="qrCodeDataUrl" alt="" class="w-48 h-48" />
+      <div v-if="currentSong.audioLink && isYoutubeLink(currentSong.audioLink)" class="mt-4 text-center">
+        <a :href="currentSong.audioLink" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+          Watch on YouTube
+        </a>
+      </div>
+      <div v-if="showQRCodeFlag && qrCodeDataUrl && isYoutubeLink(currentSong.audioLink)" class="mt-4 text-center">
+        <h3 class="text-xl font-semibold mb-2">QR Code for YouTube Link</h3>
+        <img :src="qrCodeDataUrl" alt="QR Code" class="mx-auto" />
       </div>
     </div>
     <div v-else-if="!loading" class="text-center text-xl text-base-content" aria-live="polite">Song not found</div>
@@ -43,6 +76,8 @@ import { useZoom } from '../utils/zoom'
 import { renderSong } from '../utils/songProcessor'
 import { PDFDocument as PDFLib, StandardFonts } from 'pdf-lib'
 import { downloadPDF } from '../utils/pdfBookUtils'
+import YoutubePlayer from 'vue3-youtube'
+import AudioPlayer from './AudioPlayer.vue'
 
 const route = useRoute()
 const songStore = useSongStore()
@@ -51,6 +86,13 @@ const showTranslationFlag = ref(false)
 const qrCodeDataUrl = ref('')
 const errorMessage = ref('')
 const loading = ref(true)
+const showMusicPlayer = computed(() => {
+  return !!currentSong.value?.audioLink && !hideMusicPlayer.value
+})
+const hideMusicPlayer = ref(false)
+const player = ref(null)
+const isPlaying = ref(false)
+const showQRCodeFlag = ref(false)
 
 const currentSong = computed(() => {
   const decodedTitle = decodeURIComponent(route.params.title as string)
@@ -94,14 +136,79 @@ const generatePDF = async () => {
 }
 
 const loadQRCode = async () => {
-  if (currentSong.value?.youtubeLink) {
+  if (currentSong.value?.audioLink && isYoutubeLink(currentSong.value.audioLink)) {
     try {
-      qrCodeDataUrl.value = await generateQRCode(currentSong.value.youtubeLink)
+      qrCodeDataUrl.value = await generateQRCode(currentSong.value.audioLink)
     } catch (error) {
       console.error('Error generating QR code:', error);
       errorMessage.value = 'Failed to generate QR code. YouTube link may be unavailable.';
     }
   }
+}
+
+const toggleMusicPlayer = () => {
+  hideMusicPlayer.value = !hideMusicPlayer.value
+}
+
+const getYoutubeVideoId = (url: string) => {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
+  const match = url.match(regExp)
+  return (match && match[2].length === 11) ? match[2] : null
+}
+
+const onPlayerReady = (event: any) => {
+  player.value = event.target
+}
+
+const onAudioPlayerReady = (audioElement: HTMLAudioElement) => {
+  player.value = {
+    pauseVideo: () => audioElement.pause(),
+    playVideo: () => audioElement.play(),
+    getCurrentTime: () => audioElement.currentTime,
+    seekTo: (time: number) => audioElement.currentTime = time,
+    getPlaybackRate: () => audioElement.playbackRate,
+    setPlaybackRate: (rate: number) => audioElement.playbackRate = rate
+  }
+}
+
+const playPause = () => {
+  if (isPlaying.value) {
+    player.value.pauseVideo()
+  } else {
+    player.value.playVideo()
+  }
+  isPlaying.value = !isPlaying.value
+}
+
+const seekBackward = () => {
+  const currentTime = player.value.getCurrentTime()
+  player.value.seekTo(currentTime - 10, true)
+}
+
+const seekForward = () => {
+  const currentTime = player.value.getCurrentTime()
+  player.value.seekTo(currentTime + 10, true)
+}
+
+const decreaseSpeed = () => {
+  const currentRate = player.value.getPlaybackRate()
+  player.value.setPlaybackRate(Math.max(0.25, currentRate - 0.25))
+}
+
+const increaseSpeed = () => {
+  const currentRate = player.value.getPlaybackRate()
+  player.value.setPlaybackRate(Math.min(2, currentRate + 0.25))
+}
+
+const showQRCode = async () => {
+  if (currentSong.value?.audioLink && !qrCodeDataUrl.value) {
+    await loadQRCode()
+  }
+  showQRCodeFlag.value = true
+}
+
+const isYoutubeLink = (url: string) => {
+  return url.includes('youtube.com') || url.includes('youtu.be')
 }
 
 watch(() => route.params.title, async () => {
@@ -125,6 +232,11 @@ onMounted(async () => {
   }
   if (currentSong.value) {
     loadQRCode()
+  }
+  if (currentSong.value?.audioLink) {
+    console.log('Detected audio link:', currentSong.value.audioLink)
+  } else {
+    console.log('No audio link detected for this song')
   }
   loading.value = false
 })

@@ -14,17 +14,37 @@ export const useSongStore = defineStore('song', () => {
     return searchSongs(songs.value, searchQuery.value)
   })
 
-  async function fetchSongs() {
+  const fetchSongs = async (forceRefresh = false) => {
     try {
-      const response = await fetch('https://raw.githubusercontent.com/yashineonline/ilahi/main/ilahi.txt')
+      const cacheOption = forceRefresh ? 'no-store' : 'default'
+      const response = await fetch('https://raw.githubusercontent.com/yashineonline/ilahi/main/ilahi.txt', {
+        cache: cacheOption,
+        headers: forceRefresh ? { 'Cache-Control': 'no-cache' } : {}
+      })
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      const fileContent = await response.text()
-      songs.value = processSongsFile(fileContent);
+      const text = await response.text()
+      songs.value = processSongsFile(text)
     } catch (error) {
-      console.error('Error loading songs:', error);
-      songs.value = [];
+      console.error('Error fetching songs:', error)
+      if (songs.value.length === 0) {
+        // If there's no cached data, try to load from localStorage
+        const cachedSongs = localStorage.getItem('cachedSongs')
+        if (cachedSongs) {
+          songs.value = JSON.parse(cachedSongs)
+          console.log('Loaded songs from localStorage cache')
+        } else {
+          console.error('No cached songs available')
+        }
+      } else {
+        console.log('Using existing cached songs')
+      }
+    }
+
+    // Save fetched songs to localStorage for future use
+    if (songs.value.length > 0) {
+      localStorage.setItem('cachedSongs', JSON.stringify(songs.value))
     }
   }
 

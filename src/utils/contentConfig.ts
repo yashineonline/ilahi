@@ -1,5 +1,5 @@
 export const EXPLANATION_TEXT = {
-  title: "About Ilahi App",
+  title: "About Ilahi",
   sections: [
     {
       title: "Harmonies of the Universe",

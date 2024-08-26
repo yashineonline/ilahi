@@ -19,9 +19,6 @@
             {{ song.title }}
           </router-link>
         </h3>
-        <p v-if="song.youtubeLink" class="text-sm text-gray-600">
-          <a :href="song.youtubeLink" target="_blank" rel="noopener noreferrer" class="hover:underline">Watch on YouTube</a>
-        </p>
       </div>
     </div>
     <div v-else class="text-center text-xl text-gray-600">No songs found</div>

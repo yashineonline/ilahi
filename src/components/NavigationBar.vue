@@ -26,6 +26,6 @@ const themeStore = useThemeStore()
 const songStore = useSongStore()
 
 function refreshSongs() {
-  songStore.fetchSongs()
+  songStore.fetchSongs(true)
 }
 </script>
