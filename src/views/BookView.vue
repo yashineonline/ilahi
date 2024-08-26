@@ -18,8 +18,8 @@
     </div>
     <div v-if="showSongSelector && !isLoading" class="mt-4">
       <h2 class="text-xl font-semibold mb-2">
-        Select ilahis for your custom book.<br>
-        Then scroll down to order them.
+        Select ilahis below by tapping on them in the order that you would like for your custom book.<br>
+        Then scroll down to generate the book as a PDF.
       </h2>
       <div class="space-y-2">
         <button

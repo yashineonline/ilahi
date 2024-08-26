@@ -2,9 +2,7 @@ import { SongData } from './types';
 import * as unorm from 'unorm';
 
 export function processStanzas(stanzas: string[][]): string[][] {
-  return stanzas.map(stanza => 
-    stanza.filter(line => line.trim() !== '')
-  ).filter(stanza => stanza.length > 0);
+  return stanzas;
 }
 
 export function processSong(song: SongData): SongData {
@@ -34,7 +32,6 @@ export function renderSong(song: SongData, options: { fontSize: number, showTran
   if (song.audioLink) {
     if (song.audioLink.includes('youtube.com') || song.audioLink.includes('youtu.be')) {
       html += `<section class="youtube-link mb-6 text-center">
-        <h2 class="text-2xl font-semibold mb-4 ${textColor}">YouTube</h2>
         <a href="${unorm.nfc(song.audioLink)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
           Watch on YouTube
         </a>
@@ -58,22 +55,23 @@ function renderStanzas(stanzas: string[][], textColor: string): string {
 }
 
 export function processSongsFile(fileContent: string): SongData[] {
-  const songSections = fileContent.split('Y:').filter(section => section.trim().length > 0);
+  const songSections = fileContent.split('Y:')
+    .map(section => section.trim())
+    .filter(section => section.length > 0);
 
   const splitStanzas = (text: string): string[][] => {
-    const lines = unorm.nfc(text).split('\n');
+    const lines = text.split('\n');
     const result: string[][] = [];
     let currentStanza: string[] = [];
 
     for (const line of lines) {
-      const trimmedLine = line.trim();
-      if (trimmedLine === '') {
+      if (line.trim() === '') {
         if (currentStanza.length > 0) {
           result.push(currentStanza);
           currentStanza = [];
         }
       } else {
-        currentStanza.push(trimmedLine);
+        currentStanza.push(line.trim());
       }
     }
 
@@ -81,27 +79,37 @@ export function processSongsFile(fileContent: string): SongData[] {
       result.push(currentStanza);
     }
 
-    console.log('Split stanzas result:', JSON.stringify(result, null, 2));
     return result;
   };
 
   const songs = songSections.map(section => {
-    const lines = unorm.nfc(section).split('\n');
+    const lines = section.split('\n');
 
     let audioLink = '';
-    let titleIndex = 0;
+    let title = '';
+    let titleIndex = -1;
 
-    // Check if the first line contains any valid URL
-    const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
-    if (urlRegex.test(lines[0].trim())) {
-      audioLink = lines[0].trim();
-      titleIndex = 1;
+    // Find the audio link and title
+    for (let i = 0; i < lines.length; i++) {
+      const trimmedLine = lines[i].trim();
+      if (trimmedLine.startsWith('http')) {
+        audioLink = trimmedLine;
+        console.log('Audio link:', audioLink);
+      } else if (trimmedLine !== '') {
+        title = trimmedLine;
+        console.log('Title:', title);
+        titleIndex = i;
+        break;
+      }
     }
 
-    const title = lines[titleIndex].trim().toUpperCase();
+    // If no title is found, skip this section
+    if (titleIndex === -1) {
+      return null;
+    }
 
-    const lyricsStartIndex = lines.slice(titleIndex + 1).findIndex(line => line.trim().length > 0) + titleIndex + 1;
-    const translationStart = lines.findIndex(line => line.trim() === 'T:');
+    const lyricsStartIndex = titleIndex + 1;
+    const translationStart = lines.findIndex((line, index) => index > lyricsStartIndex && line.trim() === 'T:');
 
     const lyricsText = lines.slice(lyricsStartIndex, translationStart !== -1 ? translationStart : undefined).join('\n');
     const lyrics = splitStanzas(lyricsText);
@@ -112,9 +120,8 @@ export function processSongsFile(fileContent: string): SongData[] {
     const translation = translationStart !== -1 ? splitStanzas(translationText) : [];
 
     return { title, lyrics, translation, audioLink, isUnderEdit: false };
-  });
+  }).filter(song => song !== null);  // Remove any null songs
 
-  console.log('Processed songs:', songs);
   return songs.sort((a, b) => a.title.localeCompare(b.title, 'tr'));
 }
 

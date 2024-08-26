@@ -5,6 +5,8 @@ import SongDisplay from '../components/SongDisplay.vue'
 import BookView from '../views/BookView.vue'
 import AboutView from '../views/AboutView.vue'
 
+import { useSongStore } from '../stores/songStore'
+
 const routes = [
   {
     path: '/',
@@ -24,12 +26,20 @@ const routes = [
   {
     path: '/songs',
     name: 'SongList',
-    component: SongList
+    component: SongList,
+    beforeEnter: (to, from, next) => {
+      const songStore = useSongStore()
+      if (to.query.search) {
+        songStore.setSearchQuery(to.query.search as string)
+      }
+      next()
+    }
   },
   {
     path: '/player/:title',
     name: 'SongDisplay',
-    component: SongDisplay
+    component: SongDisplay,
+  
   }
 ]
 
