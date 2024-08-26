@@ -47,8 +47,8 @@ export async function generateSingleSongPage(pdfDoc: PDFDocument, song: SongData
   }
 
   // Add centered QR code if available
-  if (song.youtubeLink) {
-    const qrCodeDataUrl = await generateQRCode(song.youtubeLink);
+  if (song.audioLink) {
+    const qrCodeDataUrl = await generateQRCode(song.audioLink);
     const qrCodeImage = await pdfDoc.embedPng(qrCodeDataUrl);
     const qrCodeSize = 50;
     if (y - qrCodeSize < 50) {

@@ -23,16 +23,10 @@
       <h1 class="text-3xl font-bold mb-4 text-center">{{ currentSong.title }}</h1>
       <div v-if="showMusicPlayer && currentSong.audioLink" class="mt-4 w-full max-w-3xl mb-6">
         <h2 class="text-2xl font-semibold mb-2">Music Player</h2>
-        <youtube-player
-          v-if="isYoutubeLink(currentSong.audioLink)"
-          :video-id="getYoutubeVideoId(currentSong.audioLink)"
-          :player-vars="{ autoplay: 0, controls: 1 }"
-          @ready="onPlayerReady"
-        />
         <audio-player
-          v-else
           :audio-src="currentSong.audioLink"
-          @player-ready="onAudioPlayerReady"
+          :is-youtube="isYoutubeLink(currentSong.audioLink)"
+          @player-ready="onPlayerReady"
         />
         <div class="mt-2 flex justify-center space-x-2">
           <button @click="playPause" class="btn btn-primary">{{ isPlaying ? 'Pause' : 'Play' }}</button>
@@ -43,11 +37,11 @@
         </div>
       </div>
       <div class="mb-6" v-html="renderedSong"></div>
-      <div v-if="currentSong.audioLink && isYoutubeLink(currentSong.audioLink)" class="mt-4 text-center">
+      <!-- <div v-if="currentSong.audioLink && isYoutubeLink(currentSong.audioLink)" class="mt-4 text-center">
         <a :href="currentSong.audioLink" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
           Watch on YouTube
         </a>
-      </div>
+      </div> -->
       <div v-if="showQRCodeFlag && qrCodeDataUrl && isYoutubeLink(currentSong.audioLink)" class="mt-4 text-center">
         <h3 class="text-xl font-semibold mb-2">QR Code for YouTube Link</h3>
         <img :src="qrCodeDataUrl" alt="QR Code" class="mx-auto" />
@@ -55,8 +49,8 @@
     </div>
     <div v-else-if="!loading" class="text-center text-xl text-base-content" aria-live="polite">Song not found</div>
     <div v-else class="text-center text-xl text-base-content" aria-live="polite">Loading song...</div>
-    <div v-if="errorMessage" class="mt-4 p-4 bg-error text-error-content rounded-lg" role="alert" aria-live="assertive">
-      {{ errorMessage }}
+    <div v-if="errorMessage || playerError" class="mt-4 p-4 bg-error text-error-content rounded-lg" role="alert" aria-live="assertive">
+      {{ errorMessage || playerError }}
     </div>
     <div class="mt-6 text-center text-sm text-base-content">
       This app is maintained by the AQRT. 
@@ -76,7 +70,6 @@ import { useZoom } from '../utils/zoom'
 import { renderSong } from '../utils/songProcessor'
 import { PDFDocument as PDFLib, StandardFonts } from 'pdf-lib'
 import { downloadPDF } from '../utils/pdfBookUtils'
-import YoutubePlayer from 'vue3-youtube'
 import AudioPlayer from './AudioPlayer.vue'
 
 const route = useRoute()
@@ -85,6 +78,7 @@ const themeStore = useThemeStore()
 const showTranslationFlag = ref(false)
 const qrCodeDataUrl = ref('')
 const errorMessage = ref('')
+const playerError = ref<string | null>(null)
 const loading = ref(true)
 const showMusicPlayer = computed(() => {
   return !!currentSong.value?.audioLink && !hideMusicPlayer.value
@@ -150,24 +144,18 @@ const toggleMusicPlayer = () => {
   hideMusicPlayer.value = !hideMusicPlayer.value
 }
 
-const getYoutubeVideoId = (url: string) => {
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
-  const match = url.match(regExp)
-  return (match && match[2].length === 11) ? match[2] : null
-}
-
-const onPlayerReady = (event: any) => {
-  player.value = event.target
-}
-
-const onAudioPlayerReady = (audioElement: HTMLAudioElement) => {
-  player.value = {
-    pauseVideo: () => audioElement.pause(),
-    playVideo: () => audioElement.play(),
-    getCurrentTime: () => audioElement.currentTime,
-    seekTo: (time: number) => audioElement.currentTime = time,
-    getPlaybackRate: () => audioElement.playbackRate,
-    setPlaybackRate: (rate: number) => audioElement.playbackRate = rate
+const onPlayerReady = (playerInstance: any) => {
+  if (isYoutubeLink(currentSong.value?.audioLink)) {
+    player.value = playerInstance;
+  } else {
+    player.value = {
+      pauseVideo: () => playerInstance.pause(),
+      playVideo: () => playerInstance.play(),
+      getCurrentTime: () => playerInstance.currentTime,
+      seekTo: (time: number) => playerInstance.currentTime = time,
+      getPlaybackRate: () => playerInstance.playbackRate,
+      setPlaybackRate: (rate: number) => playerInstance.playbackRate = rate
+    }
   }
 }
 

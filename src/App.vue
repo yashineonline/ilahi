@@ -5,7 +5,8 @@
     </header>
     <NavigationBar />
     <main class="flex-grow container mx-auto p-4">
-      <SearchBar />
+      <!-- <SearchBar /> -->
+      <SearchBar ref="searchBarRef" />
       <RouterView />
     </main>
     <footer class="bg-green-600 text-white p-4 mt-8">
@@ -21,8 +22,18 @@ import NavigationBar from './components/NavigationBar.vue'
 import SearchBar from './components/SearchBar.vue'
 import ThemeToggle from './components/ThemeToggle.vue'
 import { useThemeStore } from './stores/themeStore'
+import { ref, provide } from 'vue'
 
 const themeStore = useThemeStore()
+const searchBarRef = ref<InstanceType<typeof SearchBar> | null>(null)
+
+const resetGlobalSearch = () => {
+  if (searchBarRef.value) {
+    searchBarRef.value.clearSearch()
+  }
+}
+
+provide('resetGlobalSearch', resetGlobalSearch)
 </script>
 
 <style>
