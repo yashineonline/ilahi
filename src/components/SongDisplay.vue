@@ -145,27 +145,18 @@ const toggleMusicPlayer = () => {
 }
 
 const onPlayerReady = (playerInstance: any) => {
-  if (isYoutubeLink(currentSong.value?.audioLink)) {
-    player.value = playerInstance;
-  } else {
-    player.value = {
-      pauseVideo: () => playerInstance.pause(),
-      playVideo: () => playerInstance.play(),
-      getCurrentTime: () => playerInstance.currentTime,
-      seekTo: (time: number) => playerInstance.currentTime = time,
-      getPlaybackRate: () => playerInstance.playbackRate,
-      setPlaybackRate: (rate: number) => playerInstance.playbackRate = rate
-    }
-  }
+  player.value = playerInstance;
 }
 
 const playPause = () => {
-  if (isPlaying.value) {
-    player.value.pauseVideo()
-  } else {
-    player.value.playVideo()
+  if (player.value) {
+    if (isPlaying.value) {
+      player.value.pauseVideo();
+    } else {
+      player.value.playVideo();
+    }
+    isPlaying.value = !isPlaying.value;
   }
-  isPlaying.value = !isPlaying.value
 }
 
 const seekBackward = () => {
@@ -196,7 +187,7 @@ const showQRCode = async () => {
 }
 
 const isYoutubeLink = (url: string) => {
-  return url.includes('youtube.com') || url.includes('youtu.be')
+  return url && (url.includes('youtube.com') || url.includes('youtu.be'));
 }
 
 watch(() => route.params.title, async () => {
@@ -210,23 +201,24 @@ watch(() => route.params.title, async () => {
 
 onMounted(async () => {
   loading.value = true
-  if (songStore.songs.length === 0) {
-    try {
+  try {
+    if (songStore.songs.length === 0) {
       await songStore.fetchSongs()
-    } catch (error) {
-      console.error('Error fetching songs:', error);
-      errorMessage.value = 'Failed to load songs. Please try reloading the page.';
     }
+    if (currentSong.value) {
+      loadQRCode()
+    }
+    if (currentSong.value?.audioLink) {
+      console.log('Detected audio link:', currentSong.value.audioLink)
+    } else {
+      console.log('No audio link detected for this song')
+    }
+  } catch (error) {
+    console.error('Error loading song:', error)
+    errorMessage.value = 'Failed to load song. Please try again later.'
+  } finally {
+    loading.value = false
   }
-  if (currentSong.value) {
-    loadQRCode()
-  }
-  if (currentSong.value?.audioLink) {
-    console.log('Detected audio link:', currentSong.value.audioLink)
-  } else {
-    console.log('No audio link detected for this song')
-  }
-  loading.value = false
 })
 </script>
 

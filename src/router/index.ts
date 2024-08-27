@@ -40,6 +40,11 @@ const routes = [
     name: 'SongDisplay',
     component: SongDisplay,
   
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: Home // or create a dedicated NotFound component
   }
 ]
 
