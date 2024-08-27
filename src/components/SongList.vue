@@ -105,8 +105,8 @@ watch(() => route.query.search, (newSearch) => {
   }
 })
 
-onMounted(() => {
-  songStore.fetchSongs()
+onMounted(async () => {
+  await songStore.fetchSongs()
   if (route.query.search) {
     songStore.setSearchQuery(route.query.search as string)
   }
