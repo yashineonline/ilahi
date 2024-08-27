@@ -17,13 +17,20 @@ export const useSongStore = defineStore('song', () => {
   const fetchSongs = async (forceRefresh = false) => {
     try {
       const cacheOption = forceRefresh ? 'no-store' : 'default'
-      const corsProxy = 'https://cors-anywhere.herokuapp.com/';
-  const url = 'https://raw.githubusercontent.com/yashineonline/ilahi/main/ilahi.txt';
-  
-      const response = await fetch(corsProxy + url, {
+      // const corsProxy = 'https://cors-anywhere.herokuapp.com/';
+  // const url = 'https://raw.githubusercontent.com/yashineonline/ilahi/main/ilahi.txt';
+  const url = 'https://github.com/yashineonline/ilahi/blob/main/ilahi.txt';
+      // const response = await fetch(corsProxy + url, {
+      //   cache: cacheOption,
+      //   headers: forceRefresh ? { 'Cache-Control': 'no-cache' } : {}
+      // })
+      const response = await fetch(
+        // corsProxy + 
+        url, {
         cache: cacheOption,
         headers: forceRefresh ? { 'Cache-Control': 'no-cache' } : {}
       })
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
