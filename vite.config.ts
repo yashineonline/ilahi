@@ -11,7 +11,7 @@ export default defineConfig({
     }
   },
   build: {
-    outDir: 'docs', // Added this line
+    outDir: 'dist', // convention is keep this dist
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html')
