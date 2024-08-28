@@ -17,7 +17,7 @@ export async function generateFullBookPDF(songs: SongData[], isCustom: boolean =
 
     // Cover image (Page 1)
   log('Creating cover image');
-  const coverImage = await embedImage(pdfDoc, 'https://raw.githubusercontent.com/yashineonline/ilahi/main/cover.png');
+  const coverImage = await embedImage(pdfDoc, 'https://raw.githubusercontent.com/yashineonline/ilahiRepository/main/cover.png');
   const coverPage = pdfDoc.addPage();
   const { width, height } = coverPage.getSize();
   coverPage.drawImage(coverImage, {
@@ -33,7 +33,7 @@ export async function generateFullBookPDF(songs: SongData[], isCustom: boolean =
 
   // Second image (Page 3)
   log('Creating second image');
-  const secondImage = await embedImage(pdfDoc, 'https://raw.githubusercontent.com/yashineonline/ilahi/main/poem.png');
+  const secondImage = await embedImage(pdfDoc, 'https://raw.githubusercontent.com/yashineonline/ilahiRepository/main/poem.png');
   const secondImagePage = pdfDoc.addPage();
   secondImagePage.drawImage(secondImage, {
     x: 0,
@@ -63,7 +63,7 @@ export async function generateFullBookPDF(songs: SongData[], isCustom: boolean =
 
   // Second image (Page 5)
   log('Creating third image');
-  const thirdImage = await embedImage(pdfDoc, 'https://raw.githubusercontent.com/yashineonline/ilahi/main/names.png');
+  const thirdImage = await embedImage(pdfDoc, 'https://raw.githubusercontent.com/yashineonline/ilahiRepository/main/names.png');
   const thirdImagePage = pdfDoc.addPage();
   thirdImagePage.drawImage(thirdImage, {
     x: 0,

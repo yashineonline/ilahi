@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import path from 'path'
 
 export default defineConfig({
-  base: '/songApp-step3/',
+  base: '/ilahi/',
   plugins: [vue()],
   resolve: {
     alias: {

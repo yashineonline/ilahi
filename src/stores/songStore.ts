@@ -24,7 +24,7 @@ export const useSongStore = defineStore('song', () => {
         // const url = 'https://github.com/yashineonline/ilahi/blob/main/ilahi.txt';
 
         const owner = 'yashineonline';
-        const repo = 'ilahi';
+        const repo = 'ilahiRepository';
         const path = 'ilahi.txt';
         const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
         
