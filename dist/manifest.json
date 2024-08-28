@@ -1,0 +1,16 @@
+{
+    "name": "ilahi-app",
+    "short_name": "Ilahi",
+    "description": "Collection of Ilahis",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#000000",
+    "icons": [
+      {
+        "src": "/favicon-16x16",
+        "sizes": "64x64 32x32 24x24 16x16",
+        "type": "image/x-icon"
+      }
+    ]
+  }

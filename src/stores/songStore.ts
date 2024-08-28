@@ -17,18 +17,21 @@ export const useSongStore = defineStore('song', () => {
   const fetchSongs = async (forceRefresh = false) => {
     try {
       if (forceRefresh || songs.value.length === 0) {
-        const url = 'https://raw.githubusercontent.com/yashineonline/ilahi/main/ilahi.txt';
-        const cacheOption = forceRefresh ? 'no-store' : 'default';
+        // const url = 'https://raw.githubusercontent.com/yashineonline/ilahi/main/ilahi.txt';
+        // const cacheOption = forceRefresh ? 'no-store' : 'default';
         // const corsProxy = 'https://cors-anywhere.herokuapp.com/';
         // const url = 'https://raw.githubusercontent.com/yashineonline/ilahi/main/ilahi.txt';
-
-
         // const url = 'https://github.com/yashineonline/ilahi/blob/main/ilahi.txt';
-        const response = await fetch(
-          // corsProxy + 
-          url, {
-          cache: cacheOption,
-          headers: forceRefresh ? { 'Cache-Control': 'no-cache' } : {}
+
+        const owner = 'yashineonline';
+        const repo = 'ilahi';
+        const path = 'ilahi.txt';
+        const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+        
+        const response = await fetch(url, {
+          headers: {
+            'Accept': 'application/vnd.github.v3.raw'
+          }
         });
 
         if (!response.ok) {
@@ -62,7 +65,6 @@ export const useSongStore = defineStore('song', () => {
           console.error('Error loading local file:', localError);
           songs.value = []; // Set to empty array if all attempts fail
         }
-
       }
     }
 
