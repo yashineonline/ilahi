@@ -25,7 +25,7 @@
         <h2 class="text-2xl font-semibold mb-2">Music Player</h2>
         <audio-player
           :audio-src="currentSong.audioLink"
-          :is-youtube="isYoutubeLink(currentSong.audioLink)"
+          :player-type="getPlayerType(currentSong.audioLink)"
           @player-ready="onPlayerReady"
         />
         <div class="mt-2 flex justify-center space-x-2">
@@ -188,6 +188,16 @@ const showQRCode = async () => {
 
 const isYoutubeLink = (url: string) => {
   return url && (url.includes('youtube.com') || url.includes('youtu.be'));
+}
+
+function getPlayerType(url: string): 'youtube' | 'audio' | 'googledrive' {
+  if (isYoutubeLink(url)) {
+    return 'youtube';
+  } else if (url.includes('drive.google.com')) {
+    return 'googledrive';
+  } else {
+    return 'audio';
+  }
 }
 
 watch(() => route.params.title, async () => {

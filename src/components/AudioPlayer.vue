@@ -1,7 +1,8 @@
 <template>
   <div class="flex justify-center items-center w-full">
-    <YouTube v-if="isYoutube" :src="audioSrc" @ready="onYoutubeReady" ref="youtubePlayer" class="max-w-full" />
-    <audio v-else ref="audioElement" :src="audioSrc" @canplay="onAudioReady" class="w-full max-w-md"></audio>
+    <YouTube v-if="playerType === 'youtube'" :src="audioSrc" @ready="onYoutubeReady" ref="youtubePlayer" class="max-w-full" />
+    <audio v-else-if="playerType === 'audio'" ref="audioElement" :src="audioSrc" @canplay="onAudioReady" class="w-full max-w-md"></audio>
+    <iframe v-else-if="playerType === 'googledrive'" :src="getGoogleDriveEmbedUrl(audioSrc)" frameborder="0" width="100%" height="200"></iframe>
   </div>
 </template>
 
@@ -11,7 +12,7 @@ import YouTube from 'vue3-youtube';
 
 const props = defineProps<{
   audioSrc: string;
-  isYoutube: boolean;
+  playerType: 'youtube' | 'audio' | 'googledrive';
 }>();
 
 const emit = defineEmits(['player-ready']);
@@ -22,13 +23,13 @@ const startTime = ref(0);
 const endTime = ref(0);
 
 onMounted(() => {
-  if (!props.isYoutube && audioElement.value) {
+  if (props.playerType === 'audio' && audioElement.value) {
     emit('player-ready', wrapAudioElement(audioElement.value));
   }
 });
 
 watch(() => props.audioSrc, () => {
-  if (props.isYoutube && youtubePlayer.value) {
+  if (props.playerType === 'youtube' && youtubePlayer.value) {
     const { videoId, startTime: start, endTime: end } = getYoutubeVideoId(props.audioSrc);
     console.log('YouTube link:', props.audioSrc);
     console.log('Extracted video ID:', videoId);
@@ -37,7 +38,11 @@ watch(() => props.audioSrc, () => {
     youtubePlayer.value.loadVideoById({ videoId, startSeconds: start });
     startTime.value = start;
     endTime.value = end;
+  } else if (props.playerType === 'audio' && audioElement.value) {
+    audioElement.value.src = props.audioSrc;
+    audioElement.value.load();
   }
+  // Google Drive links are handled directly in the template
 });
 
 function onYoutubeReady(event: any) {
@@ -98,5 +103,17 @@ function getYoutubeVideoId(url: string): { videoId: string, startTime: number, e
   console.log('Extracted end time:', endTime);
 
   return { videoId, startTime, endTime };
+}
+
+function isGoogleDriveLink(url: string): boolean {
+  return url.includes('drive.google.com');
+}
+
+function getGoogleDriveEmbedUrl(url: string): string {
+  const fileId = url.match(/[-\w]{25,}/);
+  if (fileId) {
+    return `https://drive.google.com/file/d/${fileId[0]}/preview`;
+  }
+  return url;
 }
 </script>
