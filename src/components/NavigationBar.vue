@@ -11,11 +11,10 @@
           <li><router-link to="/" class="btn btn-ghost normal-case text-xl" aria-label="Home">Home</router-link></li>          
         </ul>
       </div>
-      
-      <div class="flex justify-center items-center space-x-4 mt-4 md:mt-0">
+      <div class="flex items-center space-x-4">
         <button @click="refreshSongs" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Refresh
-        </button>
+        Refresh
+      </button>
         <div class="icon-btn group relative" @touchstart="handleTouchStart($event, 'whatsapp')" @touchend="handleTouchEnd('whatsapp')">
           <a href="https://chat.whatsapp.com/F7vWb3S3qIG2sht3hTPsjp" target="_blank" rel="noopener noreferrer" @click.prevent="handleClick">
             <img src="/whatsapp.jpeg" alt="Join Ilahi Classes" class="w-10 h-10" />
