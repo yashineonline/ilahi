@@ -23,10 +23,13 @@
           <h2 class="text-2xl font-semibold mb-4">Features</h2>
           <ul class="list-disc pl-5">
             <li>Browse a vast collection of Ilahis</li>
-            <li>View lyrics and translations</li>
-            <li>Listen to audio recordings (coming soon)</li>
-            <li>Generate PDF versions of Ilahis</li>
-            <li>Customize your own Book of Ilahis</li>
+            <li>By Categories (Newest Feature)</li>
+            <li>By who is singing (coming soon)</li>
+            <li>Lyrics with translations (other languages coming soon)</li>
+            <li>Listen to audio recordings (Now Available!)</li>
+            <li>Generate PDF version of each Ilahi</li>
+            <li>Customize your own Book of Ilahis (New Cover)</li>
+            <li>Create your own book design (Coming Soon)</li>
           </ul>
         </div>
         <div class="bg-white shadow-lg rounded-lg p-6">
