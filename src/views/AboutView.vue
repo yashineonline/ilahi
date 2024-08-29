@@ -17,7 +17,7 @@
       </a>
     </p>
     <router-link to="/quotes-and-poems" class="btn btn-link">
-      Quotes and Poems on Love by Shaykh Taner
+      Quotes and Poems on Love by Shaykh Taner (coming up)
     </router-link>
   </div>
 </template>
