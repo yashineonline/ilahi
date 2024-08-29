@@ -1,38 +1,115 @@
 <template>
   <div class="container mx-auto p-4">
     <h2 class="text-2xl font-bold mb-4">Song List</h2>
-    
+
     <!-- A-Z filter -->
     <div class="flex flex-wrap justify-center my-4">
-      <button v-for="letter in 'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ'" :key="letter"
-              @click="filterByLetter(letter)"
-              :class="['btn btn-sm m-1', { 'btn-primary': currentLetter === letter }]">
+      <button
+        v-for="letter in 'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ'"
+        :key="letter"
+        @click="filterByLetter(letter)"
+        :class="['btn btn-sm m-1', { 'btn-primary': currentLetter === letter }]"
+      >
         {{ letter }}
       </button>
     </div>
 
     <!-- Category filter -->
     <div class="flex justify-center my-4">
-      <select v-model="selectedCategories" multiple class="form-multiselect block w-64 bg-white text-black">
-        <option value="">All</option>
-        <option v-for="category in allCategories" :key="category" :value="category">
-          {{ category }}
-        </option>
-      </select>
+      <div class="flex flex-col items-center">
+        <label class="mb-2 font-bold text-lg">Categories</label>
+        <div class="flex items-center mb-2">
+          <input
+            type="checkbox"
+            id="basicCategory"
+            v-model="selectedCategories"
+            value="Basic"
+            class="checkbox checkbox-primary mr-2"
+          />
+          <label for="basicCategory" class="text-lg font-semibold text-primary"
+            >Basic</label
+          >
+        </div>
+        <div class="dropdown">
+          <label tabindex="0" class="btn m-1" @click="isDropdownOpen = !isDropdownOpen"
+            >More Categories</label
+          >
+          <ul
+            v-if="isDropdownOpen"
+            tabindex="0"
+            class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 max-h-60 overflow-y-auto"
+          >
+            <li class="text-left">
+              <label>
+                <input
+                  type="checkbox"
+                  value="All"
+                  v-model="selectedCategories"
+                  class="checkbox"
+                />
+                All
+              </label>
+            </li>
+            <li v-for="category in mainCategories" :key="category" class="text-left">
+              <template v-if="Object.keys(subcategories).includes(category)">
+                <details class="dropdown">
+                  <summary>{{ category }}</summary>
+                  <ul
+                    class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"
+                  >
+                    <li
+                      v-for="subCategory in subcategories[category]"
+                      :key="subCategory"
+                      class="text-left"
+                    >
+                      <label>
+                        <input
+                          type="checkbox"
+                          :value="subCategory"
+                          v-model="selectedCategories"
+                          class="checkbox"
+                        />
+                        {{ subCategory }}
+                      </label>
+                    </li>
+                  </ul>
+                </details>
+              </template>
+              <label v-else>
+                <input
+                  type="checkbox"
+                  :value="category"
+                  v-model="selectedCategories"
+                  class="checkbox"
+                />
+                {{ category }}
+              </label>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
 
     <div class="flex justify-center my-4">
-      <button @click="resetSearch" class="btn btn-secondary">
-        Reset Search
-      </button>
+      <button @click="resetSearch" class="btn btn-secondary">Reset Search</button>
     </div>
 
-    <div v-if="paginatedSongs.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div v-for="(song, index) in paginatedSongs" :key="`${song.title}-${index}`" class="bg-white shadow-md rounded-lg p-4">
+    <div
+      v-if="paginatedSongs.length"
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+    >
+      <div
+        v-for="(song, index) in paginatedSongs"
+        :key="`${song.title}-${index}`"
+        class="bg-white shadow-md rounded-lg p-4"
+      >
         <h3 class="text-xl font-semibold mb-2">
-          <router-link 
+          <router-link
             v-if="song.title"
-            :to="{ name: 'SongDisplay', params: { title: encodeURIComponent(song.title) } }" 
+            :to="{
+              name: 'SongDisplay',
+              params: { title: encodeURIComponent(song.title) },
+            }"
             class="text-blue-600 hover:text-blue-800"
           >
             {{ song.title }}
@@ -45,166 +122,244 @@
       </div>
     </div>
     <div v-else class="text-center text-xl text-gray-600">No songs found</div>
-    
+
     <div class="mt-6 flex justify-center">
-      <button @click="prevPage" :disabled="currentPage === 1" class="btn btn-primary mr-2">&lt; Previous</button>
+      <button
+        @click="prevPage"
+        :disabled="currentPage === 1"
+        class="btn btn-primary mr-2"
+      >
+        &lt; Previous
+      </button>
       <span class="mx-2 self-center">Page {{ currentPage }} of {{ totalPages }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages" class="btn btn-primary ml-2">Next &gt;</button>
+      <button
+        @click="nextPage"
+        :disabled="currentPage === totalPages"
+        class="btn btn-primary ml-2"
+      >
+        Next &gt;
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, inject } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useSongStore } from '../stores/songStore'
-import { RouterLink, useRoute, useRouter } from 'vue-router'
-import SearchBar from './SearchBar.vue'
-import { getCurrentInstance } from 'vue'
+import { ref, computed, onMounted, watch, inject } from "vue";
+import { storeToRefs } from "pinia";
+import { useSongStore } from "../stores/songStore";
+import { RouterLink, useRoute, useRouter } from "vue-router";
+import SearchBar from "./SearchBar.vue";
+import { getCurrentInstance } from "vue";
 
-const route = useRoute()
-const router = useRouter()
-const songStore = useSongStore()
-const { filteredSongs } = storeToRefs(songStore)
+const route = useRoute();
+const router = useRouter();
+const songStore = useSongStore();
+const { filteredSongs } = storeToRefs(songStore);
 
-const currentPage = ref(1)
-const itemsPerPage = 12
-const currentLetter = ref('')
-const selectedCategories = ref<string[]>([])
+const currentPage = ref(1);
+const itemsPerPage = 12;
+const currentLetter = ref("");
+const selectedCategories = ref<string[]>([]);
 
-const resetGlobalSearch = inject('resetGlobalSearch') as () => void
+const resetGlobalSearch = inject("resetGlobalSearch") as () => void;
 
 const turkishToEnglish = (str: string) => {
   const map: { [key: string]: string } = {
-    'ç': 'c', 'ğ': 'g', 'ı': 'i', 'ö': 'o', 'ş': 's', 'ü': 'u',
-    'Ç': 'C', 'Ğ': 'G', 'İ': 'I', 'Ö': 'O', 'Ş': 'S', 'Ü': 'U'
-  }
-  return str.replace(/[çğıöşüÇĞİÖŞÜ]/g, letter => map[letter] || letter)
-}
+    ç: "c",
+    ğ: "g",
+    ı: "i",
+    ö: "o",
+    ş: "s",
+    ü: "u",
+    Ç: "C",
+    Ğ: "G",
+    İ: "I",
+    Ö: "O",
+    Ş: "S",
+    Ü: "U",
+  };
+  return str.replace(/[çğıöşüÇĞİÖŞÜ]/g, (letter) => map[letter] || letter);
+};
+
+const subcategories = {
+  "Pen Name": ["Asik Yunus", "Yunus Emre", "Niyaz", "Fakirullah", "Nesimi", "Uftade", "Sivas", "Semseddin", "Ruhi", "Muhyi", "Hatayi", "Hudayi", "Hudai", "Kul Yusuf"],
+  "Sung By": ["Shaykh Taner", "Shaykh Muhyiddin"],
+  "Pirs": ["Geylani", "Rifai", "Ansari", "Ensari", "Hashimi", "Muhammed", "Muhyiddin"],
+  "Awliya": ["Mevlana", "Haci Bektas", "Evliya", "Awliya"],
+  "Sahaba": ["Abu Bakr", "Umar", "Usman", "Ali", "Sahaba"],
+  "Anbiya": ["Nuh", "Hud", "Salih", "Ibrahim", "Musa", "Isa", "Muhammad", "Anbiya", "Enbiya", "Prophets"],
+  "Dervish Orders": ["Rifai", "Ansari", "Qadiri", "Bektashi", "Nakshbandi", "Mevlevi"],
+};
 
 const allCategories = computed(() => {
-  const categories = new Set<string>()
-  filteredSongs.value.forEach(song => {
-    song.categories.forEach(category => {
-      if (category.trim() !== '') {
-        categories.add(category.trim())
+  const categories = new Set<string>(["Basic"]);
+  filteredSongs.value.forEach((song) => {
+    song.categories.forEach((category) => {
+      if (
+        category.trim() !== "" &&
+        !Object.values(subcategories).flat().includes(category.trim())
+      ) {
+        categories.add(category.trim());
       }
-    })
-  })
-  return Array.from(categories).sort((a, b) => 
+    });
+  });
+  return Array.from(categories).sort((a, b) =>
     turkishToEnglish(a.toLowerCase()).localeCompare(turkishToEnglish(b.toLowerCase()))
-  )
-})
+  );
+});
+
+const mainCategories = computed(() => {
+  return [
+    "Basic",
+    ...Object.keys(subcategories),
+    ...allCategories.value.filter((category) => category !== "Basic"),
+  ];
+});
 
 const sortedFilteredSongs = computed(() => {
-  let songsToDisplay = filteredSongs.value
+  let songsToDisplay = filteredSongs.value;
 
-  if (currentLetter.value) {
-    songsToDisplay = songsToDisplay.filter(song => 
-      turkishToEnglish(song.title[0].toUpperCase()) === turkishToEnglish(currentLetter.value)
-    )
+  if (selectedCategories.value.length > 0 && !selectedCategories.value.includes("All")) {
+    songsToDisplay = songsToDisplay.filter((song) =>
+      selectedCategories.value.some((category) => {
+        if (Object.keys(subcategories).includes(category)) {
+          return subcategories[category].some((subCategory) =>
+            song.categories.some(
+              (songCategory) =>
+                turkishToEnglish(songCategory.toLowerCase()) ===
+                turkishToEnglish(subCategory.toLowerCase())
+            )
+          );
+        }
+        return song.categories.some(
+          (songCategory) =>
+            turkishToEnglish(songCategory.trim().toLowerCase()) ===
+            turkishToEnglish(category.toLowerCase())
+        );
+      })
+    );
   }
 
-  if (selectedCategories.value.length > 0 && !selectedCategories.value.includes('')) {
-    songsToDisplay = songsToDisplay.filter(song => 
-      selectedCategories.value.some(category => 
-        song.categories.some(songCategory => 
-          songCategory.trim() !== '' &&
-          turkishToEnglish(songCategory.toLowerCase()) === turkishToEnglish(category.toLowerCase())
-        )
-      )
-    )
+  if (currentLetter.value && selectedCategories.value.length === 0) {
+    songsToDisplay = songsToDisplay.filter(
+      (song) =>
+        turkishToEnglish(song.title[0].toUpperCase()) ===
+        turkishToEnglish(currentLetter.value)
+    );
   }
 
-  return songsToDisplay.sort((a, b) => a.title.localeCompare(b.title))
-})
+  return songsToDisplay.sort((a, b) => a.title.localeCompare(b.title));
+});
 
-const totalPages = computed(() => Math.ceil(sortedFilteredSongs.value.length / itemsPerPage))
+const totalPages = computed(() =>
+  Math.ceil(sortedFilteredSongs.value.length / itemsPerPage)
+);
 
 const paginatedSongs = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage
-  const end = start + itemsPerPage
-  return sortedFilteredSongs.value.slice(start, end)
-})
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return sortedFilteredSongs.value.slice(start, end);
+});
 
 const prevPage = () => {
-  if (currentPage.value > 1) currentPage.value--
-}
+  if (currentPage.value > 1) currentPage.value--;
+};
 
 const nextPage = () => {
-  if (currentPage.value < totalPages.value) currentPage.value++
-}
+  if (currentPage.value < totalPages.value) currentPage.value++;
+};
 
 const filterByLetter = (letter: string) => {
-  currentLetter.value = currentLetter.value === letter ? '' : letter;
+  currentLetter.value = currentLetter.value === letter ? "" : letter;
   currentPage.value = 1;
-  updateQueryParams()
-}
+  updateQueryParams();
+};
 
 const updateQueryParams = () => {
-  const query: Record<string, string | string[]> = {}
-  if (currentLetter.value) query.letter = currentLetter.value
-  if (selectedCategories.value.length > 0) query.categories = selectedCategories.value
-  router.push({ query })
-}
+  const query: Record<string, string | string[]> = {};
+  if (currentLetter.value) query.letter = currentLetter.value;
+  if (selectedCategories.value.length > 0) query.categories = selectedCategories.value;
+  router.push({ query });
+};
 
 watch([filteredSongs, currentLetter, selectedCategories], () => {
-  currentPage.value = 1
-  updateQueryParams()
-})
+  currentPage.value = 1;
+  updateQueryParams();
+});
 
-watch(() => route.query.search, (newSearch) => {
-  if (newSearch) {
-    songStore.setSearchQuery(newSearch as string)
-    currentPage.value = 1
-    currentLetter.value = ''
-    selectedCategories.value = []
+watch(
+  () => route.query.search,
+  (newSearch) => {
+    if (newSearch) {
+      songStore.setSearchQuery(newSearch as string);
+      currentPage.value = 1;
+      currentLetter.value = "";
+      selectedCategories.value = [];
+    }
   }
-})
+);
 
 onMounted(async () => {
-  await songStore.fetchSongs()
+  await songStore.fetchSongs();
   if (route.query.search) {
-    songStore.setSearchQuery(route.query.search as string)
+    songStore.setSearchQuery(route.query.search as string);
   }
   if (route.query.categories) {
-    selectedCategories.value = Array.isArray(route.query.categories) 
-      ? route.query.categories 
-      : [route.query.categories as string]
+    selectedCategories.value = Array.isArray(route.query.categories)
+      ? route.query.categories
+      : [route.query.categories as string];
   }
-})
+});
 
 const resetSearch = () => {
-  songStore.setSearchQuery('')
-  currentLetter.value = ''
-  selectedCategories.value = []
-  router.push({ query: {} })
-  resetGlobalSearch()
+  songStore.setSearchQuery("");
+  currentLetter.value = "";
+  selectedCategories.value = [];
+  router.push({ query: {} });
+  resetGlobalSearch();
+};
+
+watch(
+  () => route.query,
+  (newQuery) => {
+    if (newQuery.search) {
+      songStore.setSearchQuery(newQuery.search as string);
+      currentPage.value = 1;
+      currentLetter.value = "";
+      selectedCategories.value = [];
+    } else if (newQuery.letter) {
+      currentLetter.value = newQuery.letter as string;
+      currentPage.value = 1;
+      songStore.setSearchQuery("");
+    } else if (newQuery.categories) {
+      selectedCategories.value = Array.isArray(newQuery.categories)
+        ? newQuery.categories
+        : [newQuery.categories as string];
+      currentPage.value = 1;
+      songStore.setSearchQuery("");
+    } else {
+      songStore.setSearchQuery("");
+      currentLetter.value = "";
+      selectedCategories.value = [];
+      currentPage.value = 1;
+    }
+  },
+  { immediate: true }
+);
+
+const isDropdownOpen = ref(false);
+
+const app = getCurrentInstance()?.appContext.app;
+</script>
+
+<style>
+.select option:checked {
+  background-color: theme("colors.white");
+  /* color: white; */
 }
 
-watch(() => route.query, (newQuery) => {
-  if (newQuery.search) {
-    songStore.setSearchQuery(newQuery.search as string)
-    currentPage.value = 1
-    currentLetter.value = ''
-    selectedCategories.value = []
-  } else if (newQuery.letter) {
-    currentLetter.value = newQuery.letter as string
-    currentPage.value = 1
-    songStore.setSearchQuery('')
-  } else if (newQuery.categories) {
-    selectedCategories.value = Array.isArray(newQuery.categories) 
-      ? newQuery.categories 
-      : [newQuery.categories as string]
-    currentPage.value = 1
-    songStore.setSearchQuery('')
-  } else {
-    songStore.setSearchQuery('')
-    currentLetter.value = ''
-    selectedCategories.value = []
-    currentPage.value = 1
-  }
-}, { immediate: true })
-
-const app = getCurrentInstance()?.appContext.app
-</script>
+.select option {
+  background-color: white;
+  color: black;
+}
+</style>
