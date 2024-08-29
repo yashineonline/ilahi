@@ -11,6 +11,14 @@
       </template>
       <p v-if="section.author" class="mt-2 text-right">- {{ section.author }}</p>
     </div>
+    <p class="text-center mt-8">
+      <a href="https://aqrtsufi.org/ilahis/" target="_blank" rel="noopener noreferrer" class="text-green-600 hover:text-green-800 underline">
+        Read more about Ilahis
+      </a>
+    </p>
+    <router-link to="/quotes-and-poems" class="btn btn-link">
+      Quotes and Poems on Love by Shaykh Taner
+    </router-link>
   </div>
 </template>
 

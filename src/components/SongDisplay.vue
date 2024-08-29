@@ -28,20 +28,15 @@
           :player-type="getPlayerType(currentSong.audioLink)"
           @player-ready="onPlayerReady"
         />
-        <div class="mt-2 flex justify-center space-x-2">
+        <div v-if="playerType !== 'googledrive'" class="mt-2 flex justify-center space-x-2">
           <button @click="playPause" class="btn btn-primary">{{ isPlaying ? 'Pause' : 'Play' }}</button>
-          <button @click="seekBackward" class="btn btn-secondary">-10s</button>
-          <button @click="seekForward" class="btn btn-secondary">+10s</button>
+          <button @click="seekBackward" class="btn btn-secondary">-5s</button>
+          <button @click="seekForward" class="btn btn-secondary">+5s</button>
           <button @click="decreaseSpeed" class="btn btn-secondary">Slower</button>
           <button @click="increaseSpeed" class="btn btn-secondary">Faster</button>
         </div>
       </div>
       <div class="mb-6" v-html="renderedSong"></div>
-      <!-- <div v-if="currentSong.audioLink && isYoutubeLink(currentSong.audioLink)" class="mt-4 text-center">
-        <a :href="currentSong.audioLink" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-          Watch on YouTube
-        </a>
-      </div> -->
       <div v-if="showQRCodeFlag && qrCodeDataUrl && isYoutubeLink(currentSong.audioLink)" class="mt-4 text-center">
         <h3 class="text-xl font-semibold mb-2">QR Code for YouTube Link</h3>
         <img :src="qrCodeDataUrl" alt="QR Code" class="mx-auto" />
@@ -87,6 +82,7 @@ const hideMusicPlayer = ref(false)
 const player = ref(null)
 const isPlaying = ref(false)
 const showQRCodeFlag = ref(false)
+const playerType = ref<'youtube' | 'audio' | 'googledrive' | null>(null)
 
 const currentSong = computed(() => {
   const decodedTitle = decodeURIComponent(route.params.title as string)
@@ -144,12 +140,13 @@ const toggleMusicPlayer = () => {
   hideMusicPlayer.value = !hideMusicPlayer.value
 }
 
-const onPlayerReady = (playerInstance: any) => {
-  player.value = playerInstance;
+const onPlayerReady = (playerData: { player: any, type: 'youtube' | 'audio' | 'googledrive' }) => {
+  player.value = playerData.player;
+  playerType.value = playerData.type;
 }
 
 const playPause = () => {
-  if (player.value) {
+  if (player.value && playerType.value !== 'googledrive') {
     if (isPlaying.value) {
       player.value.pauseVideo();
     } else {
@@ -160,23 +157,31 @@ const playPause = () => {
 }
 
 const seekBackward = () => {
-  const currentTime = player.value.getCurrentTime()
-  player.value.seekTo(currentTime - 10, true)
+  if (player.value && playerType.value !== 'googledrive') {
+    const currentTime = player.value.getCurrentTime()
+    player.value.seekTo(currentTime - 5, true)
+  }
 }
 
 const seekForward = () => {
-  const currentTime = player.value.getCurrentTime()
-  player.value.seekTo(currentTime + 10, true)
+  if (player.value && playerType.value !== 'googledrive') {
+    const currentTime = player.value.getCurrentTime()
+    player.value.seekTo(currentTime + 5, true)
+  }
 }
 
 const decreaseSpeed = () => {
-  const currentRate = player.value.getPlaybackRate()
-  player.value.setPlaybackRate(Math.max(0.25, currentRate - 0.25))
+  if (player.value && playerType.value !== 'googledrive') {
+    const currentRate = player.value.getPlaybackRate()
+    player.value.setPlaybackRate(Math.max(0.25, currentRate - 0.25))
+  }
 }
 
 const increaseSpeed = () => {
-  const currentRate = player.value.getPlaybackRate()
-  player.value.setPlaybackRate(Math.min(2, currentRate + 0.25))
+  if (player.value && playerType.value !== 'googledrive') {
+    const currentRate = player.value.getPlaybackRate()
+    player.value.setPlaybackRate(Math.min(2, currentRate + 0.25))
+  }
 }
 
 const showQRCode = async () => {
