@@ -87,17 +87,18 @@ export function processSongsFile(fileContent: string): SongData[] {
 
     let audioLink = '';
     let title = '';
+    let categories: string[] = [];
     let titleIndex = -1;
 
-    // Find the audio link and title
+    // Find the audio link, categories, and title
     for (let i = 0; i < lines.length; i++) {
       const trimmedLine = lines[i].trim();
       if (trimmedLine.startsWith('http')) {
         audioLink = trimmedLine;
-        console.log('Audio link:', audioLink);
+      } else if (trimmedLine.startsWith('C:')) {
+        categories = trimmedLine.substring(2).split(',').map(cat => cat.trim());
       } else if (trimmedLine !== '') {
         title = trimmedLine;
-        console.log('Title:', title);
         titleIndex = i;
         break;
       }
@@ -119,7 +120,7 @@ export function processSongsFile(fileContent: string): SongData[] {
       : '';
     const translation = translationStart !== -1 ? splitStanzas(translationText) : [];
 
-    return { title, lyrics, translation, audioLink, isUnderEdit: false };
+    return { title, lyrics, translation, audioLink, categories, isUnderEdit: false };
   }).filter(song => song !== null);  // Remove any null songs
 
   return songs.sort((a, b) => a.title.localeCompare(b.title, 'tr'));
