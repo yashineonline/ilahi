@@ -75,12 +75,17 @@ The sun is always shining. It is the clouds that block its light
 as your nafs blocks the light of your heart.
 
 Love is the greatest power on earth and the universe.
+
 Love is hard to get but it is the combining chemistry of everything.
+
 Love is the fusion between you and everything
 and everything and everything.
+
 Love is the chemistry where you and I are dissolved.
+
 Love is the chemical in which your impurities are dissolved
 and the gold within yourself is left glowing.
+
 Love is the magnetic force, the connection, 
 the best connection you can have between you and Allah.
 
@@ -93,6 +98,6 @@ Love is the best method of migration, by which you leave your nafs and unite wit
 
 Have you ever asked love where she is coming from, where is she going to and where is her home?
 
-Murshid Shaykh Taner Vargonen Ansari
+Shaykh Taner Vargonen Ansari
 
 `;
