@@ -1,6 +1,6 @@
 import { PDFDocument as PDFLib, PDFPage, PDFFont, rgb, RGB, PDFImage } from 'pdf-lib';
 import { SongData } from './types';
-import { EXPLANATION_TEXT, POEM_TEXT } from './contentConfig';
+import { EXPLANATION_TEXT, QUOTES } from './contentConfig';
 
 export async function createCoverPage(pdfDoc: PDFLib, font: PDFFont, title: string, isCustom: boolean = false): Promise<PDFPage> {
   const page = pdfDoc.addPage();
@@ -292,7 +292,7 @@ export async function createPoemPage(pdfDoc: PDFLib, font: PDFFont): Promise<PDF
   console.log('Creating poem page');
   console.log(`Initial height: ${height}`);
 
-  const newPages = drawMultilineText(pdfDoc, page, POEM_TEXT, {
+  const newPages = drawMultilineText(pdfDoc, page, QUOTES.join('\n\n'), {
     x: 50,
     y: height - 50,
     maxWidth: width - 100,
