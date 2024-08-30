@@ -4,6 +4,9 @@ import SongList from '../components/SongList.vue'
 import SongDisplay from '../components/SongDisplay.vue'
 import BookView from '../views/BookView.vue'
 import AboutView from '../views/AboutView.vue'
+import YouTubePlayer from '../components/YouTubePlayer.vue'
+import Poems from '../views/Poems.vue'
+
 
 import { useSongStore } from '../stores/songStore'
 
@@ -45,7 +48,17 @@ const routes = [
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: Home // or create a dedicated NotFound component
-  }
+  },
+  {
+    path: '/youtube-player',
+    name: 'YouTubePlayer',
+    component: YouTubePlayer
+  },
+  {
+    path: '/poems',
+    name: 'Poems',
+    component: Poems
+  },
 ]
 
 const router = createRouter({

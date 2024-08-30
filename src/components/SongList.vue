@@ -26,7 +26,7 @@
             value="Basic"
             class="checkbox checkbox-primary mr-2"
           />
-          <label for="basicCategory" class="text-lg font-semibold text-primary">Basic</label>
+          <label for="basicCategory" class="text-lg font-semibold text-primary">Basic Zikr</label>
         </div>
         <div class="dropdown">
           <label tabindex="0" class="btn m-1" @click="isDropdownOpen = !isDropdownOpen">More Categories</label>
@@ -156,6 +156,10 @@ const turkishToEnglish = (str: string) => {
   return str.replace(/[çğıöşüÇĞİÖŞÜ]/g, (letter) => map[letter] || letter);
 };
 
+const normalizeCategory = (category: string) => {
+  return turkishToEnglish(category.trim().toLowerCase());
+};
+
 const subcategories = {
   "Pen Name": ["Aşık Yunus", "Yunus Emre", "Niyaz", "Fakirullah", "Nesimi", "Üftade", "Şemseddin Sivası", "Ruhi", "Muhyi", "Hatayi", "Hudayi", "Aşık Hüdai", "Kul Yusuf"],
   // "Sung By": ["Shaykh Taner", "Shaykh Muhyiddin"],
@@ -200,16 +204,20 @@ const processShortcuts = () => {
 const allCategories = computed(() => {
   const { processedCategories, processedShortcuts } = processShortcuts();
   const categories = new Set<string>(["Basic"]);
+  const normalizedSubcategories = new Set(
+    Object.values(processedCategories).flat().map(normalizeCategory)
+  );
+
   filteredSongs.value.forEach((song) => {
     song.categories.forEach((category) => {
-      const normalizedCategory = category.trim().toLowerCase();
+      const normalizedCategory = normalizeCategory(category);
       const matchedMainCategory = Object.keys(processedCategories).find((key) => 
-        key.toLowerCase() === normalizedCategory || 
-        processedCategories[key].some((sub) => sub.toLowerCase().startsWith(normalizedCategory))
+        normalizeCategory(key) === normalizedCategory || 
+        processedCategories[key].some((sub) => normalizeCategory(sub).startsWith(normalizedCategory))
       );
       if (matchedMainCategory) {
         categories.add(matchedMainCategory);
-      } else if (category.trim() !== '' && !processedShortcuts[normalizedCategory]) {
+      } else if (category.trim() !== '' && !processedShortcuts[normalizedCategory] && !normalizedSubcategories.has(normalizedCategory)) {
         categories.add(category.trim());
       }
     });
@@ -218,7 +226,7 @@ const allCategories = computed(() => {
 });
 
 const mainCategories = computed(() => {
-  const orderedCategories = ['All', 'Basic', 'Sung By', 'Pirs', 'Pen Name'].map(cat => cat.toLowerCase() === 'basic' ? 'basic' : cat);
+  const orderedCategories = ['All', 'Basic', 'Pirs', 'Pen Name'].map(cat => cat.toLowerCase() === 'basic' ? 'basic' : cat);
   const otherMainCategories = Object.keys(subcategories).filter(cat => !orderedCategories.includes(cat));
   const standaloneCategories = allCategories.value.filter(cat => 
     !orderedCategories.includes(cat) && 
@@ -240,18 +248,18 @@ const sortedFilteredSongs = computed(() => {
   if (selectedCategories.value.length > 0 && !selectedCategories.value.includes('All')) {
     songsToDisplay = songsToDisplay.filter((song) => 
       selectedCategories.value.some((category) => {
-        const normalizedCategory = category.toLowerCase();
+        const normalizedCategory = normalizeCategory(category);
         if (Object.keys(processedCategories).includes(category)) {
           return processedCategories[category].some((subCategory) => 
             song.categories.some((songCategory) => 
-              turkishToEnglish(songCategory.toLowerCase()) === turkishToEnglish(subCategory.toLowerCase())
+              normalizeCategory(songCategory) === normalizeCategory(subCategory)
             )
           );
         }
         return song.categories.some((songCategory) => 
-          turkishToEnglish(songCategory.trim().toLowerCase()) === turkishToEnglish(normalizedCategory) ||
+          normalizeCategory(songCategory) === normalizedCategory ||
           (processedShortcuts[normalizedCategory] && 
-           turkishToEnglish(songCategory.trim().toLowerCase()) === turkishToEnglish(processedShortcuts[normalizedCategory].toLowerCase()))
+           normalizeCategory(songCategory) === normalizeCategory(processedShortcuts[normalizedCategory]))
         );
       })
     );

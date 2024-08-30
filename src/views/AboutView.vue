@@ -16,8 +16,8 @@
         Read more about Ilahis
       </a>
     </p>
-    <router-link to="/quotes-and-poems" class="btn btn-link">
-      Quotes and Poems on Love by Shaykh Taner (coming up)
+    <router-link to="/poems" class="btn btn-link text-green-600 hover:text-green-800 underline">
+      Poems on Love by Shaykh Taner
     </router-link>
   </div>
 </template>

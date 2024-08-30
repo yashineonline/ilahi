@@ -16,16 +16,14 @@
         Refresh
       </button>
         <div class="icon-btn group relative" @touchstart="handleTouchStart($event, 'whatsapp')" @touchend="handleTouchEnd('whatsapp')">
-          <a href="https://chat.whatsapp.com/F7vWb3S3qIG2sht3hTPsjp" target="_blank" rel="noopener noreferrer" @click.prevent="handleClick">
+          <a href="https://chat.whatsapp.com/F7vWb3S3qIG2sht3hTPsjp" target="_blank" rel="noopener noreferrer" @click="handleClick">
             <img src="/whatsapp.jpeg" alt="Join Ilahi Classes" class="w-10 h-10" />
           </a>
           <div :class="['hover-text', { 'show-mobile': showWhatsAppText }]">Join Ilahi Classes</div>
         </div>
         <div class="icon-btn group relative" @touchstart="handleTouchStart($event, 'youtube')" @touchend="handleTouchEnd('youtube')">
-          <a href="https://www.youtube.com/playlist?list=PLGbOdksmscwmkifuD5H2aqXRivVN-3gvO" target="_blank" rel="noopener noreferrer" @click.prevent="handleClick">
-            <img src="/youtube.jpeg" alt="Play Ilahis" class="w-8 h-8" />
-          </a>
-          <div :class="['hover-text', { 'show-mobile': showYouTubeText }]">Play Ilahis</div>
+          <img src="/youtube.jpeg" alt="Play Ilahis" class="w-8 h-8" @click="toggleYouTubeText" />
+          <div :class="['hover-text', { 'show-mobile': showYouTubeText }]" @click="openYouTubePlayer">Play Ilahis</div>
         </div>
       </div>
     </div>
@@ -36,14 +34,17 @@
 import { useThemeStore } from '../stores/themeStore'
 import { useSongStore } from '../stores/songStore'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const themeStore = useThemeStore()
 const songStore = useSongStore()
+const router = useRouter()
 
 const showWhatsAppText = ref(false)
 const showYouTubeText = ref(false)
 let touchTimer: number | null = null
 let touchedElement: HTMLElement | null = null
+let lastClickTime = 0;
 
 function refreshSongs() {
   songStore.fetchSongs(true)
@@ -80,13 +81,31 @@ const handleTouchEnd = (type: 'whatsapp' | 'youtube') => {
 }
 
 const handleClick = (event: MouseEvent) => {
-  if (window.matchMedia('(min-width: 768px)').matches) {
-    // Allow default behavior on desktop
-    return
+  const currentTime = new Date().getTime();
+  const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+
+  if (isDesktop) {
+    if (currentTime - lastClickTime < 300) { // Double click within 300ms
+      // Allow the link to open
+      lastClickTime = 0;
+    } else {
+      // Prevent default on first click
+      event.preventDefault();
+      lastClickTime = currentTime;
+    }
+  } else {
+    // Prevent default behavior on mobile
+    event.preventDefault();
   }
-  // Prevent default behavior on mobile
-  event.preventDefault()
 }
+
+const toggleYouTubeText = () => {
+  showYouTubeText.value = !showYouTubeText.value;
+};
+
+const openYouTubePlayer = () => {
+  router.push({ name: 'YouTubePlayer' });
+};
 </script>
 
 <style scoped lang="postcss">

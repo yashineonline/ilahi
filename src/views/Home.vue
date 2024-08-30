@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto">
     <div class="bg-gray-100 p-4 rounded-lg mb-6">
-      <QuotesAndPoems />
+      <Quotes />
     </div>
     
     <div class="p-4">
@@ -25,7 +25,7 @@
             <li>Lyrics with translations (other languages coming soon)</li>
             <li>Listen to audio recordings (Now Available!)</li>
             <li>Generate PDF version of each Ilahi</li>
-            <li>Customize your own Book of Ilahis (New Cover)</li>
+            <li>Customize your own Book of Ilahis (now with Brand New Cover)</li>
             <li>Create your own book design (Coming Soon)</li>
           </ul>
         </div>
@@ -42,7 +42,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import { defineComponent } from 'vue';
-import QuotesAndPoems from '@/components/QuotesAndPoems.vue';
+import Quotes from '@/components/Quotes.vue';
 
 
 </script>
