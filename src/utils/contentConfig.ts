@@ -57,8 +57,27 @@ export const EXPLANATION_TEXT = {
   ]
 };
 
-export const POEM_TEXT = `
-What is you and what is me?
+export const QUOTES = [
+  "Love is the greatest power on earth and the universe.",
+  "Love is hard to get but it is the combining chemistry of everything.",
+
+  "Love is the fusion between you and everything and everything and everything.",
+
+  "Love is the chemistry where you and I are dissolved.",
+
+  "Love is the chemical in which your impurities are dissolved and the gold within yourself is left glowing.",
+
+  "Love is the magnetic force, the connection, the best connection you can have between you and Allah.",
+
+  "Love is the best method of migration, by which you leave your nafs and unite with your Beloved",
+
+  "Have you ever asked love where she is coming from, where is she going to and where is her home?"
+];
+
+export const POEMS = [
+  {
+    title: "What is you and what is me?",
+    content: `What is you and what is me?
 Your nafs is you. You, is what you want to be.
 When you are what 'I' want you to be,
 Then it is not you.
@@ -69,35 +88,20 @@ When you are in the fight,
 you need to make a habit of remembering Allah.
 In the fight against your nafs, you need to remember Allah too.
 You can bypass all these with the love you have in your heart
-Your quest is to surrender your brain to your heart.
+Your quest is to surrender your brain to your heart.`
+  },
+  {
+    title: "The Sun and The Clouds",
+    content: `The sun is always shining. It is the clouds that block its light 
+as your nafs blocks the light of your heart.`
+  },
+{
+    title: "Love and Hope",
+    content: `Love is the flavour of life.
+Love is the oasis in the desert, lifesaver in the sea.
+It's the rope for the mountaineers.
+It's the hope for the hopeless.`
+  },
+];
 
-The sun is always shining. It is the clouds that block its light 
-as your nafs blocks the light of your heart.
-
-Love is the greatest power on earth and the universe.
-
-Love is hard to get but it is the combining chemistry of everything.
-
-Love is the fusion between you and everything
-and everything and everything.
-
-Love is the chemistry where you and I are dissolved.
-
-Love is the chemical in which your impurities are dissolved
-and the gold within yourself is left glowing.
-
-Love is the magnetic force, the connection, 
-the best connection you can have between you and Allah.
-
-Love is the flavour of life
-Love is the oasis in the desert, lifesaver in the sea
-It's the rope for the mountaineers
-It's the hope for the hopeless
-
-Love is the best method of migration, by which you leave your nafs and unite with your Beloved
-
-Have you ever asked love where she is coming from, where is she going to and where is her home?
-
-Shaykh Taner Vargonen Ansari
-
-`;
+export const AUTHOR = "Shaykh Taner Vargonen Ansari";

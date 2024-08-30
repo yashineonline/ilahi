@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto p-4">
     <h2 class="text-2xl font-bold mb-4">Song List</h2>
-
+    
     <!-- A-Z filter -->
     <div class="flex flex-wrap justify-center my-4">
       <button
@@ -26,46 +26,21 @@
             value="Basic"
             class="checkbox checkbox-primary mr-2"
           />
-          <label for="basicCategory" class="text-lg font-semibold text-primary"
-            >Basic</label
-          >
+          <label for="basicCategory" class="text-lg font-semibold text-primary">Basic</label>
         </div>
         <div class="dropdown">
-          <label tabindex="0" class="btn m-1" @click="isDropdownOpen = !isDropdownOpen"
-            >More Categories</label
-          >
-          <ul
-            v-if="isDropdownOpen"
-            tabindex="0"
-            class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 max-h-60 overflow-y-auto"
-          >
-            <li class="text-left">
-              <label>
-                <input
-                  type="checkbox"
-                  value="All"
-                  v-model="selectedCategories"
-                  class="checkbox"
-                />
-                All
-              </label>
-            </li>
+          <label tabindex="0" class="btn m-1" @click="isDropdownOpen = !isDropdownOpen">More Categories</label>
+          <ul v-if="isDropdownOpen" tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 max-h-60 overflow-y-auto">
             <li v-for="category in mainCategories" :key="category" class="text-left">
               <template v-if="Object.keys(subcategories).includes(category)">
                 <details class="dropdown">
                   <summary>{{ category }}</summary>
-                  <ul
-                    class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"
-                  >
-                    <li
-                      v-for="subCategory in subcategories[category]"
-                      :key="subCategory"
-                      class="text-left"
-                    >
+                  <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                    <li v-for="subCategory in sortedSubcategories[category]" :key="subCategory" class="text-left">
                       <label>
                         <input
                           type="checkbox"
-                          :value="subCategory"
+                          :value="subCategory.split(',')[0].trim()"
                           v-model="selectedCategories"
                           class="checkbox"
                         />
@@ -75,7 +50,7 @@
                   </ul>
                 </details>
               </template>
-              <label v-else>
+              <label v-else-if="category !== 'Basic' && category !== 'All'">
                 <input
                   type="checkbox"
                   :value="category"
@@ -182,8 +157,8 @@ const turkishToEnglish = (str: string) => {
 };
 
 const subcategories = {
-  "Pen Name": ["Asik Yunus", "Yunus Emre", "Niyaz", "Fakirullah", "Nesimi", "Uftade", "Sivas", "Semseddin", "Ruhi", "Muhyi", "Hatayi", "Hudayi", "Hudai", "Kul Yusuf"],
-  "Sung By": ["Shaykh Taner", "Shaykh Muhyiddin"],
+  "Pen Name": ["Aşık Yunus", "Yunus Emre", "Niyaz", "Fakirullah", "Nesimi", "Üftade", "Şemseddin Sivası", "Ruhi", "Muhyi", "Hatayi", "Hudayi", "Aşık Hüdai", "Kul Yusuf"],
+  // "Sung By": ["Shaykh Taner", "Shaykh Muhyiddin"],
   "Pirs": ["Geylani", "Rifai", "Ansari", "Ensari", "Hashimi", "Muhammed", "Muhyiddin"],
   "Awliya": ["Mevlana", "Haci Bektas", "Evliya", "Awliya"],
   "Sahaba": ["Abu Bakr", "Umar", "Usman", "Ali", "Sahaba"],
@@ -191,50 +166,92 @@ const subcategories = {
   "Dervish Orders": ["Rifai", "Ansari", "Qadiri", "Bektashi", "Nakshbandi", "Mevlevi"],
 };
 
+const categoryShortcuts = {
+  "sbt": ["Sung By", "Shaykh Taner"],
+  "sbm": ["Sung By", "Shaykh Muhyiddin"],
+  // Add more shortcuts as needed
+};
+
+const sortedSubcategories = computed(() => {
+  const sorted = {};
+  for (const [key, value] of Object.entries(subcategories)) {
+    sorted[key] = value.sort((a, b) => turkishToEnglish(a.toLowerCase()).localeCompare(turkishToEnglish(b.toLowerCase())));
+  }
+  return sorted;
+});
+
+const processShortcuts = () => {
+  const processedCategories = { ...subcategories };
+  const processedShortcuts = {};
+
+  Object.entries(categoryShortcuts).forEach(([shortcut, [mainCategory, subCategory]]) => {
+    if (!processedCategories[mainCategory]) {
+      processedCategories[mainCategory] = [];
+    }
+    if (!processedCategories[mainCategory].includes(subCategory)) {
+      processedCategories[mainCategory].push(subCategory);
+    }
+    processedShortcuts[shortcut] = subCategory;
+  });
+
+  return { processedCategories, processedShortcuts };
+};
+
 const allCategories = computed(() => {
+  const { processedCategories, processedShortcuts } = processShortcuts();
   const categories = new Set<string>(["Basic"]);
   filteredSongs.value.forEach((song) => {
     song.categories.forEach((category) => {
-      if (
-        category.trim() !== "" &&
-        !Object.values(subcategories).flat().includes(category.trim())
-      ) {
+      const normalizedCategory = category.trim().toLowerCase();
+      const matchedMainCategory = Object.keys(processedCategories).find((key) => 
+        key.toLowerCase() === normalizedCategory || 
+        processedCategories[key].some((sub) => sub.toLowerCase().startsWith(normalizedCategory))
+      );
+      if (matchedMainCategory) {
+        categories.add(matchedMainCategory);
+      } else if (category.trim() !== '' && !processedShortcuts[normalizedCategory]) {
         categories.add(category.trim());
       }
     });
   });
-  return Array.from(categories).sort((a, b) =>
-    turkishToEnglish(a.toLowerCase()).localeCompare(turkishToEnglish(b.toLowerCase()))
-  );
+  return Array.from(categories);
 });
 
 const mainCategories = computed(() => {
+  const orderedCategories = ['All', 'Basic', 'Sung By', 'Pirs', 'Pen Name'].map(cat => cat.toLowerCase() === 'basic' ? 'basic' : cat);
+  const otherMainCategories = Object.keys(subcategories).filter(cat => !orderedCategories.includes(cat));
+  const standaloneCategories = allCategories.value.filter(cat => 
+    !orderedCategories.includes(cat) && 
+    !otherMainCategories.includes(cat) &&
+    cat !== 'Basic' // Exclude 'Basic' from standalone categories
+  );
+  
   return [
-    "Basic",
-    ...Object.keys(subcategories),
-    ...allCategories.value.filter((category) => category !== "Basic"),
+    ...orderedCategories,
+    ...otherMainCategories.sort((a, b) => turkishToEnglish(a.toLowerCase()).localeCompare(turkishToEnglish(b.toLowerCase()))),
+    ...standaloneCategories.sort((a, b) => turkishToEnglish(a.toLowerCase()).localeCompare(turkishToEnglish(b.toLowerCase())))
   ];
 });
 
 const sortedFilteredSongs = computed(() => {
+  const { processedCategories, processedShortcuts } = processShortcuts();
   let songsToDisplay = filteredSongs.value;
 
-  if (selectedCategories.value.length > 0 && !selectedCategories.value.includes("All")) {
-    songsToDisplay = songsToDisplay.filter((song) =>
+  if (selectedCategories.value.length > 0 && !selectedCategories.value.includes('All')) {
+    songsToDisplay = songsToDisplay.filter((song) => 
       selectedCategories.value.some((category) => {
-        if (Object.keys(subcategories).includes(category)) {
-          return subcategories[category].some((subCategory) =>
-            song.categories.some(
-              (songCategory) =>
-                turkishToEnglish(songCategory.toLowerCase()) ===
-                turkishToEnglish(subCategory.toLowerCase())
+        const normalizedCategory = category.toLowerCase();
+        if (Object.keys(processedCategories).includes(category)) {
+          return processedCategories[category].some((subCategory) => 
+            song.categories.some((songCategory) => 
+              turkishToEnglish(songCategory.toLowerCase()) === turkishToEnglish(subCategory.toLowerCase())
             )
           );
         }
-        return song.categories.some(
-          (songCategory) =>
-            turkishToEnglish(songCategory.trim().toLowerCase()) ===
-            turkishToEnglish(category.toLowerCase())
+        return song.categories.some((songCategory) => 
+          turkishToEnglish(songCategory.trim().toLowerCase()) === turkishToEnglish(normalizedCategory) ||
+          (processedShortcuts[normalizedCategory] && 
+           turkishToEnglish(songCategory.trim().toLowerCase()) === turkishToEnglish(processedShortcuts[normalizedCategory].toLowerCase()))
         );
       })
     );

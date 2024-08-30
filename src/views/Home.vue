@@ -1,10 +1,7 @@
 <template>
   <div class="container mx-auto">
-    <div class="flex justify-between items-center p-4 bg-gray-100">
-      <!-- Assume your navigation component is here -->
-      <nav>
-        <!-- Your navigation items -->
-      </nav>
+    <div class="bg-gray-100 p-4 rounded-lg mb-6">
+      <QuotesAndPoems />
     </div>
     
     <div class="p-4">
@@ -44,5 +41,8 @@
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-</script>
+import { defineComponent } from 'vue';
+import QuotesAndPoems from '@/components/QuotesAndPoems.vue';
 
+
+</script>
