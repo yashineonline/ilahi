@@ -15,15 +15,26 @@
         <button @click="refreshSongs" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
         Refresh
       </button>
-        <div class="icon-btn group relative" @touchstart="handleTouchStart($event, 'whatsapp')" @touchend="handleTouchEnd('whatsapp')">
-          <a href="https://chat.whatsapp.com/F7vWb3S3qIG2sht3hTPsjp" target="_blank" rel="noopener noreferrer" @click="handleClick">
-            <img src="/whatsapp.jpeg" alt="Join Ilahi Classes" class="w-10 h-10" />
-          </a>
-          <div :class="['hover-text', { 'show-mobile': showWhatsAppText }]">Join Ilahi Classes</div>
+        <div class="icon-btn group relative" @click="handleIconClick('whatsapp')">
+          <img src="/whatsapp.jpeg" alt="Join Ilahi Classes" class="w-10 h-10" />
         </div>
-        <div class="icon-btn group relative" @touchstart="handleTouchStart($event, 'youtube')" @touchend="handleTouchEnd('youtube')">
-          <img src="/youtube.jpeg" alt="Play Ilahis" class="w-8 h-8" @click="toggleYouTubeText" />
-          <div :class="['hover-text', { 'show-mobile': showYouTubeText }]" @click="openYouTubePlayer">Play Ilahis</div>
+        <div class="icon-btn group relative" @click="handleIconClick('youtube')">
+          <img src="/youtube.jpeg" alt="Play Ilahis" class="w-8 h-8" />
+        </div>
+      </div>
+      <!-- Large pop-up box -->
+      <div v-if="showPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @click="closePopup">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full m-4 relative" @click.stop>
+          <button @click="closePopup" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <h2 class="text-2xl font-bold mb-4">{{ popupContent.title }}</h2>
+          <p class="mb-4">{{ popupContent.description }}</p>
+          <button @click="handlePopupAction" class="bg-white hover:bg-blue-500 text-blue-500 hover:text-white font-bold py-2 px-4 rounded w-full border border-blue-500 transition-colors duration-300">
+            {{ popupContent.actionText }}
+          </button>
         </div>
       </div>
     </div>
@@ -40,72 +51,47 @@ const themeStore = useThemeStore()
 const songStore = useSongStore()
 const router = useRouter()
 
-const showWhatsAppText = ref(false)
-const showYouTubeText = ref(false)
-let touchTimer: number | null = null
-let touchedElement: HTMLElement | null = null
-let lastClickTime = 0;
+const showPopup = ref(false)
+const popupContent = ref({
+  title: '',
+  description: '',
+  actionText: '',
+  action: () => {}
+})
 
 function refreshSongs() {
   songStore.fetchSongs(true)
 }
 
-const handleTouchStart = (event: TouchEvent, type: 'whatsapp' | 'youtube') => {
-  const target = event.currentTarget as HTMLElement
-  touchedElement = target
-  touchTimer = window.setTimeout(() => {
-    const link = target.querySelector('a')
-    if (link) {
-      window.open(link.href, '_blank')
-    }
-  }, 500) // Long press duration (500ms)
-
+const handleIconClick = (type: 'whatsapp' | 'youtube') => {
   if (type === 'whatsapp') {
-    showWhatsAppText.value = true
-  } else {
-    showYouTubeText.value = true
-  }
-}
-
-const handleTouchEnd = (type: 'whatsapp' | 'youtube') => {
-  if (touchTimer) {
-    clearTimeout(touchTimer)
-  }
-  setTimeout(() => {
-    if (type === 'whatsapp') {
-      showWhatsAppText.value = false
-    } else {
-      showYouTubeText.value = false
-    }
-  }, 2000) // Hide text after 2 seconds
-}
-
-const handleClick = (event: MouseEvent) => {
-  const currentTime = new Date().getTime();
-  const isDesktop = window.matchMedia('(min-width: 768px)').matches;
-
-  if (isDesktop) {
-    if (currentTime - lastClickTime < 300) { // Double click within 300ms
-      // Allow the link to open
-      lastClickTime = 0;
-    } else {
-      // Prevent default on first click
-      event.preventDefault();
-      lastClickTime = currentTime;
+    popupContent.value = {
+      title: 'Join Ilahi Classes',
+      description: 'Connect with us via WhatsApp to join weekly Ilahi classes on Zoom.',
+      actionText: 'Open WhatsApp',
+      action: () => window.open('https://chat.whatsapp.com/F7vWb3S3qIG2sht3hTPsjp', '_blank')
     }
   } else {
-    // Prevent default behavior on mobile
-    event.preventDefault();
+    popupContent.value = {
+      title: 'Play Ilahis',
+      description: 'Listen to Ilahis here!',
+      actionText: 'Open YouTube Player',
+      action: () => router.push({ name: 'YouTubePlayer' })
+    }
   }
+  showPopup.value = true
 }
 
-const toggleYouTubeText = () => {
-  showYouTubeText.value = !showYouTubeText.value;
-};
+const closePopup = () => {
+  showPopup.value = false
+}
 
-const openYouTubePlayer = () => {
-  router.push({ name: 'YouTubePlayer' });
-};
+const handlePopupAction = () => {
+  popupContent.value.action()
+  closePopup()
+}
+
+
 </script>
 
 <style scoped lang="postcss">
@@ -140,7 +126,7 @@ const openYouTubePlayer = () => {
 }
 
 .icon-btn {
-  @apply relative inline-block;
+  @apply relative inline-block cursor-pointer;
 }
 
 .hover-text {
