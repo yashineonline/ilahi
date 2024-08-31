@@ -12,10 +12,14 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['192.png', '48.png', '72.png', '96.png', '144.png', '512.png'],
       manifest: {
-        name: 'Ilahi Book App',
-        short_name: 'Ilahi Book',
-        description: 'Explore Sacred Sufi Songs and Hymns',
-        theme_color: '#16a34a',
+        name: "ilahi Book App",
+        short_name: "Ilahi",
+        description: "Collection of Ilahis",
+        start_url: "/ilahi/",
+        scope: "/ilahi/",
+        display: "standalone",
+        background_color: "#ffffff",
+        theme_color: "#16a34a",
         icons: [
           {
             src: '/48.png',
