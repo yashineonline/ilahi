@@ -1,5 +1,5 @@
 <template>
-  <div class="icon-btn group relative flex items-center" @click="showInstallInstructions">
+  <div v-if="!isAppInstalled" class="icon-btn group relative flex items-center" @click="showInstallInstructions">
     <font-awesome-icon :icon="['far', 'circle-down']" shake style="color: #B197FC;" class="mr-2" size="2xl" />
     <span class="hover-text">Install App</span>
   </div>
@@ -32,6 +32,7 @@ const deferredPrompt = ref<any>(null);
 const showInstructions = ref(false);
 const isIOS = ref(false);
 const isAndroid = ref(false);
+const isAppInstalled = ref(false);
 
 const installInstructions = {
   ios: {
@@ -83,8 +84,18 @@ const closeInstructions = () => {
   showInstructions.value = false;
 };
 
+const checkIfInstalled = () => {
+  if (window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true) {
+    isAppInstalled.value = true;
+  }
+};
+
 onMounted(() => {
   window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  checkIfInstalled();
+  window.addEventListener('appinstalled', () => {
+    isAppInstalled.value = true;
+  });
   isIOS.value = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
   isAndroid.value = /Android/.test(navigator.userAgent);
 });
