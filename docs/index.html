@@ -21,7 +21,18 @@
     <meta name="apple-mobile-web-app-title" content="Ilahi">
     <link rel="apple-touch-icon" href="/ilahi/192.png">
     <meta name="theme-color" content="#16a34a">
-    <script type="module" crossorigin src="/ilahi/assets/main-D-2Ky3pp.js"></script>
+    
+    <!-- Add this script for URL rewriting -->
+    <script>
+      (function() {
+        const redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/ilahi/assets/main-QwcM1piB.js"></script>
     <link rel="stylesheet" crossorigin href="/ilahi/assets/main-kahkGhBV.css">
   <link rel="manifest" href="/ilahi/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/ilahi/registerSW.js"></script></head>
   <body>
