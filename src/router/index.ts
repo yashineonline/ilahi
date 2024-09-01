@@ -39,7 +39,7 @@ const routes = [
     }
   },
   {
-    path: '/player/:title',
+    path: '/player/:slug',
     name: 'SongDisplay',
     component: SongDisplay,
   

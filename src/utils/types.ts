@@ -5,4 +5,5 @@ export interface SongData {
   audioLink?: string;
   categories: string[];
   isUnderEdit: boolean;
+  slug: string;
 }

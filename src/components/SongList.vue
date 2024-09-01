@@ -83,7 +83,7 @@
             v-if="song.title"
             :to="{
               name: 'SongDisplay',
-              params: { title: encodeURIComponent(song.title) },
+              params: { slug: slugify(song.title) },
             }"
             class="text-blue-600 hover:text-blue-800"
           >
@@ -125,6 +125,7 @@ import { useSongStore } from "../stores/songStore";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 import SearchBar from "./SearchBar.vue";
 import { getCurrentInstance } from "vue";
+import { slugify } from '../utils/search';
 
 const route = useRoute();
 const router = useRouter();
@@ -281,6 +282,13 @@ const sortedFilteredSongs = computed(() => {
 const totalPages = computed(() =>
   Math.ceil(sortedFilteredSongs.value.length / itemsPerPage)
 );
+
+const slugifiedSongs = computed(() => {
+  return sortedFilteredSongs.value.map(song => ({
+    ...song,
+    slug: slugify(song.title)
+  }));
+});
 
 const paginatedSongs = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;

@@ -66,6 +66,7 @@ import { renderSong } from '../utils/songProcessor'
 import { PDFDocument as PDFLib, StandardFonts } from 'pdf-lib'
 import { downloadPDF } from '../utils/pdfBookUtils'
 import AudioPlayer from './AudioPlayer.vue'
+import { slugify } from '../utils/search';
 
 const route = useRoute()
 const songStore = useSongStore()
@@ -85,8 +86,8 @@ const showQRCodeFlag = ref(false)
 const playerType = ref<'youtube' | 'audio' | 'googledrive' | null>(null)
 
 const currentSong = computed(() => {
-  const decodedTitle = decodeURIComponent(route.params.title as string)
-  return songStore.songs.find(song => song.title === decodedTitle)
+  const slugParam = route.params.slug as string;
+  return songStore.songs.find(song => slugify(song.title) === slugParam);
 })
 
 const { fontSize, increaseFont, decreaseFont } = useZoom()
@@ -205,14 +206,16 @@ function getPlayerType(url: string): 'youtube' | 'audio' | 'googledrive' {
   }
 }
 
-watch(() => route.params.title, async () => {
-  loading.value = true
-  await songStore.fetchSongs()
-  if (currentSong.value) {
-    loadQRCode()
+watch(() => route.params.slug, async (newSlug) => {
+  if (newSlug) {
+    loading.value = true;
+    await songStore.fetchSongs();
+    if (currentSong.value) {
+      loadQRCode();
+    }
+    loading.value = false;
   }
-  loading.value = false
-})
+});
 
 onMounted(async () => {
   loading.value = true
