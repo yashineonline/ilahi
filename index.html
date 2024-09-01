@@ -21,6 +21,17 @@
     <meta name="apple-mobile-web-app-title" content="Ilahi">
     <link rel="apple-touch-icon" href="/192.png">
     <meta name="theme-color" content="#16a34a">
+    
+    <!-- Add this script for URL rewriting -->
+    <script>
+      (function() {
+        const redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="app"></div>
