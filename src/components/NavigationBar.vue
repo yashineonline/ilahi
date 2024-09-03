@@ -1,33 +1,30 @@
 <template>
-  <nav :class="['navbar shadow-lg', themeStore.theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800']" aria-label="Main navigation">
-    <div class="container mx-auto px-4">
-      <div class="flex-1">
-        <router-link to="/songs" class="btn btn-ghost normal-case text-xl">View Ilahi List Here</router-link>        
-      </div>
-      <div class="flex-none">
-        <ul class="menu menu-horizontal px-1">
-          <li><router-link to="/book" class="btn btn-primary btn-sm">Download Ilahi Book</router-link></li>
-          <li><router-link to="/about" class="btn btn-ghost btn-sm">About Ilahi</router-link></li>
-          <li><router-link to="/" class="btn btn-ghost normal-case text-xl" aria-label="Home">Home</router-link></li>          
-        </ul>
-      </div>
-      <div class="flex items-center space-x-4">
-        <button @click="refreshSongs" class="btn btn-ghost btn-circle">
-          <font-awesome-icon :icon="['fas', 'rotate']" spin style="color: #17a6ee;" />
+  <nav class="navbar shadow-lg flex-col w-full" aria-label="Main navigation">
+    <div class="w-full px-4 flex flex-col items-center">
+      <Installation class="mb-2" />
+      <ul class="flex flex-col w-full mb-4 list-none p-0">
+        <li><router-link to="/songs" class="btn btn-ghost normal-case text-xl mb-2">View Ilahi List</router-link></li>
+        <li><router-link to="/book" class="btn btn-ghost btn-sm text-xl mb-2">Download Ilahi Book</router-link></li>
+        <li><router-link to="/about" class="btn btn-ghost btn-sm text-xl mb-2">About Ilahi</router-link></li>
+        <li><router-link to="/" class="btn btn-ghost normal-case text-xl mb-2" aria-label="Home">Home</router-link></li>
+      </ul>
+      <div class="flex items-center space-x-4" role="group" aria-label="Additional actions">
+        <button @click="refreshSongs" class="btn btn-ghost btn-circle" aria-label="Refresh songs">
+          <font-awesome-icon :icon="['fas', 'rotate']" spin style="color: #17a6ee;" aria-hidden="true" />
         </button>
-        <button class="btn btn-circle btn-outline" @click="handleIconClick('whatsapp')" aria-label="Join Ilahi Classes via WhatsApp">
-          <font-awesome-icon :icon="['fab', 'whatsapp']"  style="color: #63E6BE;" size="2xl" />
+        <button class="btn btn-ghost" @click="handleIconClick('whatsapp')" aria-label="Join Ilahi Classes via WhatsApp">
+          <font-awesome-icon :icon="['fab', 'whatsapp']" style="color: #63E6BE;" size="2xl" aria-hidden="true" />
         </button>
-        <button class="btn btn-circle btn-outline" @click="handleIconClick('youtube')" aria-label="Play Ilahis on YouTube">
-          <font-awesome-icon :icon="['fab', 'youtube']" style="color: #ff3d3d;" size="2xl" />
+        <button class="btn btn-ghost" @click="handleIconClick('youtube')" aria-label="Play Ilahis on YouTube">
+          <font-awesome-icon :icon="['fab', 'youtube']" style="color: #ff3d3d;" size="2xl" aria-hidden="true" />
         </button>
-        <Installation />
+        
       </div>
       <!-- Large pop-up box -->
       <div v-if="showPopup" class="modal modal-open" @click="closePopup">
-        <div class="modal-box relative" @click.stop>
-          <button @click="closePopup" class="btn btn-sm btn-circle absolute right-2 top-2">✕</button>
-          <h2 class="text-2xl font-bold mb-4">{{ popupContent.title }}</h2>
+        <div class="modal-box relative" @click.stop role="dialog" aria-labelledby="popupTitle">
+          <button @click="closePopup" class="btn btn-sm btn-circle absolute right-2 top-2" aria-label="Close">✕</button>
+          <h2 id="popupTitle" class="text-2xl font-bold mb-4">{{ popupContent.title }}</h2>
           <p class="mb-4">{{ popupContent.description }}</p>
           <button @click="handlePopupAction" class="btn btn-primary btn-block">
             {{ popupContent.actionText }}
@@ -89,3 +86,29 @@ const handlePopupAction = () => {
   closePopup()
 }
 </script>
+
+<style scoped>
+.navbar {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* Add these new styles */
+.modal-box {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.modal-box h2 {
+  color: var(--text-color);
+}
+
+.modal-box p {
+  color: var(--text-color);
+}
+
+.modal-box button {
+  background-color: var(--primary-color);
+  color: var(--primary-content);
+}
+</style>

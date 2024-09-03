@@ -1,6 +1,8 @@
 <template>
-  <div class="flex justify-center items-center w-full">
-    <YouTube v-if="playerType === 'youtube'" :src="audioSrc" @ready="onYoutubeReady" ref="youtubePlayer" class="max-w-full" />
+  <div class="w-full max-w-full overflow-hidden">
+    <div v-if="playerType === 'youtube'" class="relative w-full pt-[56.25%]">
+      <YouTube :src="audioSrc" @ready="onYoutubeReady" ref="youtubePlayer" class="absolute top-0 left-0 w-full h-full" />
+    </div>
     <div v-else-if="playerType === 'googledrive'" class="w-full max-w-md">
       <iframe
         :src="getGoogleDriveEmbedUrl(audioSrc)"
@@ -251,3 +253,18 @@ function onIframeLoad(event: Event) {
   });
 }
 </script>
+
+<style scoped>
+.aspect-w-16 {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+}
+
+.aspect-w-16 :deep(iframe) {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+</style>

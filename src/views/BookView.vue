@@ -1,5 +1,5 @@
 <template>
-  <div class="p-6 bg-blue-500 text-white rounded-lg space-y-4">
+  <div class="w-full max-w-4xl mx-auto p-6 bg-blue-500 text-white rounded-lg space-y-4">
     <h1 class="text-2xl font-bold">Ilahi Book</h1>
     <p>Download our collection of Ilahis as a PDF book.</p>
     <div v-if="isLoading" class="text-center">
