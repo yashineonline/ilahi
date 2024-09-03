@@ -1,16 +1,15 @@
 <template>
-  <div :class="['min-h-screen flex flex-col', themeStore.theme === 'dark' ? 'dark-theme' : 'light-theme']">
+  <div class="min-h-screen flex flex-col">
     <header class="bg-green-600 text-white p-4">
       <h1 class="text-2xl font-bold">Ilahi Book App</h1>
     </header>
     <NavigationBar />
-    <main class="flex-grow container mx-auto p-4">
-      <!-- <SearchBar /> -->
+    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
       <SearchBar ref="searchBarRef" />
       <RouterView />
     </main>
     <footer class="bg-green-600 text-white p-4 mt-8">
-      <p class="text-center">&copy; Ilahi App 2024 AQRT. All rights reserved.</p>
+      <p class="text-center">&copy; AQRT Ilahi Book App 2024. All rights reserved.</p>
     </footer>
     <ThemeToggle class="fixed bottom-4 right-4" />
   </div>

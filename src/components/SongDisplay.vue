@@ -1,33 +1,45 @@
 <template>
-  <div :class="['container', 'mx-auto', 'p-4', 'flex', 'flex-col', 'items-center', themeStore.theme === 'dark' ? 'bg-gray-800' : 'bg-white']">
-    <div class="w-full flex justify-between items-center mb-4">
-      <div class="flex flex-col space-y-2 w-full">
-        <router-link to="/songs" class="btn btn-secondary self-start">Back to Ilahi List</router-link>
-        <div class="flex justify-end space-x-2">
-          <button class="btn btn-primary" @click="showTranslation" :aria-pressed="showTranslationFlag">
-            {{ showTranslationFlag ? 'Hide' : 'Show' }} Translation
-          </button>
-          <button class="btn btn-accent" @click="generatePDF">Generate PDF</button>
-          <button class="btn btn-outline" @click="decreaseFont">Smaller</button>
-          <button class="btn btn-outline" @click="increaseFont">Bigger</button>
-          <button v-if="currentSong?.audioLink" class="btn btn-primary" @click="toggleMusicPlayer">
-            {{ hideMusicPlayer ? 'Show' : 'Hide' }} Music Player
-          </button>
-          <button v-if="currentSong?.audioLink" class="btn btn-secondary" @click="showQRCode">
-            Get QR Code
-          </button>
-        </div>
+    <div class="w-full max-w-4xl mx-auto p-2 flex flex-col items-center">
+    <div class="w-full flex flex-wrap gap-1 mb-2">
+      <button v-if="currentSong?.audioLink" class="btn btn-primary btn-sm" @click="toggleMusicPlayer">
+        <font-awesome-icon :icon="['fas', hideMusicPlayer ? 'music' : 'pause']" class="mr-2" />
+        {{ hideMusicPlayer ? 'Show' : 'Hide' }} Music
+      </button>
+    </div>
+    <div class="w-full flex flex-wrap items-center gap-2 mb-4">
+      <button 
+        v-if="currentSong?.translation && currentSong.translation.length > 0"
+        class="btn btn-primary btn-sm" 
+        @click="showTranslation" 
+        :aria-pressed="showTranslationFlag"
+      >
+        <font-awesome-icon :icon="['fas', 'language']" class="mr-2" />
+        {{ showTranslationFlag ? 'Hide' : 'Show' }} Translation
+      </button>
+      <div class="flex items-center gap-2">
+        <span class="text-sm">Smaller</span>
+        <input 
+          type="range" 
+          min="4" 
+          max="66" 
+          :value="fontSize" 
+          class="range range-xs range-primary" 
+          @input="updateFontSize"
+        />
+        <span class="normal-case">Larger</span>
       </div>
     </div>
-    <div v-if="currentSong" class="w-full max-w-3xl">
+    <div v-if="currentSong" class="w-full">
       <h1 class="text-3xl font-bold mb-4 text-center">{{ currentSong.title }}</h1>
-      <div v-if="showMusicPlayer && currentSong.audioLink" class="mt-4 w-full max-w-3xl mb-6">
+      <div v-if="showMusicPlayer && currentSong.audioLink" class="mt-4 w-full mb-6">
         <h2 class="text-2xl font-semibold mb-2">Music Player</h2>
-        <audio-player
-          :audio-src="currentSong.audioLink"
-          :player-type="getPlayerType(currentSong.audioLink)"
-          @player-ready="onPlayerReady"
-        />
+        <div class="w-full flex justify-center">
+          <audio-player
+            :audio-src="currentSong.audioLink"
+            :player-type="getPlayerType(currentSong.audioLink)"
+            @player-ready="onPlayerReady"
+          />
+        </div>
         <div v-if="playerType !== 'googledrive'" class="mt-2 flex justify-center space-x-2">
           <button @click="playPause" class="btn btn-primary">{{ isPlaying ? 'Pause' : 'Play' }}</button>
           <button @click="seekBackward" class="btn btn-secondary">-5s</button>
@@ -47,6 +59,15 @@
     <div v-if="errorMessage || playerError" class="mt-4 p-4 bg-error text-error-content rounded-lg" role="alert" aria-live="assertive">
       {{ errorMessage || playerError }}
     </div>
+    <div class="w-full flex flex-wrap items-center gap-4 mb-4">
+      <button class="btn btn-accent" @click="generatePDF">
+        <font-awesome-icon :icon="['fas', 'file-pdf']" class="mr-2" size="2xl" />
+      </button>
+      <button v-if="currentSong?.audioLink" class="btn btn-secondary" @click="showQRCode">
+        <font-awesome-icon :icon="['fas', 'qrcode']" class="mr-2" size="2xl" />
+      </button>
+    </div>
+
     <div class="mt-6 text-center text-sm text-base-content">
       This app is maintained by the AQRT. 
       <a href="https://aqrtsufi.org" target="_blank" rel="noopener noreferrer" class="link link-primary focus:ring-2 focus:ring-offset-2 focus:ring-primary">Visit aqrtsufi.org</a>
@@ -67,6 +88,11 @@ import { PDFDocument as PDFLib, StandardFonts } from 'pdf-lib'
 import { downloadPDF } from '../utils/pdfBookUtils'
 import AudioPlayer from './AudioPlayer.vue'
 import { slugify } from '../utils/search';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faFilePdf, faQrcode, faMusic, faPause, faLanguage } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+library.add(faFilePdf, faQrcode, faMusic, faPause, faLanguage)
 
 const route = useRoute()
 const songStore = useSongStore()
@@ -97,7 +123,7 @@ const renderedSong = computed(() => {
     return renderSong(currentSong.value, { 
       fontSize: fontSize.value, 
       showTranslation: showTranslationFlag.value,
-      theme: themeStore.theme
+      theme: themeStore.theme === 'light-theme' ? 'light' : 'dark'
     })
   }
   return ''
@@ -238,14 +264,24 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
+const updateFontSize = (event: Event) => {
+  const newSize = parseInt((event.target as HTMLInputElement).value);
+  fontSize.value = newSize;
+}
 </script>
 
 <style scoped>
+.container {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
 p {
   line-height: 1.6;
 }
 
-:focus {
+:deep(*:focus) {
   outline: 2px solid currentColor;
   outline-offset: 2px;
 }

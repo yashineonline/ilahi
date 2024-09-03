@@ -1,7 +1,7 @@
 <template>
-  <div v-if="!isAppInstalled" class="icon-btn group relative flex items-center" @click="showInstallInstructions">
-    <font-awesome-icon :icon="['far', 'circle-down']" shake style="color: #B197FC;" class="mr-2" size="2xl" />
-    <span class="hover-text">Install App</span>
+  <div v-if="!isAppInstalled" class="flex items-center mb-2 p-2 bg-blue-100 rounded-md cursor-pointer" @click="showInstallInstructions">
+    <font-awesome-icon :icon="['far', 'circle-down']" shake style="color: #B197FC;" class="mr-2" size="lg" />
+    <span class="text-sm font-medium">Install App</span>
   </div>
   <div v-if="showInstructions" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @click="closeInstructions">
     <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full m-4 relative" @click.stop>

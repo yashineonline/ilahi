@@ -10,6 +10,8 @@ import Poems from '../views/Poems.vue'
 
 import { useSongStore } from '../stores/songStore'
 
+// const SongList = () => import('./components/SongList.vue');
+
 const routes = [
   {
     path: '/',

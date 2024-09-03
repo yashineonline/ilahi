@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto">
-    <div class="bg-gray-100 p-4 rounded-lg mb-6">
+    <div class="bg-base-200 p-4 rounded-lg mb-6">
       <Quotes />
     </div>
     

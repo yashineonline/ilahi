@@ -5,7 +5,17 @@ export default {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        // You can add your custom colors here
+        // For example:
+        // primary: '#646cff',
+        // secondary: '#535bf2',
+      },
+    },
   },
-  plugins: [],
+  plugins: [require('daisyui')],
+  daisyui: {
+    themes: ["light", "dark"],
+  },
 }
