@@ -96,6 +96,21 @@ Your quest is to surrender your brain to your heart.`
 as your nafs blocks the light of your heart.`
   },
 {
+  title: "Teaching with Love",
+  content: `If Allah wants to teach you something, 
+  first He gives you the curiosity about it 
+  and then He gives you the love for it 
+  and then the means (makes it possible 
+  and gives you the knowledge) for it.
+  This means Allah is doing this.
+  
+  When you want to do something, 
+  if it is not happening, 
+  then, it means Allah does not want it. 
+  This is not your thing.`
+},
+
+{
     title: "Love and Hope",
     content: `Love is the flavour of life.
 Love is the oasis in the desert, lifesaver in the sea.

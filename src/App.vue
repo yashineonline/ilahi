@@ -20,10 +20,10 @@ import { RouterView } from 'vue-router'
 import NavigationBar from './components/NavigationBar.vue'
 import SearchBar from './components/SearchBar.vue'
 import ThemeToggle from './components/ThemeToggle.vue'
-import { useThemeStore } from './stores/themeStore'
+// import { useThemeStore } from './stores/themeStore'
 import { ref, provide } from 'vue'
 
-const themeStore = useThemeStore()
+// const themeStore = useThemeStore()
 const searchBarRef = ref<InstanceType<typeof SearchBar> | null>(null)
 
 const resetGlobalSearch = () => {

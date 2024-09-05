@@ -1,14 +1,14 @@
 <template>
-    <div class="container mx-auto p-4">
-      <h1 class="text-3xl font-bold mb-4">AQRT Ilahi Playlist</h1>
-      <div class="aspect-w-16 aspect-h-9">
-        <YouTube
-          :src="playlistUrl"
-          @ready="onPlayerReady"
-          @error="onPlayerError"
-        />
-      </div>
+  <div class="w-full max-w-4xl mx-auto px-2 sm:px-4">
+    <h1 class="text-3xl font-bold mb-4">AQRT Ilahi Playlist</h1>
+    <div>
+      <YouTube
+        :src="playlistUrl"
+        @ready="onPlayerReady"
+        @error="onPlayerError"
+      />
     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -28,17 +28,3 @@ const onPlayerError = (error: any) => {
 };
 </script>
 
-<style scoped>
-.aspect-w-16 {
-  position: relative;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-}
-
-.aspect-w-16 :deep(iframe) {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-}
-</style>

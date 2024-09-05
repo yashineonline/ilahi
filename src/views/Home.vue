@@ -2,6 +2,7 @@
   <div class="container mx-auto">
     <div class="bg-base-200 p-4 rounded-lg mb-6">
       <Quotes />
+      
     </div>
     
     <div class="p-4">
@@ -41,7 +42,7 @@
 
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
-import { defineComponent } from 'vue';
+// import { defineComponent } from 'vue';
 import Quotes from '@/components/Quotes.vue';
 
 

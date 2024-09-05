@@ -6,6 +6,8 @@ import BookView from '../views/BookView.vue'
 import AboutView from '../views/AboutView.vue'
 import YouTubePlayer from '../components/YouTubePlayer.vue'
 import Poems from '../views/Poems.vue'
+import Entrance from '../components/Entrance.vue'
+
 
 
 import { useSongStore } from '../stores/songStore'
@@ -55,6 +57,11 @@ const routes = [
     path: '/youtube-player',
     name: 'YouTubePlayer',
     component: YouTubePlayer
+  },
+  {
+    path: '/entrance',
+    name: 'Entrance',
+    component: Entrance
   },
   {
     path: '/poems',
