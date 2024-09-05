@@ -1,0 +1,89 @@
+<template>
+    <div class="p-4">
+      <div class="player-container">
+        <div ref="playerContainer"></div>
+      </div>
+    </div>
+  </template>
+  
+  <script lang="ts">
+  import { defineComponent, onMounted, ref } from 'vue';
+  
+  export default defineComponent({
+    name: 'Entrance',
+    setup() {
+      const player = ref<YT.Player | null>(null);
+      const playerContainer = ref<HTMLElement | null>(null);
+
+      const videoId = 'f97Eyr8gYUo'; // Video ID of the YouTube video
+      const segments = [
+        { start: 216, end: 231 },
+        { start: 257, end: 273 },
+      ];
+  
+      let currentSegment = 0;
+  
+      const onPlayerReady = () => {
+        playSegment(currentSegment);
+      };
+  
+      const onPlayerStateChange = (event: YT.OnStateChangeEvent) => {
+        if (event.data === YT.PlayerState.ENDED && currentSegment < segments.length - 1) {
+          currentSegment++;
+          playSegment(currentSegment);
+        }
+      };
+  
+      const playSegment = (index: number) => {
+        if (player.value) {
+          const segment = segments[index];
+          player.value.loadVideoById({
+            videoId: videoId,
+            startSeconds: segment.start,
+            endSeconds: segment.end,
+          });
+        }
+      };
+  
+      const loadYouTubeAPI = () => {
+        return new Promise<void>((resolve) => {
+          if (window.YT && window.YT.Player) {
+            resolve();
+          } else {
+            const tag = document.createElement('script');
+            tag.src = 'https://www.youtube.com/iframe_api';
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+            window.onYouTubeIframeAPIReady = () => resolve();
+          }
+        });
+      };
+
+      onMounted(async () => {
+        await loadYouTubeAPI();
+        // Initialize the YouTube Player
+        player.value = new YT.Player(playerContainer.value as HTMLElement, {
+          height: '390',
+          width: '640',
+          videoId: videoId,
+          events: {
+            onReady: onPlayerReady,
+            onStateChange: onPlayerStateChange,
+          },
+        });
+      });
+
+      return {
+        playerContainer,
+      };
+    },
+  });
+  </script>
+  
+  <style scoped>
+  .player-container {
+    width: 640px;
+    height: 390px;
+    margin: 0 auto;
+  }
+  </style>

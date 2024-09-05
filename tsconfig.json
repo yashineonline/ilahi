@@ -15,7 +15,7 @@
     },
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "resetGlobal.d.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "resetGlobal.d.ts", "src/components/Entrance with api.ignore"],
   
   "exclude": [
     // ... other exclusions ...
