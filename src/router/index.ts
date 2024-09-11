@@ -7,7 +7,7 @@ import AboutView from '../views/AboutView.vue'
 import YouTubePlayer from '../components/YouTubePlayer.vue'
 import Poems from '../views/Poems.vue'
 import Entrance from '../components/Entrance.vue'
-
+import Wirds from '../views/Wirds.vue'
 
 
 import { useSongStore } from '../stores/songStore'
@@ -67,6 +67,11 @@ const routes = [
     path: '/poems',
     name: 'Poems',
     component: Poems
+  },
+  {
+    path: '/wirds',
+    name: 'wirds',
+    component: Wirds
   },
 ]
 

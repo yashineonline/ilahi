@@ -54,12 +54,14 @@ function renderStanzas(stanzas: string[][], textColor: string): string {
   }).join('');
 }
 
+import { slugify } from '../utils/search';
+
 export function processSongsFile(fileContent: string): SongData[] {
   const songSections = fileContent.split('Y:')
     .map(section => section.trim())
     .filter(section => section.length > 0);
 
-  const splitStanzas = (text: string): string[][] => {
+const splitStanzas = (text: string): string[][] => {
     const lines = text.split('\n');
     const result: string[][] = [];
     let currentStanza: string[] = [];
@@ -120,8 +122,18 @@ export function processSongsFile(fileContent: string): SongData[] {
       : '';
     const translation = translationStart !== -1 ? splitStanzas(translationText) : [];
 
-    return { title, lyrics, translation, audioLink, categories, isUnderEdit: false };
-  }).filter(song => song !== null);  // Remove any null songs
+    const slug = slugify(title);  // Generate a slug from the title
+
+    return { 
+      title, 
+      lyrics, 
+      translation, 
+      audioLink: audioLink,
+      categories, 
+      isUnderEdit: false,
+      slug  // Add the slug property
+    };
+  }).filter(song => song !== null);
 
   return songs.sort((a, b) => a.title.localeCompare(b.title, 'tr'));
 }

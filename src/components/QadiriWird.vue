@@ -1,0 +1,446 @@
+<template>
+  <div class="qadiri-wird-container p-4">
+    <h1 class="text-3xl font-bold mb-4">Qadiri Wird</h1>
+
+    <div class="controls mb-4 p-4 bg-gray-100 rounded-lg">
+      <div class="flex flex-wrap items-center gap-4 mb-2">
+        <div class="flex items-center">
+          <label for="fontSize" class="mr-2">Font Size:</label>
+          <input type="range" id="fontSize" min="16" max="48" v-model="fontSize" class="range range-primary w-32" />
+          <span class="ml-2">{{ fontSize }}px</span>
+        </div>
+        <div class="flex items-center">
+          <label for="textColor" class="mr-2">Text:</label>
+          <input type="color" id="textColor" v-model="textColor" class="w-8 h-8" />
+        </div>
+        <div class="flex items-center">
+          <label for="backgroundColor" class="mr-2">Background:</label>
+          <input type="color" id="backgroundColor" v-model="backgroundColor" class="w-8 h-8" />
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <label for="transitionSelect" class="mr-2">Transition:</label>
+        <select id="transitionSelect" v-model="selectedTransition" class="select select-primary select-sm bg-white">
+          <option v-for="option in transitionOptions" :key="option.value" :value="option.value">
+            {{ option.label }}
+          </option>
+        </select>
+        <button @click="restartWird" class="btn btn-primary btn-sm">Restart</button>
+        <button @click="togglePrevious" class="btn btn-secondary btn-sm">
+          {{ showPrevious ? 'Hide' : 'Show' }} Previous
+        </button>
+        <button @click="toggleNext" class="btn btn-secondary btn-sm">
+          {{ showNext ? 'Hide' : 'Show' }} Next
+        </button>
+      </div>
+    </div>
+
+    <div 
+      class="wird-display p-4 rounded-lg shadow-lg" 
+      :style="{ fontSize: `${fontSize}px`, color: textColor, backgroundColor }"
+      ref="wirdDisplay"
+      @touchstart="touchStart"
+      @touchmove="touchMove"
+      @touchend="touchEnd"
+      tabindex="0"
+      @keydown="handleKeydown"
+    >
+      <div v-if="loading" class="loading loading-spinner loading-lg"></div>
+      <div v-else-if="error">{{ error }}</div>
+      <div v-else class="relative overflow-hidden h-[60vh] w-full mx-auto shadow-lg rounded-lg" :style="{ backgroundColor }">
+        <div v-if="showPrevious" class="absolute top-12 left-0 w-full p-2 text-gray-400" :style="{ fontSize: prevNextFontSize }">
+          <div v-html="formatPrevNext(wird[currentIndex - 1])"></div>
+        </div>
+        <transition-group :name="selectedTransition" tag="div" mode="out-in">
+          <div 
+            v-for="(part, index) in wird" 
+            :key="index"
+            v-show="currentIndex === index"
+            class="absolute top-0 left-0 w-full h-full flex items-center justify-center p-4"
+          >
+            <div class="wird-part-content" v-html="part"></div>
+          </div>
+        </transition-group>
+        <div v-if="showNext" class="absolute bottom-24 left-0 w-full p-2 text-gray-400" :style="{ fontSize: prevNextFontSize }">
+          <div v-html="formatPrevNext(wird[currentIndex + 1])"></div>
+        </div>
+      </div>
+      <div class="navigation mt-4 flex justify-between items-center">
+        <button @click="goToPreviousPart" class="btn btn-primary btn-sm" :disabled="currentIndex === 0">&lt; Previous</button>
+        <div class="flex items-center">
+          <input 
+            v-model.number="currentIndexInput" 
+            type="number" 
+            min="1" 
+            :max="wird.length" 
+            class="w-16 text-center mr-2 bg-white"
+            @change="handleIndexChange"
+          />
+          <span>/ {{ wird.length }}</span>
+        </div>
+        <button @click="goToNextPart" class="btn btn-primary btn-sm" :disabled="currentIndex === wird.length - 1">Next &gt;</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue';
+
+const slideDirection = ref('left');
+
+const wird = ref<string[]>([]);
+const currentIndex = ref(0);
+const showPrevious = ref(true);
+const showNext = ref(true);
+const loading = ref(false);
+const error = ref('');
+const fontSize = ref(parseInt(localStorage.getItem('qadiriWirdFontSize') || '24'));
+const textColor = ref(localStorage.getItem('qadiriWirdTextColor') || '#000000');
+const backgroundColor = ref(localStorage.getItem('qadiriWirdBackgroundColor') || '#ffffff');
+const wirdDisplay = ref<HTMLElement | null>(null);
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+const transitionOptions = [
+  { value: 'slide', label: 'Slide' },
+  { value: 'fade', label: 'Fade' },
+  { value: 'zoom', label: 'Zoom' },
+  { value: 'flip', label: 'Flip' },
+  { value: 'slideFade', label: 'Slide and Fade' },
+  { value: 'bounce', label: 'Bounce' },
+  { value: 'pageTurn', label: 'Page Turn' },
+];
+
+const selectedTransition = ref(localStorage.getItem('qadiriWirdTransition') || 'slide');
+
+const handleIndexChange = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const value = parseInt(target.value, 10);
+  currentIndexInput.value = value;
+};
+
+const restartWird = () => {
+  currentIndex.value = 0;
+};
+
+const togglePrevious = () => {
+  showPrevious.value = !showPrevious.value;
+};
+
+const toggleNext = () => {
+  showNext.value = !showNext.value;
+};
+
+const formatPrevNext = (text: string | undefined): string => {
+  if (!text) return '';
+  return text.replace(/<br>/g, ' ');
+};
+
+const splitWird = (text: string): string[] => {
+  return text.split(/\n\s*\n/)
+    .map(part => part.trim())
+    .filter(part => part.length > 0 && part !== 'Qadiri Wird')
+    .map(part => part.replace(/\n/g, '<br>'));
+};
+
+
+const currentPart = computed(() => wird.value[currentIndex.value] || '');
+const previousPart = computed(() => wird.value[currentIndex.value - 1] || '');
+const nextPart = computed(() => wird.value[currentIndex.value + 1] || '');
+const currentIndexInput = computed({
+  get: () => currentIndex.value + 1,
+  set: (value: number) => {
+    currentIndex.value = validateIndex(value - 1);
+  }
+});
+
+const prevNextFontSize = computed(() => {
+  return window.innerWidth >= 1024 ? `${fontSize.value * 0.75}px` : '14px';
+});
+
+const fetchWird = async () => {
+  loading.value = true;
+  error.value = '';
+  try {
+    // First, try to fetch from GitHub
+    const owner = 'yashineonline';
+    const repo = 'ilahiRepository';
+    const path = 'qadiriWird.txt';
+    const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+    
+    console.log('Fetching Qadiri Wird from GitHub:', url);
+    const response = await fetch(url, {
+      headers: {
+        'Accept': 'application/vnd.github.v3.raw'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const text = await response.text();
+    console.log('Fetched text:', text.substring(0, 100) + '...'); // Log first 100 characters
+    wird.value = splitWird(text);
+    console.log('Split wird:', wird.value);
+  } catch (err) {
+    console.error('Error fetching Qadiri Wird from GitHub:', err);
+    
+    // If GitHub fetch fails, try to fetch from local file
+    try {
+      console.log('Fetching Qadiri Wird from local file');
+      const response = await fetch('/qadiriWird.txt');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const text = await response.text();
+      console.log('Fetched text from local file:', text.substring(0, 100) + '...'); // Log first 100 characters
+      wird.value = splitWird(text);
+      console.log('Split wird from local file:', wird.value);
+    } catch (localErr) {
+      console.error('Error fetching local Qadiri Wird:', localErr);
+      error.value = 'Failed to load Qadiri Wird. Please try again later.';
+    }
+  } finally {
+    loading.value = false;
+    currentIndex.value = 0;
+  }
+};
+
+const goToNextPart = () => {
+  if (currentIndex.value < wird.value.length - 1) {
+    currentIndex.value = validateIndex(currentIndex.value + 1);
+    slideDirection.value = 'left';
+  }
+};
+const goToPreviousPart = () => {
+  if (currentIndex.value > 0) {
+    currentIndex.value = validateIndex(currentIndex.value - 1);
+    slideDirection.value = 'right';
+  }
+};
+
+let lastKeyPressTime = 0;
+const keyPressDelay = 300; // milliseconds
+
+const handleKeydown = (e: KeyboardEvent) => {
+  const currentTime = new Date().getTime();
+  if (currentTime - lastKeyPressTime > keyPressDelay) {
+    if (e.key === 'ArrowLeft') {
+      goToPreviousPart();
+    } else if (e.key === 'ArrowRight') {
+      goToNextPart();
+    }
+    lastKeyPressTime = currentTime;
+  }
+};
+
+const touchStart = (e: TouchEvent) => {
+  touchStartX = e.touches[0].clientX;
+};
+
+const touchMove = (e: TouchEvent) => {
+  touchEndX = e.touches[0].clientX;
+};
+
+const touchEnd = () => {
+  const swipeDistance = touchStartX - touchEndX;
+  if (Math.abs(swipeDistance) > 50) {
+    if (swipeDistance > 0) {
+      goToNextPart();
+    } else {
+      goToPreviousPart();
+    }
+  }
+};
+
+const validateIndex = (index: number): number => {
+  return Math.max(0, Math.min(index, wird.value.length - 1));
+};
+
+watch([fontSize, textColor, backgroundColor], ([newFontSize, newTextColor, newBackgroundColor]) => {
+  localStorage.setItem('qadiriWirdFontSize', newFontSize.toString());
+  localStorage.setItem('qadiriWirdTextColor', newTextColor);
+  localStorage.setItem('qadiriWirdBackgroundColor', newBackgroundColor);
+});
+
+watch(selectedTransition, (newTransition) => {
+  localStorage.setItem('qadiriWirdTransition', newTransition);
+});
+
+onMounted(async () => {
+  console.log('QadiriWird component mounted');
+  try {
+    await fetchWird();
+    console.log('Fetched Wird:', wird.value);
+    console.log('Number of parts:', wird.value.length);
+    console.log('First part:', wird.value[0]);
+    console.log('Last part:', wird.value[wird.value.length - 1]);
+  } catch (error) {
+    console.error('Error fetching Wird:', error);
+  }
+  document.addEventListener('keydown', handleKeydown);
+});
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeydown);
+});
+</script>
+
+<style scoped>
+@media (min-width: 1024px) {
+  .wird-display {
+    min-height: 80vh;
+  }
+}
+
+/* Page Turn transition */
+.pageTurn-enter-active,
+.pageTurn-leave-active {
+  transition: all 0.6s ease;
+  transform-origin: left center;
+}
+.pageTurn-enter-from {
+  opacity: 0;
+  transform: rotateY(-90deg);
+}
+.pageTurn-leave-to {
+  opacity: 0;
+  transform: rotateY(90deg);
+}
+
+
+/* Flying transition */
+.flying-enter-active,
+.flying-leave-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+.flying-enter-from {
+  opacity: 0;
+  transform: translate(30px, 0) rotate(10deg);
+}
+.flying-leave-to {
+  opacity: 0;
+  transform: translate(-30px, 0) rotate(-10deg);
+}
+
+/* Add this to preserve existing transitions */
+.slide-enter-active,
+.slide-leave-active,
+.fade-enter-active,
+.fade-leave-active,
+.zoom-enter-active,
+.zoom-leave-active,
+.flip-enter-active,
+.flip-leave-active,
+.slideFade-enter-active,
+.slideFade-leave-active,
+.bounce-enter-active,
+.bounce-leave-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+/* Slide transition */
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.3s ease-out;
+}
+.slide-enter-from.left,
+.slide-leave-to.right {
+  transform: translateX(100%);
+}
+.slide-leave-to.left,
+.slide-enter-from.right {
+  transform: translateX(-100%);
+}
+
+/* Fade transition */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Zoom transition */
+.zoom-enter-active,
+.zoom-leave-active {
+  transition: all 0.5s ease;
+}
+.zoom-enter-from,
+.zoom-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+/* Flip transition */
+.flip-enter-active,
+.flip-leave-active {
+  transition: all 0.5s ease;
+}
+.flip-enter-from {
+  opacity: 0;
+  transform: rotateY(-90deg);
+}
+.flip-leave-to {
+  opacity: 0;
+  transform: rotateY(90deg);
+}
+
+/* Slide and fade transition */
+.slideFade-enter-active,
+.slideFade-leave-active {
+  transition: all 0.5s ease;
+}
+.slideFade-enter-from {
+  opacity: 0;
+  transform: translateX(50px);
+}
+.slideFade-leave-to {
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+/* Bounce transition */
+@keyframes bounce-in {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+@keyframes bounce-out {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(0); }
+}
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+  animation: bounce-out 0.5s;
+}
+
+.wird-display {
+  min-height: 60vh;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.wird-part-content {
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.navigation {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+}
+</style>
