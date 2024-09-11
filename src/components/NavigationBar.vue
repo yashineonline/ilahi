@@ -3,6 +3,7 @@
     <div class="w-full px-4 flex flex-col items-center">
       <Installation class="mb-2" />
       <ul class="flex flex-col w-full mb-4 list-none p-0">
+        <li><router-link to="/wirds" class="btn btn-ghost normal-case text-xl mb-2">Wirds</router-link></li>
         <li><router-link to="/songs" class="btn btn-ghost normal-case text-xl mb-2">View Ilahi List</router-link></li>
         <li><router-link to="/book" class="btn btn-ghost btn-sm text-xl mb-2">Download Ilahi Book</router-link></li>
         <li><router-link to="/about" class="btn btn-ghost btn-sm text-xl mb-2">About Ilahi</router-link></li>

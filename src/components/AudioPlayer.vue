@@ -1,19 +1,21 @@
 <template>
-  <div>
-    <div v-if="playerType === 'youtube'">
-      <YouTube :src="audioSrc" @ready="onYoutubeReady" ref="youtubePlayer" />
+  <div class="audio-player-container">
+    <div class="player-wrapper" v-if="playerType === 'youtube'">
+      <YouTube :src="audioSrc" @ready="onYoutubeReady" ref="youtubePlayer" 
+      width="100%"
+      height="100%"
+      class="youtube-player" />
     </div>
-    <div v-else-if="playerType === 'googledrive'" class="w-full max-w-md">
+    <div class="player-wrapper" v-else-if="playerType === 'googledrive'">
       <iframe
         :src="getGoogleDriveEmbedUrl(audioSrc)"
-        width="100%"
-        height="100"
         frameborder="0"
         allowfullscreen
         @load="onIframeLoad"
+        class="google-drive-player"
       ></iframe>
     </div>
-    <div v-else class="w-full max-w-md">
+    <div v-else class="audio-controls">
       <button @click="togglePlay" class="btn btn-primary" :disabled="!isLoaded">
         {{ isPlaying ? 'Pause' : 'Play' }}
       </button>
@@ -94,6 +96,7 @@ function tryFallbackAudio() {
     isLoaded.value = false;
   };
 }
+
 function wrapAudioElement(audio: HTMLAudioElement) {
   return {
     pauseVideo: () => audio.pause(),
@@ -254,3 +257,51 @@ function onIframeLoad(event: Event) {
 }
 </script>
 
+<style scoped>
+.audio-player-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.player-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  overflow: hidden;
+}
+
+.youtube-player,
+.google-drive-player {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.audio-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .audio-player-container {
+    max-width: 600px;
+  }
+
+  .player-wrapper {
+    padding-bottom: 0;
+    height: 337.5px; 
+  }
+
+  .youtube-player,
+  .google-drive-player {
+    position: relative;
+    height: 100%;
+  }
+}
+</style>

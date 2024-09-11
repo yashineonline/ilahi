@@ -71,7 +71,9 @@ export const QUOTES = [
 
   "Love is the best method of migration, by which you leave your nafs and unite with your Beloved",
 
-  "Have you ever asked love where she is coming from, where is she going to and where is her home?"
+  "Have you ever asked love where she is coming from, where is she going to and where is her home?",
+
+  "Love is giving yourself to the beloved and not asking it back." 
 ];
 
 export const POEMS = [

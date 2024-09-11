@@ -20,8 +20,8 @@
         <span class="text-sm">Smaller</span>
         <input 
           type="range" 
-          min="4" 
-          max="66" 
+          min="12" 
+          max="132" 
           :value="fontSize" 
           class="range range-xs range-primary" 
           @input="updateFontSize"
@@ -33,20 +33,23 @@
       <h1 class="text-3xl font-bold mb-4 text-center">{{ currentSong.title }}</h1>
       <div v-if="showMusicPlayer && currentSong.audioLink" class="mt-4 w-full mb-6">
         <h2 class="text-2xl font-semibold mb-2">Music Player</h2>
-        <div class="w-full flex justify-center">
-          <audio-player
-            :audio-src="currentSong.audioLink"
-            :player-type="getPlayerType(currentSong.audioLink)"
-            @player-ready="onPlayerReady"
-          />
+        <div class="card shadow-lg w-full max-w-4xl mx-auto">
+          <div v-if="playerType !== 'googledrive'" class="mt-2 flex justify-center space-x-2">
+          <button @click="playPause" class="btn btn-primary btn-sm">{{ isPlaying ? 'Pause' : 'Play' }}</button>
+          <button @click="seekBackward" class="btn btn-primary btn-sm">-5s</button>
+          <button @click="seekForward" class="btn btn-primary btn-sm">+5s</button>
+          <button @click="decreaseSpeed" class="btn btn-primary btn-sm">Slower</button>
+          <button @click="increaseSpeed" class="btn btn-primary btn-sm">Faster</button>
         </div>
-        <div v-if="playerType !== 'googledrive'" class="mt-2 flex justify-center space-x-2">
-          <button @click="playPause" class="btn btn-primary">{{ isPlaying ? 'Pause' : 'Play' }}</button>
-          <button @click="seekBackward" class="btn btn-secondary">-5s</button>
-          <button @click="seekForward" class="btn btn-secondary">+5s</button>
-          <button @click="decreaseSpeed" class="btn btn-secondary">Slower</button>
-          <button @click="increaseSpeed" class="btn btn-secondary">Faster</button>
+          <div class="card-body">
+            <audio-player
+              :audio-src="currentSong.audioLink"
+              :player-type="getPlayerType(currentSong.audioLink)"
+              @player-ready="onPlayerReady"
+            />
+          </div>
         </div>
+        
       </div>
       <div class="mb-6" v-html="renderedSong"></div>
       <div v-if="showQRCodeFlag && qrCodeDataUrl && isYoutubeLink(currentSong.audioLink)" class="mt-4 text-center">
@@ -285,4 +288,17 @@ p {
   outline: 2px solid currentColor;
   outline-offset: 2px;
 }
+
+.card-body {
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+
 </style>
