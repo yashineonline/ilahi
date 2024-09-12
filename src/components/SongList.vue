@@ -24,25 +24,25 @@
             id="basicCategory"
             v-model="selectedCategories"
             value="Basic"
-            class="checkbox checkbox-primary mr-2"
+            class="checkbox checkbox-primary mr-2 custom-checkbox"
           />
           <label for="basicCategory" class="text-lg font-semibold text-primary">Basic Zikr</label>
         </div>
         <div class="dropdown">
           <label tabindex="0" class="btn m-1" @click="isDropdownOpen = !isDropdownOpen">More Categories</label>
-          <ul v-if="isDropdownOpen" tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 max-h-60 overflow-y-auto">
+          <ul v-if="isDropdownOpen" tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 max-h-60 overflow-y-auto custom-dropdown">
             <li v-for="category in mainCategories" :key="category" class="text-left">
               <template v-if="Object.keys(subcategories).includes(category)">
                 <details class="dropdown">
-                  <summary>{{ category }}</summary>
+                  <summary class="text-base-content">{{ category }}</summary>
                   <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
                     <li v-for="subCategory in sortedSubcategories[category]" :key="subCategory" class="text-left">
-                      <label>
+                      <label class="text-base-content">
                         <input
                           type="checkbox"
                           :value="subCategory.split(',')[0].trim()"
                           v-model="selectedCategories"
-                          class="checkbox"
+                          class="checkbox custom-checkbox"
                         />
                         {{ subCategory }}
                       </label>
@@ -50,12 +50,12 @@
                   </ul>
                 </details>
               </template>
-              <label v-else-if="category !== 'Basic' && category !== 'All'">
+              <label v-else-if="category !== 'Basic' && category !== 'All'" class="text-base-content">
                 <input
                   type="checkbox"
                   :value="category"
                   v-model="selectedCategories"
-                  class="checkbox"
+                  class="checkbox custom-checkbox"
                 />
                 {{ category }}
               </label>
@@ -396,5 +396,49 @@ const app = getCurrentInstance()?.appContext.app;
 .select option {
   background-color: white;
   color: black;
+}
+
+.custom-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 1.5em;
+  height: 1.5em;
+  border: 2px solid currentColor;
+  border-radius: 0.25em;
+  display: inline-grid;
+  place-content: center;
+}
+
+.custom-checkbox::before {
+  content: "";
+  width: 0.85em;
+  height: 0.85em;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em currentColor;
+  transform-origin: center;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.custom-checkbox:checked::before {
+  transform: scale(1);
+}
+
+.custom-dropdown {
+  background-color: var(--tw-prose-body);
+  color: var(--tw-prose-headings);
+}
+
+:root[data-theme="dark"] .custom-dropdown {
+  background-color: hsl(var(--b1));
+  color: hsl(var(--bc));
+}
+
+:root[data-theme="dark"] .custom-checkbox {
+  border-color: hsl(var(--bc));
+}
+
+:root[data-theme="dark"] .custom-checkbox::before {
+  background-color: hsl(var(--bc));
 }
 </style>

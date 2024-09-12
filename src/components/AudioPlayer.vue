@@ -1,10 +1,14 @@
 <template>
   <div class="audio-player-container">
     <div class="player-wrapper" v-if="playerType === 'youtube'">
-      <YouTube :src="audioSrc" @ready="onYoutubeReady" ref="youtubePlayer" 
-      width="100%"
-      height="100%"
-      class="youtube-player" />
+      <YouTube 
+        :src="audioSrc" 
+        @ready="onYoutubeReady" 
+        ref="youtubePlayer"
+        width="100%"
+        height="100%"
+        class="youtube-player" 
+      />
     </div>
     <div class="player-wrapper" v-else-if="playerType === 'googledrive'">
       <iframe
@@ -32,6 +36,8 @@ import { Howl } from 'howler';
 const props = defineProps<{
   audioSrc: string;
   playerType: 'youtube' | 'audio' | 'googledrive';
+  startTime?: number;
+  endTime?: number;
 }>();
 
 const emit = defineEmits(['player-ready']);
@@ -124,18 +130,18 @@ watch(() => props.audioSrc, () => {
 
 function onYoutubeReady(event: any) {
   console.log('YouTube player ready');
-  if (startTime.value > 0) {
-    console.log('Seeking to start time:', startTime.value);
-    event.target.seekTo(startTime.value);
+  const { startTime, endTime } = getYoutubeVideoId(props.audioSrc);
+  if (startTime > 0) {
+    event.target.seekTo(startTime);
+    event.target.playVideo();
   }
   emit('player-ready', { player: event.target, type: 'youtube' });
 
-  if (endTime.value > 0) {
-    console.log('Setting up end time check for:', endTime.value);
+  if (endTime > 0) {
+    console.log('Setting up end time check for:', endTime);
     const checkTime = setInterval(() => {
       const currentTime = event.target.getCurrentTime();
-      console.log('Current time:', currentTime, 'End time:', endTime.value);
-      if (currentTime >= endTime.value) {
+      if (currentTime >= endTime) {
         console.log('Reached end time, pausing video');
         event.target.pauseVideo();
         clearInterval(checkTime);
@@ -157,16 +163,13 @@ function wrapHowlInstance(howl: Howl) {
 
 function getYoutubeVideoId(url: string): { videoId: string, startTime: number, endTime: number } {
   console.log('Processing URL:', url);
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
-  const match = url.match(regExp);
-  const videoId = (match && match[2].length === 11) ? match[2] : '';
+  const videoIdMatch = url.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/watch\?.+&v=))([^\/&\?]{11})/);
+  const videoId = videoIdMatch ? videoIdMatch[1] : '';
   
-  const startTimeRegExp = /[?&]t=(\d+)/;
-  const startTimeMatch = url.match(startTimeRegExp);
+  const startTimeMatch = url.match(/[?&]t=(\d+)/);
   const startTime = startTimeMatch ? parseInt(startTimeMatch[1], 10) : 0;
 
-  const endTimeRegExp = /[?&]end=(\d+)/;
-  const endTimeMatch = url.match(endTimeRegExp);
+  const endTimeMatch = url.match(/[?&]end=(\d+)/);
   const endTime = endTimeMatch ? parseInt(endTimeMatch[1], 10) : 0;
 
   console.log('Extracted video ID:', videoId);
@@ -255,6 +258,22 @@ function onIframeLoad(event: Event) {
     type: 'googledrive'
   });
 }
+
+const playSegment = () => {
+  if (youtubePlayer.value && props.playerType === 'youtube') {
+    const { videoId, startTime, endTime } = getYoutubeVideoId(props.audioSrc);
+    youtubePlayer.value.loadVideoById({
+      videoId: videoId,
+      startSeconds: startTime,
+      endSeconds: endTime || undefined,
+    });
+  }
+};
+
+watch(() => props.audioSrc, playSegment);
+
+onMounted(playSegment);
+
 </script>
 
 <style scoped>
