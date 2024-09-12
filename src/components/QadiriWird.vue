@@ -59,13 +59,8 @@
     </div>
 
     <div 
-      class=
-      "wird-display p-4 rounded-lg shadow-lg flex flex-col items-center" 
-      :style="{ 
-        fontSize: `${adjustedFontSize}px`, 
-        color: textColor, 
-        backgroundColor,
-        height: displayHeight }"
+      class="wird-display p-4 rounded-lg shadow-lg flex flex-col items-center" 
+      :style="{ fontSize: `${adjustedFontSize}px`, color: textColor, backgroundColor }"
       ref="wirdDisplay"
       @touchstart="touchStart"
       @touchmove="touchMove"
@@ -192,35 +187,10 @@ const currentIndexInput = computed({
 
 const prevNextFontSize = computed(() => {
   if (isMobileLayout.value) {
-    return Math.min(adjustedFontSize.value * 0.75, 100); // Adjust for mobile
+    return Math.min(adjustedFontSize.value * 0.75, 18); // Adjust for mobile
   }
   return adjustedFontSize.value * 0.75;
 });
-
-const displayHeight = computed(() => isMobileLayout.value ? '70vh' : '80vh');
-   
-   const adjustFontSize = () => {
-     const container = wirdDisplay.value;
-     if (!container) return;
-     
-     let localFontSize = fontSize.value;
-     const content = container.querySelector('.wird-part-content') as HTMLElement;
-     if (!content) return;
-     
-     while (content.scrollHeight > container.clientHeight && localFontSize > 12) {
-       localFontSize--;
-       content.style.fontSize = `${localFontSize}px`;
-     }
-     
-     while (content.scrollHeight < container.clientHeight && localFontSize < 48) {
-       localFontSize++;
-       content.style.fontSize = `${localFontSize}px`;
-     }
-     // Update the actual fontSize ref after adjustment
-    fontSize.value = localFontSize;
-
-   };
-
 
 const fetchWird = async () => {
   loading.value = true;
@@ -352,8 +322,6 @@ const checkMobileLayout = () => {
   isMobileLayout.value = window.innerWidth < 768; // Adjust this breakpoint as needed
 };
 
-
-
 // Update the onMounted hook
 onMounted(async () => {
   console.log('QadiriWird component mounted');
@@ -366,13 +334,6 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error fetching Wird:', error);
   }
-  const resizeObserver = new ResizeObserver(adjustFontSize);
-     if (wirdDisplay.value) {
-       resizeObserver.observe(wirdDisplay.value);
-     }
-
-
-
   document.addEventListener('keydown', handleKeydown);
 
   // Check for mobile layout
@@ -406,7 +367,7 @@ const goBack = () => {
 
 const adjustedFontSize = computed(() => {
   if (isMobileLayout.value) {
-    return Math.min(fontSize.value, 40); // Adjust max font size for mobile
+    return Math.min(fontSize.value, 24); // Adjust max font size for mobile
   }
   return fontSize.value;
 });
@@ -548,7 +509,7 @@ const adjustedFontSize = computed(() => {
 
 .wird-display {
   min-height: 60vh;
-  overflow-y: auto;
+  overflow: hidden;
   position: relative;
   border: 1px solid #ccc;
   border-radius: 8px;
