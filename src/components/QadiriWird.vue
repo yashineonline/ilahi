@@ -6,7 +6,7 @@
       <div class="flex flex-wrap items-center gap-4 mb-2">
         <div class="flex items-center">
           <label for="fontSize" class="mr-2">Font Size:</label>
-          <input type="range" id="fontSize" min="16" max="48" v-model="fontSize" class="range range-primary w-32" />
+          <input type="range" id="fontSize" min="16" max="48" v-model="fontSize" class="range range-primary w-32 custom-range" />
           <span class="ml-2">{{ fontSize }}px</span>
         </div>
         <div class="flex items-center">
@@ -25,18 +25,20 @@
             {{ option.label }}
           </option>
         </select>
-        <button @click="restartWird" class="btn btn-primary btn-sm">Restart</button>
-        <button @click="togglePrevious" class="btn btn-secondary btn-sm">
-          {{ showPrevious ? 'Hide' : 'Show' }} Previous
-        </button>
-        <button @click="toggleNext" class="btn btn-secondary btn-sm">
-          {{ showNext ? 'Hide' : 'Show' }} Next
-        </button>
+        <div class="flex flex-wrap items-center gap-2 mt-2">
+          <button @click="restartWird" class="btn btn-primary btn-sm">Restart</button>
+          <button @click="togglePrevious" class="btn btn-secondary btn-sm">
+            {{ showPrevious ? 'Hide' : 'Show' }} Previous
+          </button>
+          <button @click="toggleNext" class="btn btn-secondary btn-sm">
+            {{ showNext ? 'Hide' : 'Show' }} Next
+          </button>
+        </div>
       </div>
     </div>
 
     <div 
-      class="wird-display p-4 rounded-lg shadow-lg" 
+      class="wird-display p-4 rounded-lg shadow-lg flex flex-col items-center" 
       :style="{ fontSize: `${fontSize}px`, color: textColor, backgroundColor }"
       ref="wirdDisplay"
       @touchstart="touchStart"
@@ -47,25 +49,25 @@
     >
       <div v-if="loading" class="loading loading-spinner loading-lg"></div>
       <div v-else-if="error">{{ error }}</div>
-      <div v-else class="relative overflow-hidden h-[60vh] w-full mx-auto shadow-lg rounded-lg" :style="{ backgroundColor }">
-        <div v-if="showPrevious" class="absolute top-12 left-0 w-full p-2 text-gray-400" :style="{ fontSize: prevNextFontSize }">
+      <div v-else class="relative flex flex-col h-[60vh] w-full mx-auto shadow-lg rounded-lg" :style="{ backgroundColor }">
+        <div v-if="showPrevious" class="flex-shrink-0 w-full p-2 text-gray-400 text-center" :style="{ fontSize: prevNextFontSize }">
           <div v-html="formatPrevNext(wird[currentIndex - 1])"></div>
         </div>
-        <transition-group :name="selectedTransition" tag="div" mode="out-in">
+        <transition-group :name="selectedTransition" tag="div" mode="out-in" class="flex-grow flex items-center justify-center overflow-auto">
           <div 
             v-for="(part, index) in wird" 
             :key="index"
             v-show="currentIndex === index"
-            class="absolute top-0 left-0 w-full h-full flex items-center justify-center p-4"
+            class="w-full h-full flex items-center justify-center p-4 overflow-y-auto"
           >
             <div class="wird-part-content" v-html="part"></div>
           </div>
         </transition-group>
-        <div v-if="showNext" class="absolute bottom-24 left-0 w-full p-2 text-gray-400" :style="{ fontSize: prevNextFontSize }">
+        <div v-if="showNext" class="flex-shrink-0 w-full p-2 text-gray-400 text-center" :style="{ fontSize: prevNextFontSize }">
           <div v-html="formatPrevNext(wird[currentIndex + 1])"></div>
         </div>
       </div>
-      <div class="navigation mt-4 flex justify-between items-center">
+      <div class="navigation mt-4 flex justify-between items-center w-full">
         <button @click="goToPreviousPart" class="btn btn-primary btn-sm" :disabled="currentIndex === 0">&lt; Previous</button>
         <div class="flex items-center">
           <input 
@@ -85,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, onUnmounted } from 'vue';
+import { ref, computed, onMounted, watch, watchEffect, onUnmounted } from 'vue';
 
 const slideDirection = ref('left');
 
@@ -96,8 +98,8 @@ const showNext = ref(true);
 const loading = ref(false);
 const error = ref('');
 const fontSize = ref(parseInt(localStorage.getItem('qadiriWirdFontSize') || '24'));
-const textColor = ref(localStorage.getItem('qadiriWirdTextColor') || '#000000');
-const backgroundColor = ref(localStorage.getItem('qadiriWirdBackgroundColor') || '#ffffff');
+const textColor = ref(localStorage.getItem('qadiriWirdTextColor') || '#229B36');
+const backgroundColor = ref(localStorage.getItem('qadiriWirdBackgroundColor') || '#E1D5D0');
 const wirdDisplay = ref<HTMLElement | null>(null);
 
 let touchStartX = 0;
@@ -270,6 +272,19 @@ watch(selectedTransition, (newTransition) => {
   localStorage.setItem('qadiriWirdTransition', newTransition);
 });
 
+watchEffect(() => {
+  if (!localStorage.getItem('qadiriWirdFontSize')) {
+    localStorage.setItem('qadiriWirdFontSize', fontSize.value.toString());
+  }
+  if (!localStorage.getItem('qadiriWirdTextColor')) {
+    localStorage.setItem('qadiriWirdTextColor', textColor.value);
+  }
+  if (!localStorage.getItem('qadiriWirdBackgroundColor')) {
+    localStorage.setItem('qadiriWirdBackgroundColor', backgroundColor.value);
+  }
+});
+
+
 onMounted(async () => {
   console.log('QadiriWird component mounted');
   try {
@@ -339,7 +354,7 @@ onUnmounted(() => {
 .slideFade-leave-active,
 .bounce-enter-active,
 .bounce-leave-active {
-  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+  transition: all 0.01s ease;
 }
 
 /* Slide transition */
@@ -429,6 +444,8 @@ onUnmounted(() => {
   position: relative;
   border: 1px solid #ccc;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
 }
 
 .wird-part-content {
@@ -437,10 +454,61 @@ onUnmounted(() => {
   padding: 1rem;
 }
 
-.navigation {
-  position: absolute;
-  bottom: 1rem;
-  left: 1rem;
-  right: 1rem;
+@media (max-width: 768px) {
+  .wird-display {
+    flex-direction: column;
+  }
+
+  .wird-part-content {
+    padding: 0.5rem;
+  }
 }
+
+.navigation {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem;
+  z-index: 10;
+}
+
+@media (max-width: 768px) {
+  .navigation {
+    position: fixed;
+  }
+}
+
+.custom-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #ddd;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.custom-range:hover {
+  opacity: 1;
+}
+
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #4CAF50;
+  cursor: pointer;
+  border-radius: 100%;
+}
+
+.custom-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #4CAF50;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
 </style>

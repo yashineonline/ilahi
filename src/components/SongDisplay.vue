@@ -23,7 +23,7 @@
           min="12" 
           max="132" 
           :value="fontSize" 
-          class="range range-xs range-primary" 
+          class="range range-xs range-primary custom-range" 
           @input="updateFontSize"
         />
         <span class="normal-case">Larger</span>
@@ -299,6 +299,36 @@ p {
   box-sizing: border-box;
 }
 
+.custom-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #ddd;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.custom-range:hover {
+  opacity: 1;
+}
+
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #4CAF50;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.custom-range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #4CAF50;
+  cursor: pointer;
+  border-radius: 50%;
+}
 
 
 </style>

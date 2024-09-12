@@ -16,6 +16,17 @@ export default {
   },
   plugins: [require('daisyui')],
   daisyui: {
-    themes: ["light", "dark"],
+    themes: [
+      {
+        light: {
+          // ... other color definitions
+          "secondary": "#9333ea", // This is a purple color
+        },
+        dark: {
+          // ... other color definitions
+          "secondary": "#9333ea", // Same purple color for dark mode
+        },
+      },
+    ],
   },
 }
