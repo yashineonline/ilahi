@@ -1,17 +1,17 @@
 <template>
     <div class="wirds-container">
-      <h1 class="text-3xl font-bold mb-4">Wirds</h1>
-      <div class="flex flex-col gap-4">
+      <h1 class="text-3xl font-bold mb-4" v-if="!showQadiriWird">Wirds</h1>
+      <div class="flex flex-col gap-4" v-if="!showQadiriWird">
         <button class="btn btn-secondary text-xl" disabled>
           Rifai Wird (Coming Soon)
         </button>
         <button @click="toggleQadiriWird" class="btn btn-primary text-xl">
-          {{ showQadiriWird ? 'Back' : 'Show Qadiri Wird' }} 
+          Show Qadiri Wird
         </button>
       </div>
       <Suspense v-if="showQadiriWird">
         <template #default>
-          <QadiriWird />
+          <QadiriWird @go-back="toggleQadiriWird" />
         </template>
         <template #fallback>
           <div>Loading Qadiri Wird...</div>

@@ -30,7 +30,7 @@
         </div>
         <div class="dropdown">
           <label tabindex="0" class="btn m-1" @click="isDropdownOpen = !isDropdownOpen">More Categories</label>
-          <ul v-if="isDropdownOpen" tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 max-h-60 overflow-y-auto custom-dropdown">
+          <ul v-if="isDropdownOpen" tabindex="0" class="dropdown-content z-[1] menu p-2 shadow rounded-box w-52 max-h-60 overflow-y-auto custom-dropdown">
             <li v-for="category in mainCategories" :key="category" class="text-left">
               <template v-if="Object.keys(subcategories).includes(category)">
                 <details class="dropdown">
@@ -424,21 +424,60 @@ const app = getCurrentInstance()?.appContext.app;
   transform: scale(1);
 }
 
-.custom-dropdown {
-  background-color: var(--tw-prose-body);
-  color: var(--tw-prose-headings);
-}
-
-:root[data-theme="dark"] .custom-dropdown {
-  background-color: hsl(var(--b1));
-  color: hsl(var(--bc));
-}
-
 :root[data-theme="dark"] .custom-checkbox {
   border-color: hsl(var(--bc));
 }
 
 :root[data-theme="dark"] .custom-checkbox::before {
   background-color: hsl(var(--bc));
+}
+
+
+
+.custom-dropdown {
+  background-color: white;
+  color: black;
+  border: 1px solid #e2e8f0;
+}
+
+:root[data-theme="dark"] .custom-dropdown {
+  background-color: #2d3748;
+  color: #e2e8f0;
+  border: 1px solid #4a5568;
+}
+
+.custom-dropdown li > * {
+  color: inherit;
+}
+
+.custom-dropdown li > *:hover {
+  background-color: #f7fafc;
+}
+
+:root[data-theme="dark"] .custom-dropdown li > *:hover {
+  background-color: #4a5568;
+}
+
+/* Ensure text color for nested dropdowns */
+.custom-dropdown .dropdown .dropdown-content {
+  background-color: white;
+  color: black;
+}
+
+:root[data-theme="dark"] .custom-dropdown .dropdown .dropdown-content {
+  background-color: #2d3748;
+  color: #e2e8f0;
+}
+
+.custom-dropdown .dropdown .dropdown-content li > * {
+  color: inherit;
+}
+
+.custom-dropdown .dropdown .dropdown-content li > *:hover {
+  background-color: #f7fafc;
+}
+
+:root[data-theme="dark"] .custom-dropdown .dropdown .dropdown-content li > *:hover {
+  background-color: #4a5568;
 }
 </style>

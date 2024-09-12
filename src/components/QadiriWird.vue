@@ -1,45 +1,71 @@
 <template>
-  <div class="qadiri-wird-container p-4">
-    <h1 class="text-3xl font-bold mb-4">Qadiri Wird</h1>
-
-    <div class="controls mb-4 p-4 bg-gray-100 rounded-lg">
-      <div class="flex flex-wrap items-center gap-4 mb-2">
-        <div class="flex items-center">
-          <label for="fontSize" class="mr-2">Font Size:</label>
-          <input type="range" id="fontSize" min="16" max="48" v-model="fontSize" class="range range-primary w-32 custom-range" />
-          <span class="ml-2">{{ fontSize }}px</span>
-        </div>
-        <div class="flex items-center">
-          <label for="textColor" class="mr-2">Text:</label>
-          <input type="color" id="textColor" v-model="textColor" class="w-8 h-8" />
-        </div>
-        <div class="flex items-center">
-          <label for="backgroundColor" class="mr-2">Background:</label>
-          <input type="color" id="backgroundColor" v-model="backgroundColor" class="w-8 h-8" />
-        </div>
+  <div class="qadiri-wird-container p-4" :class="{ 'fullscreen': isFullscreen }">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-3xl font-bold" v-if="!isFullscreen">Qadiri Wird</h1>
+      <div class="flex gap-2">
+        <button @click="toggleFullscreen" class="btn btn-circle btn-sm">
+          <font-awesome-icon :icon="['fas', isFullscreen ? 'compress' : 'expand']" />
+        </button>
+        <button @click="toggleSettings" class="btn btn-circle btn-sm">
+          <font-awesome-icon :icon="['fas', 'cog']" />
+        </button>
+        <button @click="goBack" class="btn btn-circle btn-sm" v-if="isFullscreen">
+          <font-awesome-icon :icon="['fas', 'arrow-left']" />
+        </button>
       </div>
-      <div class="flex flex-wrap items-center gap-2">
-        <label for="transitionSelect" class="mr-2">Transition:</label>
-        <select id="transitionSelect" v-model="selectedTransition" class="select select-primary select-sm bg-white">
-          <option v-for="option in transitionOptions" :key="option.value" :value="option.value">
-            {{ option.label }}
-          </option>
-        </select>
-        <div class="flex flex-wrap items-center gap-2 mt-2">
-          <button @click="restartWird" class="btn btn-primary btn-sm">Restart</button>
-          <button @click="togglePrevious" class="btn btn-secondary btn-sm">
-            {{ showPrevious ? 'Hide' : 'Show' }} Previous
-          </button>
-          <button @click="toggleNext" class="btn btn-secondary btn-sm">
-            {{ showNext ? 'Hide' : 'Show' }} Next
-          </button>
+    </div>
+
+    <div class="controls mb-4 p-4 bg-gray-100 rounded-lg" v-if="showSettings">
+      <div class="collapse collapse-arrow">
+        <input type="checkbox" /> 
+        <div class="collapse-title text-xl font-medium">
+          Settings
+        </div>
+        <div class="collapse-content">
+          <div class="flex flex-wrap items-center gap-4 mb-2">
+            <div class="flex items-center">
+              <label for="fontSize" class="mr-2">Font Size:</label>
+              <input type="range" id="fontSize" min="16" max="132" v-model="fontSize" class="range range-primary w-32 custom-range" />
+              <span class="ml-2">{{ fontSize }}px</span>
+            </div>
+            <div class="flex items-center">
+              <label for="textColor" class="mr-2">Text:</label>
+              <input type="color" id="textColor" v-model="textColor" class="w-8 h-8" />
+            </div>
+            <div class="flex items-center">
+              <label for="backgroundColor" class="mr-2">Background:</label>
+              <input type="color" id="backgroundColor" v-model="backgroundColor" class="w-8 h-8" />
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <label for="transitionSelect" class="mr-2">Transition:</label>
+            <select id="transitionSelect" v-model="selectedTransition" class="select select-primary select-sm bg-white">
+              <option v-for="option in transitionOptions" :key="option.value" :value="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+            <div class="flex flex-wrap items-center gap-2 mt-2">
+              <button @click="restartWird" class="btn btn-primary btn-sm">Restart</button>
+              <button @click="togglePrevious" class="btn btn-secondary btn-sm">
+                {{ showPrevious ? 'Hide' : 'Show' }} Previous
+              </button>
+              <button @click="toggleNext" class="btn btn-secondary btn-sm">
+                {{ showNext ? 'Hide' : 'Show' }} Next
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <div 
-      class="wird-display p-4 rounded-lg shadow-lg flex flex-col items-center" 
-      :style="{ fontSize: `${fontSize}px`, color: textColor, backgroundColor }"
+      class=
+      "wird-display p-4 rounded-lg shadow-lg flex flex-col items-center" 
+      :style="{ 
+        fontSize: `${adjustedFontSize}px`, 
+        color: textColor, 
+        backgroundColor,
+        height: displayHeight }"
       ref="wirdDisplay"
       @touchstart="touchStart"
       @touchmove="touchMove"
@@ -50,7 +76,7 @@
       <div v-if="loading" class="loading loading-spinner loading-lg"></div>
       <div v-else-if="error">{{ error }}</div>
       <div v-else class="relative flex flex-col h-[60vh] w-full mx-auto shadow-lg rounded-lg" :style="{ backgroundColor }">
-        <div v-if="showPrevious" class="flex-shrink-0 w-full p-2 text-gray-400 text-center" :style="{ fontSize: prevNextFontSize }">
+        <div v-if="showPrevious" class="flex-shrink-0 w-full p-2 text-gray-400 text-center" :style="{ fontSize: `${prevNextFontSize}px` }">
           <div v-html="formatPrevNext(wird[currentIndex - 1])"></div>
         </div>
         <transition-group :name="selectedTransition" tag="div" mode="out-in" class="flex-grow flex items-center justify-center overflow-auto">
@@ -63,12 +89,14 @@
             <div class="wird-part-content" v-html="part"></div>
           </div>
         </transition-group>
-        <div v-if="showNext" class="flex-shrink-0 w-full p-2 text-gray-400 text-center" :style="{ fontSize: prevNextFontSize }">
+        <div v-if="showNext" class="flex-shrink-0 w-full p-2 text-gray-400 text-center" :style="{ fontSize: `${prevNextFontSize}px` }">
           <div v-html="formatPrevNext(wird[currentIndex + 1])"></div>
         </div>
       </div>
-      <div class="navigation mt-4 flex justify-between items-center w-full">
-        <button @click="goToPreviousPart" class="btn btn-primary btn-sm" :disabled="currentIndex === 0">&lt; Previous</button>
+      <div class="navigation mt-4 flex justify-between items-center w-full" :class="{ 'mobile': isMobileLayout }">
+        <button @click="goToPreviousPart" class="btn btn-circle" :disabled="currentIndex === 0">
+          <font-awesome-icon :icon="['fas', 'chevron-left']" />
+        </button>
         <div class="flex items-center">
           <input 
             v-model.number="currentIndexInput" 
@@ -80,7 +108,9 @@
           />
           <span>/ {{ wird.length }}</span>
         </div>
-        <button @click="goToNextPart" class="btn btn-primary btn-sm" :disabled="currentIndex === wird.length - 1">Next &gt;</button>
+        <button @click="goToNextPart" class="btn btn-circle" :disabled="currentIndex === wird.length - 1">
+          <font-awesome-icon :icon="['fas', 'chevron-right']" />
+        </button>
       </div>
     </div>
   </div>
@@ -88,6 +118,8 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, watchEffect, onUnmounted } from 'vue';
+import { useNavigationStore } from '../stores/navigationStore';
+import { FontAwesomeIcon } from '@/plugins/font-awesome';
 
 const slideDirection = ref('left');
 
@@ -159,8 +191,36 @@ const currentIndexInput = computed({
 });
 
 const prevNextFontSize = computed(() => {
-  return window.innerWidth >= 1024 ? `${fontSize.value * 0.75}px` : '14px';
+  if (isMobileLayout.value) {
+    return Math.min(adjustedFontSize.value * 0.75, 100); // Adjust for mobile
+  }
+  return adjustedFontSize.value * 0.75;
 });
+
+const displayHeight = computed(() => isMobileLayout.value ? '70vh' : '80vh');
+   
+   const adjustFontSize = () => {
+     const container = wirdDisplay.value;
+     if (!container) return;
+     
+     let localFontSize = fontSize.value;
+     const content = container.querySelector('.wird-part-content') as HTMLElement;
+     if (!content) return;
+     
+     while (content.scrollHeight > container.clientHeight && localFontSize > 12) {
+       localFontSize--;
+       content.style.fontSize = `${localFontSize}px`;
+     }
+     
+     while (content.scrollHeight < container.clientHeight && localFontSize < 48) {
+       localFontSize++;
+       content.style.fontSize = `${localFontSize}px`;
+     }
+     // Update the actual fontSize ref after adjustment
+    fontSize.value = localFontSize;
+
+   };
+
 
 const fetchWird = async () => {
   loading.value = true;
@@ -284,7 +344,17 @@ watchEffect(() => {
   }
 });
 
+// Add a new ref for mobile layout
+const isMobileLayout = ref(false);
 
+// Define checkMobileLayout outside of onMounted
+const checkMobileLayout = () => {
+  isMobileLayout.value = window.innerWidth < 768; // Adjust this breakpoint as needed
+};
+
+
+
+// Update the onMounted hook
 onMounted(async () => {
   console.log('QadiriWird component mounted');
   try {
@@ -296,11 +366,49 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error fetching Wird:', error);
   }
+  const resizeObserver = new ResizeObserver(adjustFontSize);
+     if (wirdDisplay.value) {
+       resizeObserver.observe(wirdDisplay.value);
+     }
+
+
+
   document.addEventListener('keydown', handleKeydown);
+
+  // Check for mobile layout
+  checkMobileLayout();
+  window.addEventListener('resize', checkMobileLayout);
 });
 
+// Update onUnmounted to remove the resize event listener
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeydown);
+  window.removeEventListener('resize', checkMobileLayout);
+});
+
+const isFullscreen = ref(false);
+const showSettings = ref(false);
+const navigationStore = useNavigationStore();
+
+const toggleFullscreen = () => {
+  isFullscreen.value = !isFullscreen.value;
+  navigationStore.setNavigationVisibility(!isFullscreen.value);
+};
+
+const toggleSettings = () => {
+  showSettings.value = !showSettings.value;
+};
+
+const goBack = () => {
+  isFullscreen.value = false;
+  navigationStore.setNavigationVisibility(true);
+};
+
+const adjustedFontSize = computed(() => {
+  if (isMobileLayout.value) {
+    return Math.min(fontSize.value, 40); // Adjust max font size for mobile
+  }
+  return fontSize.value;
 });
 </script>
 
@@ -440,7 +548,7 @@ onUnmounted(() => {
 
 .wird-display {
   min-height: 60vh;
-  overflow: hidden;
+  overflow-y: auto;
   position: relative;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -453,6 +561,8 @@ onUnmounted(() => {
   overflow-y: auto;
   padding: 1rem;
 }
+
+
 
 @media (max-width: 768px) {
   .wird-display {
@@ -511,4 +621,20 @@ onUnmounted(() => {
   border-radius: 50%;
 }
 
+/* Add styles for mobile layout */
+@media (max-width: 639px) {
+  .wird-display {
+    min-height: calc(100vh - 16rem); /* Adjust based on your layout */
+  }
+
+  .navigation {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 0.5rem;
+    z-index: 10;
+  }
+}
 </style>
