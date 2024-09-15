@@ -4,7 +4,7 @@
         class="btn btn-success mb-4 w-full"
         @click="playWelcomeSequence"
         v-show="!isPlayingWelcome"
-        
+        disabled
       >
         Welcome
       </button>
@@ -12,6 +12,7 @@
         class="btn btn-secondary mb-4 w-full"
         @click="playFirstSegment"
         v-show="!isPlayingFirst"
+        disabled
         
       >
         Walking to the Dergah
@@ -21,6 +22,7 @@
         class="btn btn-secondary mb-4 w-full"
         @click="playSecondSegment"
         v-show="!isPlayingSecond"
+        disabled
         
       >
         Entering the Dergah
