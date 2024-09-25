@@ -126,6 +126,7 @@ import { RouterLink, useRoute, useRouter } from "vue-router";
 import SearchBar from "./SearchBar.vue";
 import { getCurrentInstance } from "vue";
 import { slugify } from '../utils/search';
+import { CATEGORIES, subcategories, filterSongsByCategory, getAllCategories, normalizeCategory, turkishToEnglish, getSortedSubcategories, processShortcuts, getMainCategories } from '../utils/categoryUtils';
 
 const route = useRoute();
 const router = useRouter();
@@ -139,74 +140,11 @@ const selectedCategories = ref<string[]>([]);
 
 const resetGlobalSearch = inject("resetGlobalSearch") as () => void;
 
-const turkishToEnglish = (str: string) => {
-  const map: { [key: string]: string } = {
-    ç: "c",
-    ğ: "g",
-    ı: "i",
-    î: "i",
-    ö: "o",
-    ş: "s",
-    ü: "u",
-    Ç: "C",
-    Ğ: "G",
-    İ: "I",
-    Î: "I",
-    Ö: "O",
-    Ş: "S",
-    Ü: "U",
-  };
-  return str.replace(/[çğıöşüÇĞİÖŞÜ]/g, (letter) => map[letter] || letter);
-};
-
-const normalizeCategory = (category: string) => {
-  return turkishToEnglish(category.trim().toLowerCase());
-};
-
-const subcategories = {
-  "Pen Name": ["Aşık Yunus", "Yunus Emre", "Niyaz", "Fakirullah", "Nesimi", "Üftade", "Şemseddin Sivası", "Ruhi", "Muhyi", "Hatayi", "Hudayi", "Aşık Hüdai", "Kul Yusuf"],
-  // "Sung By": ["Shaykh Taner", "Shaykh Muhyiddin"],
-  "Pirs": ["Geylani", "Rifai", "Ansari", "Ensari", "Hashimi", "Muhammed", "Muhyiddin"],
-  "Awliya": ["Mevlana", "Haci Bektas", "Evliya", "Awliya"],
-  "Sahaba": ["Abu Bakr", "Umar", "Usman", "Ali", "Sahaba"],
-  "Anbiya": ["Nuh", "Hud", "Salih", "Ibrahim", "Musa", "Isa", "Muhammad", "Anbiya", "Enbiya", "Prophets"],
-  "Dervish Orders": ["Rifai", "Ansari", "Qadiri", "Bektashi", "Nakshbandi", "Mevlevi"],
-};
-
-const categoryShortcuts = {
-  "sbt": ["Sung By", "Shaykh Taner"],
-  "sbm": ["Sung By", "Shaykh Muhyiddin"],
-  // Add more shortcuts as needed
-};
-
-const sortedSubcategories = computed(() => {
-  const sorted = {};
-  for (const [key, value] of Object.entries(subcategories)) {
-    sorted[key] = value.sort((a, b) => turkishToEnglish(a.toLowerCase()).localeCompare(turkishToEnglish(b.toLowerCase())));
-  }
-  return sorted;
-});
-
-const processShortcuts = () => {
-  const processedCategories = { ...subcategories };
-  const processedShortcuts = {};
-
-  Object.entries(categoryShortcuts).forEach(([shortcut, [mainCategory, subCategory]]) => {
-    if (!processedCategories[mainCategory]) {
-      processedCategories[mainCategory] = [];
-    }
-    if (!processedCategories[mainCategory].includes(subCategory)) {
-      processedCategories[mainCategory].push(subCategory);
-    }
-    processedShortcuts[shortcut] = subCategory;
-  });
-
-  return { processedCategories, processedShortcuts };
-};
+const sortedSubcategories = computed(() => getSortedSubcategories());
 
 const allCategories = computed(() => {
   const { processedCategories, processedShortcuts } = processShortcuts();
-  const categories = new Set<string>(["Basic"]);
+  const categories = new Set<string>([CATEGORIES.BASIC]);
   const normalizedSubcategories = new Set(
     Object.values(processedCategories).flat().map(normalizeCategory)
   );
@@ -228,44 +166,14 @@ const allCategories = computed(() => {
   return Array.from(categories);
 });
 
-const mainCategories = computed(() => {
-  const orderedCategories = ['All', 'Basic', 'Pirs', 'Pen Name'].map(cat => cat.toLowerCase() === 'basic' ? 'basic' : cat);
-  const otherMainCategories = Object.keys(subcategories).filter(cat => !orderedCategories.includes(cat));
-  const standaloneCategories = allCategories.value.filter(cat => 
-    !orderedCategories.includes(cat) && 
-    !otherMainCategories.includes(cat) &&
-    cat !== 'Basic' // Exclude 'Basic' from standalone categories
-  );
-  
-  return [
-    ...orderedCategories,
-    ...otherMainCategories.sort((a, b) => turkishToEnglish(a.toLowerCase()).localeCompare(turkishToEnglish(b.toLowerCase()))),
-    ...standaloneCategories.sort((a, b) => turkishToEnglish(a.toLowerCase()).localeCompare(turkishToEnglish(b.toLowerCase())))
-  ];
-});
+const mainCategories = computed(() => getMainCategories(allCategories.value));
 
 const sortedFilteredSongs = computed(() => {
   const { processedCategories, processedShortcuts } = processShortcuts();
   let songsToDisplay = filteredSongs.value;
 
   if (selectedCategories.value.length > 0 && !selectedCategories.value.includes('All')) {
-    songsToDisplay = songsToDisplay.filter((song) => 
-      selectedCategories.value.some((category) => {
-        const normalizedCategory = normalizeCategory(category);
-        if (Object.keys(processedCategories).includes(category)) {
-          return processedCategories[category].some((subCategory) => 
-            song.categories.some((songCategory) => 
-              normalizeCategory(songCategory) === normalizeCategory(subCategory)
-            )
-          );
-        }
-        return song.categories.some((songCategory) => 
-          normalizeCategory(songCategory) === normalizedCategory ||
-          (processedShortcuts[normalizedCategory] && 
-           normalizeCategory(songCategory) === normalizeCategory(processedShortcuts[normalizedCategory]))
-        );
-      })
-    );
+    songsToDisplay = filterSongsByCategory(songsToDisplay, selectedCategories.value);
   }
 
   if (currentLetter.value && selectedCategories.value.length === 0) {

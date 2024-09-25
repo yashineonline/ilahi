@@ -4,6 +4,7 @@ export interface SongData {
   translation: string[][];
   audioLink?: string;
   categories: string[];
+  tags: string[];
   isUnderEdit: boolean;
   slug: string;
 }

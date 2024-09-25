@@ -17,12 +17,6 @@ export const useSongStore = defineStore('song', () => {
   const fetchSongs = async (forceRefresh = false) => {
     try {
       if (forceRefresh || songs.value.length === 0) {
-        // const url = 'https://raw.githubusercontent.com/yashineonline/ilahi/main/ilahi.txt';
-        // const cacheOption = forceRefresh ? 'no-store' : 'default';
-        // const corsProxy = 'https://cors-anywhere.herokuapp.com/';
-        // const url = 'https://raw.githubusercontent.com/yashineonline/ilahi/main/ilahi.txt';
-        // const url = 'https://github.com/yashineonline/ilahi/blob/main/ilahi.txt';
-
         const owner = 'yashineonline';
         const repo = 'ilahiRepository';
         const path = 'ilahi.txt';

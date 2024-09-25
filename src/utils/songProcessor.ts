@@ -90,6 +90,7 @@ const splitStanzas = (text: string): string[][] => {
     let audioLink = '';
     let title = '';
     let categories: string[] = [];
+    let tags: string[] = [];
     let titleIndex = -1;
 
     // Find the audio link, categories, and title
@@ -98,7 +99,9 @@ const splitStanzas = (text: string): string[][] => {
       if (trimmedLine.startsWith('http')) {
         audioLink = trimmedLine;
       } else if (trimmedLine.startsWith('C:')) {
-        categories = trimmedLine.substring(2).split(',').map(cat => cat.trim());
+        const [categoriesStr, tagsStr] = trimmedLine.substring(2).split('|').map(s => s.trim());
+        categories = categoriesStr.split(',').map(cat => cat.trim());
+        tags = tagsStr ? tagsStr.split(',').map(tag => tag.trim()) : [];
       } else if (trimmedLine !== '') {
         title = trimmedLine;
         titleIndex = i;
@@ -130,6 +133,7 @@ const splitStanzas = (text: string): string[][] => {
       translation, 
       audioLink: audioLink,
       categories, 
+      tags, 
       isUnderEdit: false,
       slug  // Add the slug property
     };
