@@ -6,17 +6,17 @@
       <p>Loading... Please wait.</p>
     </div>
     <div v-else class="space-y-2">
-      <button @click="confirmDownload('all')" :disabled="isLoading" class="px-4 py-2 bg-white text-green-600 border border-green-600 rounded hover:bg-green-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-        Download {{ songStore.songs.length }} Ilahis
-      </button>
       <button @click="downloadBasicBook" :disabled="isLoading" class="px-4 py-2 bg-white text-blue-600 border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         Download {{ basicSongs.length }} Basic Ilahis
       </button>
-      <button @click="downloadIntermediateBook" :disabled="isLoading" class="px-4 py-2 bg-white text-purple-600 border border-purple-600 rounded hover:bg-purple-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-        Download {{ intermediateSongs.length }} Ilahis
+      <button @click="downloadIntermediateBook" :disabled="isLoading" class="px-4 py-2 bg-white text-red-600 border border-red-600 rounded hover:bg-red-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        {{ intermediateSongs.length }} Ilahis (including Basic)
       </button>
-      <button @click="showSongSelector = true" :disabled="isLoading" class="px-4 py-2 bg-white text-orange-600 border border-orange-600 rounded hover:bg-orange-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+      <button @click="showSongSelector = true" :disabled="isLoading" class="px-4 py-2 bg-white text-purple-600 border border-purple-600 rounded hover:bg-purple-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         Create Custom Book
+      </button>
+      <button @click="confirmDownload('all')" :disabled="isLoading" class="px-4 py-2 bg-white text-green-600 border border-green-600 rounded hover:bg-green-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        {{ songStore.songs.length }} Ilahis
       </button>
     </div>
     <div v-if="showSongSelector && !isLoading" class="mt-4">
@@ -126,6 +126,7 @@ const downloadBasicBook = async () => {
   if (basicSongs.value.length === 0) {
     alert('No basic ilahis available. Please try again later.');
     return;
+
   }
   isLoading.value = true;
   const { pdfBytes } = await generateFullBookPDF(basicSongs.value);

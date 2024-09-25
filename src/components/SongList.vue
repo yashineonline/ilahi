@@ -26,7 +26,7 @@
             value="Basic"
             class="checkbox checkbox-primary mr-2 custom-checkbox"
           />
-          <label for="basicCategory" class="text-lg font-semibold text-primary">Basic Zikr</label>
+          <label for="basicCategory" class="text-lg font-semibold text-primary">Basic Ilahis For Zikr</label>
         </div>
         <div class="dropdown">
           <label tabindex="0" class="btn m-1" @click="isDropdownOpen = !isDropdownOpen">More Categories</label>
@@ -40,7 +40,7 @@
                       <label class="text-base-content">
                         <input
                           type="checkbox"
-                          :value="subCategory.split(',')[0].trim()"
+                          :value="subCategory"
                           v-model="selectedCategories"
                           class="checkbox custom-checkbox"
                         />
@@ -50,7 +50,7 @@
                   </ul>
                 </details>
               </template>
-              <label v-else-if="category !== 'Basic' && category !== 'All'" class="text-base-content">
+              <label v-else class="text-base-content">
                 <input
                   type="checkbox"
                   :value="category"
@@ -126,12 +126,12 @@ import { RouterLink, useRoute, useRouter } from "vue-router";
 import SearchBar from "./SearchBar.vue";
 import { getCurrentInstance } from "vue";
 import { slugify } from '../utils/search';
-import { CATEGORIES, subcategories, filterSongsByCategory, getAllCategories, normalizeCategory, turkishToEnglish, getSortedSubcategories, processShortcuts, getMainCategories } from '../utils/categoryUtils';
+import { CATEGORIES, getSubcategories, filterSongsByCategory, normalizeCategory, turkishToEnglish, getSortedSubcategories, processShortcuts, getMainCategories } from '../utils/categoryUtils';
 
 const route = useRoute();
 const router = useRouter();
 const songStore = useSongStore();
-const { filteredSongs } = storeToRefs(songStore);
+const { filteredSongs, categories } = storeToRefs(songStore);
 
 const currentPage = ref(1);
 const itemsPerPage = 12;
@@ -140,11 +140,13 @@ const selectedCategories = ref<string[]>([]);
 
 const resetGlobalSearch = inject("resetGlobalSearch") as () => void;
 
-const sortedSubcategories = computed(() => getSortedSubcategories());
+const sortedSubcategories = computed(() => getSortedSubcategories(subcategories.value));
+
+const subcategories = computed(() => getSubcategories());
 
 const allCategories = computed(() => {
-  const { processedCategories, processedShortcuts } = processShortcuts();
-  const categories = new Set<string>([CATEGORIES.BASIC]);
+  const { processedCategories, processedShortcuts } = processShortcuts(subcategories.value);
+  const categories = new Set<string>(songStore.categories);
   const normalizedSubcategories = new Set(
     Object.values(processedCategories).flat().map(normalizeCategory)
   );
@@ -166,10 +168,15 @@ const allCategories = computed(() => {
   return Array.from(categories);
 });
 
-const mainCategories = computed(() => getMainCategories(allCategories.value));
+const mainCategories = computed(() => {
+  const categories = getMainCategories(allCategories.value);
+  return categories
+    .filter(category => Object.keys(subcategories.value).includes(category) || category === 'All' || category === CATEGORIES.BASIC|| category === 'inter')
+    .map(category => category === 'inter' ? 'Intermediate' : category);
+});
 
 const sortedFilteredSongs = computed(() => {
-  const { processedCategories, processedShortcuts } = processShortcuts();
+  const { processedCategories, processedShortcuts } = processShortcuts(subcategories.value);
   let songsToDisplay = filteredSongs.value;
 
   if (selectedCategories.value.length > 0 && !selectedCategories.value.includes('All')) {
@@ -243,14 +250,21 @@ watch(
 );
 
 onMounted(async () => {
-  await songStore.fetchSongs();
-  if (route.query.search) {
-    songStore.setSearchQuery(route.query.search as string);
-  }
-  if (route.query.categories) {
-    selectedCategories.value = Array.isArray(route.query.categories)
-      ? route.query.categories
-      : [route.query.categories as string];
+  try {
+    const loadedCategories = await songStore.fetchSongs();
+    if (loadedCategories) {
+      // Update allCategories or perform any necessary actions with the loaded categories
+    }
+    if (route.query.search) {
+      songStore.setSearchQuery(route.query.search as string);
+    }
+    if (route.query.categories) {
+      selectedCategories.value = Array.isArray(route.query.categories)
+        ? route.query.categories
+        : [route.query.categories as string];
+    }
+  } catch (error) {
+    console.error('Error loading songs and categories:', error);
   }
 });
 
