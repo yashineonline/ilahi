@@ -6,13 +6,16 @@
       <p>Loading... Please wait.</p>
     </div>
     <div v-else class="space-y-2">
-      <button @click="downloadFullBook" :disabled="isLoading" class="px-4 py-2 bg-white text-green-600 border border-green-600 rounded hover:bg-green-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-        Download Full PDF Book
+      <button @click="confirmDownload('all')" :disabled="isLoading" class="px-4 py-2 bg-white text-green-600 border border-green-600 rounded hover:bg-green-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        Download {{ songStore.songs.length }} Ilahis
       </button>
       <button @click="downloadBasicBook" :disabled="isLoading" class="px-4 py-2 bg-white text-blue-600 border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-        Download Basic-Ilahi PDF Book (Coming soon!)
+        Download {{ basicSongs.length }} Basic Ilahis
       </button>
-      <button @click="showSongSelector = true" :disabled="isLoading" class="px-4 py-2 bg-white text-purple-600 border border-purple-600 rounded hover:bg-purple-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+      <button @click="downloadIntermediateBook" :disabled="isLoading" class="px-4 py-2 bg-white text-purple-600 border border-purple-600 rounded hover:bg-purple-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+        Download {{ intermediateSongs.length }} Ilahis
+      </button>
+      <button @click="showSongSelector = true" :disabled="isLoading" class="px-4 py-2 bg-white text-orange-600 border border-orange-600 rounded hover:bg-orange-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         Create Custom Book
       </button>
     </div>
@@ -57,20 +60,37 @@
       </div>
     </div>
   </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal" :class="{ 'modal-open': showConfirmModal }">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg">Confirm Download</h3>
+      <p class="py-4">Are you sure you want to download all {{ songStore.songs.length }} ilahis?</p>
+      <div class="modal-action">
+        <button @click="downloadFullBook" class="btn btn-primary">Yes, Download them all!</button>
+        <button @click="showConfirmModal = false" class="btn">No, this is too much!</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useSongStore } from '../stores/songStore';
 import { generateFullBookPDF } from '../utils/fullSongBookPDF';
 import { downloadPDF } from '../utils/pdfBookUtils';
 import { SongData } from '../utils/types';
 import SelectedSongsManager from '../components/SelectedSongsManager.vue';
+import { CATEGORIES, filterSongsByCategory } from '../utils/categoryUtils';
 
 const songStore = useSongStore();
 const showSongSelector = ref(false);
 const selectedSongs = ref<SongData[]>([]);
 const isLoading = ref(false);
+const showConfirmModal = ref(false);
+
+const basicSongs = computed(() => filterSongsByCategory(songStore.songs, ['basic']));
+const intermediateSongs = computed(() => filterSongsByCategory(songStore.songs, ['intermediate']));
 
 onMounted(async () => {
   if (songStore.songs.length === 0) {
@@ -80,7 +100,18 @@ onMounted(async () => {
   }
 });
 
+const confirmDownload = (type: 'all' | 'basic' | 'intermediate') => {
+  if (type === 'all') {
+    showConfirmModal.value = true;
+  } else if (type === 'basic') {
+    downloadBasicBook();
+  } else if (type === 'intermediate') {
+    downloadIntermediateBook();
+  }
+};
+
 const downloadFullBook = async () => {
+  showConfirmModal.value = false;
   if (songStore.songs.length === 0) {
     alert('No songs available. Please try again later.');
     return;
@@ -91,8 +122,26 @@ const downloadFullBook = async () => {
   isLoading.value = false;
 };
 
-const downloadBasicBook = () => {
-  alert('This feature is coming soon!');
+const downloadBasicBook = async () => {
+  if (basicSongs.value.length === 0) {
+    alert('No basic ilahis available. Please try again later.');
+    return;
+  }
+  isLoading.value = true;
+  const { pdfBytes } = await generateFullBookPDF(basicSongs.value);
+  await downloadPDF(pdfBytes, 'AQRT_Basic_Ilahi.pdf');
+  isLoading.value = false;
+};
+
+const downloadIntermediateBook = async () => {
+  if (intermediateSongs.value.length === 0) {
+    alert('No intermediate ilahis available. Please try again later.');
+    return;
+  }
+  isLoading.value = true;
+  const { pdfBytes } = await generateFullBookPDF(intermediateSongs.value);
+  await downloadPDF(pdfBytes, 'AQRT_Intermediate_Ilahi.pdf');
+  isLoading.value = false;
 };
 
 const generateCustomBook = async () => {
@@ -101,7 +150,7 @@ const generateCustomBook = async () => {
     return;
   }
   isLoading.value = true;
-  const { pdfBytes } = await generateFullBookPDF(selectedSongs.value, true); 
+  const { pdfBytes } = await generateFullBookPDF(selectedSongs.value, true);
   await downloadPDF(pdfBytes, 'AQRT_Custom_Ilahi_Book.pdf');
   isLoading.value = false;
 };

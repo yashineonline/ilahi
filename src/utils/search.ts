@@ -24,6 +24,9 @@ export function searchSongs(songs: SongData[], query: string): SongData[] {
       Array.isArray(stanza) && stanza.some(line => 
         typeof line === 'string' && normalizeText(line).includes(normalizedQuery)
       )
+    )) ||
+    (Array.isArray(song.tags) && song.tags.some(tag => 
+      normalizeText(tag).includes(normalizedQuery)
     ))
   );
 }
