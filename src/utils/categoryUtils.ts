@@ -1,18 +1,17 @@
 import { SongData } from './types';
 
 export const CATEGORIES = {
-  BASIC: 'Basic Zikr',
+  BASIC: 'Basic',
   INTERMEDIATE: 'Intermediate',
 };
 
-export const subcategories = {
-  "Pen Name": ["Aşık Yunus", "Yunus Emre", "Niyaz", "Fakirullah", "Nesimi", "Üftade", "Şemseddin Sivası", "Ruhi", "Muhyi", "Hatayi", "Hudayi", "Aşık Hüdai", "Kul Yusuf"],
-  "Pirs": ["Geylani", "Rifai", "Ansari", "Ensari", "Hashimi", "Muhammed", "Muhyiddin"],
-  "Awliya": ["Mevlana", "Haci Bektas", "Evliya", "Awliya"],
-  "Sahaba": ["Abu Bakr", "Umar", "Usman", "Ali", "Sahaba"],
-  "Anbiya": ["Nuh", "Hud", "Salih", "Ibrahim", "Musa", "Isa", "Muhammad", "Anbiya", "Enbiya", "Prophets"],
-  "Dervish Orders": ["Rifai", "Ansari", "Qadiri", "Bektashi", "Nakshbandi", "Mevlevi"],
+let subcategories: Record<string, string[]> = {};
+
+export const setSubcategories = (newSubcategories: Record<string, string[]>) => {
+  subcategories = newSubcategories;
 };
+
+export const getSubcategories = () => subcategories;
 
 export const categoryShortcuts = {
   "sbt": ["Sung By", "Shaykh Taner"],
@@ -45,6 +44,7 @@ export const filterSongsByCategory = (songs: SongData[], categories: string[]): 
       }
       if (normalizedCategory === 'intermediate') {
         return song.categories.some(songCategory => 
+            normalizeCategory(songCategory).includes('basic') ||
           normalizeCategory(songCategory).includes('inter')
         );
       }
@@ -72,7 +72,7 @@ export const getAllCategories = (songs: SongData[]): string[] => {
   return Array.from(categories);
 };
 
-export const getSortedSubcategories = () => {
+export const getSortedSubcategories = (subcategories: Record<string, string[]>) => {
   const sorted = {};
   for (const [key, value] of Object.entries(subcategories)) {
     sorted[key] = value.sort((a, b) => turkishToEnglish(a.toLowerCase()).localeCompare(turkishToEnglish(b.toLowerCase())));
@@ -80,7 +80,7 @@ export const getSortedSubcategories = () => {
   return sorted;
 };
 
-export const processShortcuts = () => {
+export const processShortcuts = (subcategories: Record<string, string[]>) => {
   const processedCategories = { ...subcategories };
   const processedShortcuts = {};
 

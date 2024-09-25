@@ -56,12 +56,38 @@ function renderStanzas(stanzas: string[][], textColor: string): string {
 
 import { slugify } from '../utils/search';
 
-export function processSongsFile(fileContent: string): SongData[] {
-  const songSections = fileContent.split('Y:')
+export function processSongsFile(fileContent: string): { songs: SongData[], subcategories: Record<string, string[]> } {
+  const lines = fileContent.split('\n');
+  const subcategories: Record<string, string[]> = {};
+  let songSections: string[] = [];
+
+  let isParsingSubcategories = false;
+  let currentIndex = 0;
+
+  // Parse subcategories
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (line === 'SUBCATEGORIES:') {
+      isParsingSubcategories = true;
+      continue;
+    }
+    if (line === 'Y:') {
+      isParsingSubcategories = false;
+      currentIndex = i;
+      break;
+    }
+    if (isParsingSubcategories && line) {
+      const [category, items] = line.split(':');
+      subcategories[category.trim()] = items.split(',').map(item => item.trim());
+    }
+  }
+
+  // Parse songs
+  songSections = fileContent.slice(currentIndex).split('Y:')
     .map(section => section.trim())
     .filter(section => section.length > 0);
 
-const splitStanzas = (text: string): string[][] => {
+  const splitStanzas = (text: string): string[][] => {
     const lines = text.split('\n');
     const result: string[][] = [];
     let currentStanza: string[] = [];
@@ -139,10 +165,10 @@ const splitStanzas = (text: string): string[][] => {
     };
   }).filter(song => song !== null);
 
-  return songs.sort((a, b) => a.title.localeCompare(b.title, 'tr'));
+  return { songs: songs.sort((a, b) => a.title.localeCompare(b.title, 'tr')), subcategories };
 }
 
 export function getProcessedSongsCount(fileContent: string): number {
-  const songs = processSongsFile(fileContent);
+  const { songs } = processSongsFile(fileContent);
   return songs.length;
 }
