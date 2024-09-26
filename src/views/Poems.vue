@@ -6,7 +6,6 @@
         <p class="mb-4 whitespace-pre-wrap">{{ poem.content }}</p>
       </div>
     </div>
-    <Entrance />
   </template>
   
   <script setup lang="ts">
