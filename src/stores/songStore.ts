@@ -23,11 +23,11 @@ export const useSongStore = defineStore('song', () => {
       const cachedCategories = localStorage.getItem('cachedCategories')
 
       if (!forceRefresh && cachedSongs && cachedSubcategories && cachedCategories) {
-        songs.value = JSON.parse(cachedSongs)
-        setSubcategories(JSON.parse(cachedSubcategories))
-        categories.value = JSON.parse(cachedCategories)
-        console.log('Loaded songs, subcategories, and categories from localStorage cache')
-        return
+        songs.value = JSON.parse(cachedSongs);
+        setSubcategories(JSON.parse(cachedSubcategories));
+        categories.value = JSON.parse(cachedCategories);
+        console.log('Loaded categories from cache:', categories.value);
+        return categories.value;
       }
 
       const owner = 'yashineonline';
@@ -52,6 +52,7 @@ export const useSongStore = defineStore('song', () => {
       localStorage.setItem('cachedSongs', JSON.stringify(songs.value))
       localStorage.setItem('cachedSubcategories', JSON.stringify(subcategories))
       localStorage.setItem('cachedCategories', JSON.stringify(categories.value))
+      console.log('Updated categories:', categories.value) 
       return categories.value // Return the categories
     } catch (error) {
       console.error('Error fetching songs:', error)
