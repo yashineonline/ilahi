@@ -1,7 +1,7 @@
 <template>
-    <div class="w-full max-w-4xl mx-auto p-2 flex flex-col items-center">
+  <div class="w-full max-w-4xl mx-auto p-2 flex flex-col items-center">
     <div class="w-full flex flex-wrap gap-1 mb-2">
-      <button v-if="currentSong?.audioLink" class="btn btn-primary btn-sm" @click="toggleMusicPlayer">
+      <button v-if="hasAudioLinks" class="btn btn-primary btn-sm" @click="toggleMusicPlayer">
         <font-awesome-icon :icon="['fas', hideMusicPlayer ? 'music' : 'pause']" class="mr-2" />
         {{ hideMusicPlayer ? 'Show' : 'Hide' }} Music
       </button>
@@ -16,6 +16,9 @@
         <font-awesome-icon :icon="['fas', 'language']" class="mr-2" />
         {{ showTranslationFlag ? 'Hide' : 'Show' }} Translation
       </button>
+      <Modal v-if="showNoTranslationModal" @close="showNoTranslationModal = false">
+    <p>Translation of this ilahi will be available in future insha Allah.</p>
+  </Modal>
       <div class="flex items-center gap-2">
         <span class="text-sm">Smaller</span>
         <input 
@@ -31,29 +34,36 @@
     </div>
     <div v-if="currentSong" class="w-full">
       <h1 class="text-3xl font-bold mb-4 text-center">{{ currentSong.title }}</h1>
-      <div v-if="showMusicPlayer && currentSong.audioLink" class="mt-4 w-full mb-6">
-        <h2 class="text-2xl font-semibold mb-2">Music Player</h2>
-        <div class="card shadow-lg w-full max-w-4xl mx-auto">
-          <div v-if="playerType !== 'googledrive'" class="mt-2 flex justify-center space-x-2">
-          <button @click="playPause" class="btn btn-primary btn-sm">{{ isPlaying ? 'Pause' : 'Play' }}</button>
-          <button @click="seekBackward" class="btn btn-primary btn-sm">-5s</button>
-          <button @click="seekForward" class="btn btn-primary btn-sm">+5s</button>
-          <button @click="decreaseSpeed" class="btn btn-primary btn-sm">Slower</button>
-          <button @click="increaseSpeed" class="btn btn-primary btn-sm">Faster</button>
-        </div>
-          <div class="card-body">
-            <audio-player
-              :audio-src="currentSong.audioLink"
-              :player-type="getPlayerType(currentSong.audioLink)"
-              @player-ready="onPlayerReady"
-            />
-          </div>
-        </div>
-        
+      <div v-if="!hideMusicPlayer && currentSong.mainLinks && currentSong.mainLinks.length > 0" class="mb-4">
+        <audio-player
+          :audio-src="currentSong.mainLinks[0]"
+          :player-type="getPlayerType(currentSong.mainLinks[0])"
+          @player-ready="onPlayerReady"
+        />
       </div>
       <div class="mb-6" v-html="renderedSong"></div>
-      <div v-if="showQRCodeFlag && qrCodeDataUrl && isYoutubeLink(currentSong.audioLink)" class="mt-4 text-center">
-        <h3 class="text-xl font-semibold mb-2">QR Code for YouTube Link</h3>
+      <div v-if="!hideMusicPlayer && currentSong.mainLinks && currentSong.mainLinks.length > 1" class="mt-4">
+        <h2 class="text-2xl font-semibold mb-2">More Versions</h2>
+        <div v-for="(link, index) in currentSong.mainLinks.slice(1)" :key="link" class="mb-2">
+          <audio-player
+            :audio-src="link"
+            :player-type="getPlayerType(link)"
+            @player-ready="onPlayerReady"
+          />
+        </div>
+      </div>
+      <div v-if="!hideMusicPlayer && currentSong.alternateTunes && currentSong.alternateTunes.length > 0" class="mt-4">
+        <h2 class="text-2xl font-semibold mb-2">Alternate Tunes</h2>
+        <div v-for="link in currentSong.alternateTunes" :key="link" class="mb-2">
+          <audio-player
+            :audio-src="link"
+            :player-type="getPlayerType(link)"
+            @player-ready="onPlayerReady"
+          />
+        </div>
+      </div>
+      <div v-if="showQRCodeFlag && qrCodeDataUrl" class="mt-4 text-center">
+        <h3 class="text-xl font-semibold mb-2">QR Code For This Ilahi</h3>
         <img :src="qrCodeDataUrl" alt="QR Code" class="mx-auto" />
       </div>
     </div>
@@ -66,7 +76,7 @@
       <button class="btn btn-accent" @click="generatePDF">
         <font-awesome-icon :icon="['fas', 'file-pdf']" class="mr-2" size="2xl" />
       </button>
-      <button v-if="currentSong?.audioLink" class="btn btn-secondary" @click="showQRCode">
+      <button v-if="hasAudioLinks" class="btn btn-secondary" @click="showQRCode">
         <font-awesome-icon :icon="['fas', 'qrcode']" class="mr-2" size="2xl" />
       </button>
     </div>
@@ -94,6 +104,7 @@ import { slugify } from '../utils/search';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faFilePdf, faQrcode, faMusic, faPause, faLanguage } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import Modal from './Modal.vue'
 
 library.add(faFilePdf, faQrcode, faMusic, faPause, faLanguage)
 
@@ -106,13 +117,14 @@ const errorMessage = ref('')
 const playerError = ref<string | null>(null)
 const loading = ref(true)
 const showMusicPlayer = computed(() => {
-  return !!currentSong.value?.audioLink && !hideMusicPlayer.value
+  return hasAudioLinks.value && !hideMusicPlayer.value
 })
 const hideMusicPlayer = ref(false)
 const player = ref(null)
 const isPlaying = ref(false)
 const showQRCodeFlag = ref(false)
 const playerType = ref<'youtube' | 'audio' | 'googledrive' | null>(null)
+const showNoTranslationModal = ref(false)
 
 const currentSong = computed(() => {
   const slugParam = route.params.slug as string;
@@ -133,7 +145,11 @@ const renderedSong = computed(() => {
 })
 
 const showTranslation = () => {
-  showTranslationFlag.value = !showTranslationFlag.value
+  if (currentSong.value?.translation && currentSong.value.translation.length > 0) {
+    showTranslationFlag.value = !showTranslationFlag.value;
+  } else {
+    showNoTranslationModal.value = true;
+  }
 }
 
 const generatePDF = async () => {
@@ -155,16 +171,33 @@ const generatePDF = async () => {
   }
 }
 
+const hasAudioLinks = computed(() => {
+  return (currentSong.value?.mainLinks && currentSong.value.mainLinks.length > 0) ||
+         (currentSong.value?.alternateTunes && currentSong.value.alternateTunes.length > 0);
+});
+
+const currentAudioLink = computed(() => {
+  if (currentSong.value?.mainLinks && currentSong.value.mainLinks.length > 0) {
+    return currentSong.value.mainLinks[0];
+  }
+  if (currentSong.value?.alternateTunes && currentSong.value.alternateTunes.length > 0) {
+    return currentSong.value.alternateTunes[0];
+  }
+  return '';
+});
+
 const loadQRCode = async () => {
-  if (currentSong.value?.audioLink && isYoutubeLink(currentSong.value.audioLink)) {
+  if (currentSong.value) {
+    const songUrl = `${window.location.origin}/songs/${currentSong.value.slug}`;
     try {
-      qrCodeDataUrl.value = await generateQRCode(currentSong.value.audioLink)
+      qrCodeDataUrl.value = await generateQRCode(songUrl);
     } catch (error) {
       console.error('Error generating QR code:', error);
-      errorMessage.value = 'Failed to generate QR code. YouTube link may be unavailable.';
+      errorMessage.value = 'Failed to generate QR code.';
     }
   }
 }
+
 
 const toggleMusicPlayer = () => {
   hideMusicPlayer.value = !hideMusicPlayer.value
@@ -186,40 +219,16 @@ const playPause = () => {
   }
 }
 
-const seekBackward = () => {
-  if (player.value && playerType.value !== 'googledrive') {
-    const currentTime = player.value.getCurrentTime()
-    player.value.seekTo(currentTime - 5, true)
-  }
-}
-
-const seekForward = () => {
-  if (player.value && playerType.value !== 'googledrive') {
-    const currentTime = player.value.getCurrentTime()
-    player.value.seekTo(currentTime + 5, true)
-  }
-}
-
-const decreaseSpeed = () => {
-  if (player.value && playerType.value !== 'googledrive') {
-    const currentRate = player.value.getPlaybackRate()
-    player.value.setPlaybackRate(Math.max(0.25, currentRate - 0.25))
-  }
-}
-
-const increaseSpeed = () => {
-  if (player.value && playerType.value !== 'googledrive') {
-    const currentRate = player.value.getPlaybackRate()
-    player.value.setPlaybackRate(Math.min(2, currentRate + 0.25))
-  }
-}
 
 const showQRCode = async () => {
-  if (currentSong.value?.audioLink && !qrCodeDataUrl.value) {
-    await loadQRCode()
+  if (currentSong.value) {
+    if (!qrCodeDataUrl.value) {
+      await loadQRCode();
+    }
+    showQRCodeFlag.value = true;
   }
-  showQRCodeFlag.value = true
 }
+
 
 const isYoutubeLink = (url: string) => {
   return url && (url.includes('youtube.com') || url.includes('youtu.be'));
@@ -233,6 +242,13 @@ function getPlayerType(url: string): 'youtube' | 'audio' | 'googledrive' {
   } else {
     return 'audio';
   }
+}
+
+const getLinkType = (url: string) => {
+  if (isYoutubeLink(url)) return 'YouTube';
+  if (url.includes('soundcloud.com')) return 'SoundCloud';
+  if (url.includes('drive.google.com')) return 'Google Drive';
+  return 'Listen';
 }
 
 watch(() => route.params.slug, async (newSlug) => {
@@ -255,10 +271,10 @@ onMounted(async () => {
     if (currentSong.value) {
       loadQRCode()
     }
-    if (currentSong.value?.audioLink) {
-      console.log('Detected audio link:', currentSong.value.audioLink)
+    if (hasAudioLinks.value) {
+      console.log('Detected audio links for this song')
     } else {
-      console.log('No audio link detected for this song')
+      console.log('No audio links detected for this song')
     }
   } catch (error) {
     console.error('Error loading song:', error)

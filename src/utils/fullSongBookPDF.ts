@@ -4,11 +4,17 @@ import { generateSingleSongPage, embedFont } from './singleSongPDF';
 import { createCoverPage, createTableOfContents, addPageNumbersAndFooters, updateTableOfContents, embedImage } from './pdfBookUtils';
 import { FONT_PATH } from './fontConfig';
 
-export async function generateFullBookPDF(songs: SongData[], isCustom: boolean = false): Promise<{ pdfBytes: Uint8Array, logs: string[] }> {
+export async function generateFullBookPDF(songs: SongData[], isCustom: boolean = false, onProgress?:(progress: number)=>void): Promise<{ pdfBytes: Uint8Array, logs: string[] }> {
   const logs: string[] = [];
+  const totalSteps = songs.length *2; // Adjust this number based on your total steps, instead of adding 10 or 15, i made it 2 steps for each song
+  let currentStep = 0;
   const log = (message: string) => {
     console.log(message);
     logs.push(message);
+    currentStep++;
+    if (onProgress) {
+      onProgress(Math.min(99, (currentStep / totalSteps) * 100)); // Cap at 95% to leave room for final steps
+    }
   };
 
   log('Generating full book PDF');
@@ -103,5 +109,8 @@ export async function generateFullBookPDF(songs: SongData[], isCustom: boolean =
 
   log('Saving PDF');
   const pdfBytes = await pdfDoc.save();
+  if (onProgress) {
+    onProgress(100); // Set to 100% when PDF is fully generated
   return { pdfBytes, logs };
+  }
 }
