@@ -3,6 +3,8 @@ export interface SongData {
   lyrics: string[][];
   translation: string[][];
   audioLink?: string;
+  mainLinks: string[];
+  alternateTunes: string[];
   categories: string[];
   tags: string[];
   isUnderEdit: boolean;

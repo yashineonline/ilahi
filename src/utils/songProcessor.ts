@@ -61,31 +61,47 @@ export function processSongsFile(fileContent: string): { songs: SongData[], subc
   const subcategories: Record<string, string[]> = {};
   let songSections: string[] = [];
 
+  let isParsingNotes = true;
   let isParsingSubcategories = false;
-  let currentIndex = 0;
+  let currentSection = '';
 
-  // Parse subcategories
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
-    if (line === 'SUBCATEGORIES:') {
-      isParsingSubcategories = true;
+    
+    if (isParsingNotes) {
+      if (line === 'SUBCATEGORIES:') {
+        isParsingNotes = false;
+        isParsingSubcategories = true;
+        continue;
+      }
+      // Ignore notes
       continue;
     }
-    if (line === 'Y:') {
-      isParsingSubcategories = false;
-      currentIndex = i;
-      break;
-    }
-    if (isParsingSubcategories && line) {
-      const [category, items] = line.split(':');
-      subcategories[category.trim()] = items.split(',').map(item => item.trim());
+    
+    if (isParsingSubcategories) {
+      if (line === 'Y:') {
+        isParsingSubcategories = false;
+        continue;
+      }
+      if (line.includes(':')) {
+        const [category, items] = line.split(':').map(s => s.trim());
+        subcategories[category] = items.split(',').map(item => item.trim());
+      }
+    } else {
+      if (line === 'Y:') {
+        if (currentSection.trim()) {
+          songSections.push(currentSection.trim());
+        }
+        currentSection = '';
+      } else {
+        currentSection += line + '\n';
+      }
     }
   }
 
-  // Parse songs
-  songSections = fileContent.slice(currentIndex).split('Y:')
-    .map(section => section.trim())
-    .filter(section => section.length > 0);
+  if (currentSection.trim()) {
+    songSections.push(currentSection.trim());
+  }
 
   const splitStanzas = (text: string): string[][] => {
     const lines = text.split('\n');
@@ -113,22 +129,25 @@ export function processSongsFile(fileContent: string): { songs: SongData[], subc
   const songs = songSections.map(section => {
     const lines = section.split('\n');
 
-    let audioLink = '';
+    let mainLinks: string[] = [];
+    let alternateTunes: string[] = [];
     let title = '';
     let categories: string[] = [];
     let tags: string[] = [];
     let titleIndex = -1;
 
-    // Find the audio link, categories, and title
+    // Find the links, categories, and title
     for (let i = 0; i < lines.length; i++) {
       const trimmedLine = lines[i].trim();
-      if (trimmedLine.startsWith('http')) {
-        audioLink = trimmedLine;
+      if (trimmedLine.startsWith('L:')) {
+        mainLinks.push(trimmedLine.substring(2).trim());
+      } else if (trimmedLine.startsWith('A:')) {
+        alternateTunes.push(trimmedLine.substring(2).trim());
       } else if (trimmedLine.startsWith('C:')) {
         const [categoriesStr, tagsStr] = trimmedLine.substring(2).split('|').map(s => s.trim());
         categories = categoriesStr.split(',').map(cat => cat.trim());
         tags = tagsStr ? tagsStr.split(',').map(tag => tag.trim()) : [];
-      } else if (trimmedLine !== '') {
+      } else if (trimmedLine !== '' && !title) {
         title = trimmedLine;
         titleIndex = i;
         break;
@@ -157,7 +176,8 @@ export function processSongsFile(fileContent: string): { songs: SongData[], subc
       title, 
       lyrics, 
       translation, 
-      audioLink: audioLink,
+      mainLinks,
+      alternateTunes,
       categories, 
       tags, 
       isUnderEdit: false,

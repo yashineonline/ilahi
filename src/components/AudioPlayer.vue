@@ -20,10 +20,16 @@
       ></iframe>
     </div>
     <div v-else class="audio-controls">
-      <button @click="togglePlay" class="btn btn-primary" :disabled="!isLoaded">
+      <audio ref="audioElement" :src="audioSrc" preload="auto"></audio>
+    </div>
+    <div class="controls mt-2 flex justify-center space-x-2">
+      <button @click="togglePlay" class="btn btn-primary btn-sm">
         {{ isPlaying ? 'Pause' : 'Play' }}
       </button>
-      <p v-if="!isLoaded">Loading audio...</p>
+      <button @click="seekBackward" class="btn btn-primary btn-sm">-5s</button>
+      <button @click="seekForward" class="btn btn-primary btn-sm">+5s</button>
+      <button @click="decreaseSpeed" class="btn btn-primary btn-sm">Slower</button>
+      <button @click="increaseSpeed" class="btn btn-primary btn-sm">Faster</button>
     </div>
   </div>
 </template>
@@ -48,6 +54,7 @@ const startTime = ref(0);
 const endTime = ref(0);
 const isPlaying = ref(false);
 const isLoaded = ref(false);
+const playbackRate = ref(1);
 
 const getAudioSrc = computed(() => {
   if (props.playerType === 'googledrive') {
@@ -273,6 +280,44 @@ const playSegment = () => {
 watch(() => props.audioSrc, playSegment);
 
 onMounted(playSegment);
+
+const seekBackward = () => {
+  if (props.playerType === 'youtube' && youtubePlayer.value) {
+    const currentTime = youtubePlayer.value.getCurrentTime()
+    youtubePlayer.value.seekTo(currentTime - 5, true)
+  } else if (props.playerType === 'audio' && howl.value) {
+    const currentTime = howl.value.seek() as number
+    howl.value.seek(currentTime - 5)
+  }
+}
+
+const seekForward = () => {
+  if (props.playerType === 'youtube' && youtubePlayer.value) {
+    const currentTime = youtubePlayer.value.getCurrentTime()
+    youtubePlayer.value.seekTo(currentTime + 5, true)
+  } else if (props.playerType === 'audio' && howl.value) {
+    const currentTime = howl.value.seek() as number
+    howl.value.seek(currentTime + 5)
+  }
+}
+
+const decreaseSpeed = () => {
+  playbackRate.value = Math.max(0.25, playbackRate.value - 0.25)
+  setPlaybackRate()
+}
+
+const increaseSpeed = () => {
+  playbackRate.value = Math.min(2, playbackRate.value + 0.25)
+  setPlaybackRate()
+}
+
+const setPlaybackRate = () => {
+  if (props.playerType === 'youtube' && youtubePlayer.value) {
+    youtubePlayer.value.setPlaybackRate(playbackRate.value)
+  } else if (props.playerType === 'audio' && howl.value) {
+    howl.value.rate(playbackRate.value)
+  }
+}
 
 </script>
 

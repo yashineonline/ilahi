@@ -32,7 +32,7 @@ export const useSongStore = defineStore('song', () => {
 
       const owner = 'yashineonline';
       const repo = 'ilahiRepository';
-      const path = 'ilahi.txt';
+      const path = 'ilahiHU.txt';
       const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
       
       const response = await fetch(url, {

@@ -4,6 +4,7 @@
     <p>Download our collection of Ilahis as a PDF book.</p>
     <div v-if="isLoading" class="text-center">
       <p>Loading... Please wait.</p>
+      <ProgressBar :progress="progress" />
     </div>
     <div v-else class="space-y-2">
       <button @click="downloadBasicBook" :disabled="isLoading" class="px-4 py-2 bg-white text-blue-600 border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
@@ -82,15 +83,19 @@ import { downloadPDF } from '../utils/pdfBookUtils';
 import { SongData } from '../utils/types';
 import SelectedSongsManager from '../components/SelectedSongsManager.vue';
 import { CATEGORIES, filterSongsByCategory } from '../utils/categoryUtils';
+import ProgressBar from '../components/ProgressBar.vue';
 
 const songStore = useSongStore();
 const showSongSelector = ref(false);
 const selectedSongs = ref<SongData[]>([]);
 const isLoading = ref(false);
 const showConfirmModal = ref(false);
+const progress = ref(0);
 
 const basicSongs = computed(() => filterSongsByCategory(songStore.songs, ['basic']));
 const intermediateSongs = computed(() => filterSongsByCategory(songStore.songs, ['intermediate']));
+
+
 
 onMounted(async () => {
   if (songStore.songs.length === 0) {
@@ -117,9 +122,20 @@ const downloadFullBook = async () => {
     return;
   }
   isLoading.value = true;
-  const { pdfBytes } = await generateFullBookPDF(songStore.songs);
-  await downloadPDF(pdfBytes, 'AQRT_Ilahi_DraftBook.pdf');
-  isLoading.value = false;
+  progress.value = 0;
+  try {
+    const { pdfBytes, logs } = await generateFullBookPDF(songStore.songs, false, (p) => {
+      progress.value = p;
+    });
+    progress.value = 99; // Set to 99% before starting download
+    await downloadPDF(pdfBytes, 'AQRT_Ilahi_DraftBook.pdf');
+    progress.value = 100; // Set to 100% when download is complete
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    alert('An error occurred while generating the PDF. Please try again later.');
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 const downloadBasicBook = async () => {
@@ -129,9 +145,20 @@ const downloadBasicBook = async () => {
 
   }
   isLoading.value = true;
-  const { pdfBytes } = await generateFullBookPDF(basicSongs.value);
-  await downloadPDF(pdfBytes, 'AQRT_Basic_Ilahi.pdf');
-  isLoading.value = false;
+  progress.value = 0;
+  try {
+    const { pdfBytes, logs } = await generateFullBookPDF(basicSongs.value, false, (p) => {
+      progress.value = p;
+    });
+    progress.value = 99; // Set to 99% before starting download
+    await downloadPDF(pdfBytes, 'AQRT_Basic_Ilahi.pdf');
+    progress.value = 100; // Set to 100% when download is complete
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    alert('An error occurred while generating the PDF. Please try again later.');
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 const downloadIntermediateBook = async () => {
@@ -140,9 +167,20 @@ const downloadIntermediateBook = async () => {
     return;
   }
   isLoading.value = true;
-  const { pdfBytes } = await generateFullBookPDF(intermediateSongs.value);
-  await downloadPDF(pdfBytes, 'AQRT_Intermediate_Ilahi.pdf');
-  isLoading.value = false;
+  progress.value = 0;
+  try {
+    const { pdfBytes, logs } = await generateFullBookPDF(intermediateSongs.value, false, (p) => {
+      progress.value = p;
+    });
+    progress.value = 99; // Set to 99% before starting download
+    await downloadPDF(pdfBytes, 'AQRT_Intermediate_Ilahi.pdf');
+    progress.value = 100; // Set to 100% when download is complete
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    alert('An error occurred while generating the PDF. Please try again later.');
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 const generateCustomBook = async () => {

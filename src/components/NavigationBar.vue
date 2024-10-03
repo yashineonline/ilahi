@@ -5,8 +5,16 @@
       <ul class="flex flex-col w-full mb-4 list-none p-0">
         <li><router-link to="/wirds" class="btn btn-ghost normal-case text-xl mb-2">Wirds</router-link></li>
         <li><router-link to="/songs" class="btn btn-ghost normal-case text-xl mb-2">View Ilahi List</router-link></li>
-        <li><router-link to="/book" class="btn btn-ghost btn-sm text-xl mb-2">Download Ilahi Book</router-link></li>
-        <li><router-link to="/about" class="btn btn-ghost btn-sm text-xl mb-2">About Ilahi</router-link></li>
+        <div class="dropdown">
+      <label tabindex="0" class="btn btn-ghost normal-case text-xl mb-2">More</label>
+      <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+        <li><router-link to="/book" class="btn btn-ghost btn-sm">Download Ilahi Book</router-link></li>
+        <li><router-link to="/about" class="btn btn-ghost btn-sm">About Ilahi</router-link></li>
+        <li><router-link to="/history" class="btn btn-ghost btn-sm">History</router-link></li>
+        <li><router-link to="/books" class="btn btn-ghost btn-sm">Other Ilahi Books</router-link></li>
+        <li><router-link to="/miscellaneous" class="btn btn-ghost btn-sm">Miscellaneous</router-link></li>
+      </ul>
+    </div>
         <li><router-link to="/" class="btn btn-ghost normal-case text-xl mb-2" aria-label="Home">Home</router-link></li>
       </ul>
       <div class="flex items-center space-x-4" role="group" aria-label="Additional actions">

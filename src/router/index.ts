@@ -8,7 +8,9 @@ import YouTubePlayer from '../components/YouTubePlayer.vue'
 import Poems from '../views/Poems.vue'
 import Entrance from '../components/Entrance.vue'
 import Wirds from '../views/Wirds.vue'
-
+import BooksView from '../views/BooksView.vue'
+import HistoryView from '../views/HistoryView.vue'
+import MiscellaneousView from '../views/MiscellaneousView.vue'
 
 import { useSongStore } from '../stores/songStore'
 
@@ -73,6 +75,22 @@ const routes = [
     name: 'wirds',
     component: Wirds
   },
+  {
+    path: '/history',
+    name: 'History',
+    component: HistoryView
+  },
+  {
+    path: '/books',
+    name: 'Books',
+    component: BooksView
+  },
+  {
+    path: '/miscellaneous',
+    name: 'Miscellaneous',
+    component: MiscellaneousView
+  },
+
 ]
 
 const router = createRouter({

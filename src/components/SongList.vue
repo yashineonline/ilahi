@@ -1,6 +1,9 @@
 <template>
   <div class="w-full max-w-4xl mx-auto p-4">
-    <h2 class="text-2xl font-bold mb-4">Song List</h2>
+    <h2 class="text-2xl font-bold mb-4">Ilahi List</h2>
+    <div class="flex justify-center my-4">
+      <button @click="resetSearch" class="btn btn-secondary">Reset Search</button>
+    </div>
     
     <!-- A-Z filter -->
     <div class="flex flex-wrap justify-center my-4">
@@ -65,9 +68,6 @@
       </div>
     </div>
 
-    <div class="flex justify-center my-4">
-      <button @click="resetSearch" class="btn btn-secondary">Reset Search</button>
-    </div>
 
     <div
       v-if="paginatedSongs.length"
