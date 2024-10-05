@@ -18,8 +18,11 @@ export function renderSong(song: SongData, options: { fontSize: number, showTran
   
   const textColor = theme === 'light' ? 'text-gray-800' : 'text-gray-200';
   
+  // Filter out the history stanza from lyrics
+  const lyricsWithoutHistory = song.lyrics.filter(stanza => !stanza.some(line => line.includes('History:')));
+
   let html = `<section class="lyrics mb-6" style="font-size: ${fontSize}px;">
-    ${renderStanzas(song.lyrics, textColor)}
+    ${renderStanzas(lyricsWithoutHistory, textColor)}
   </section>`;
 
   if (showTranslation && song.translation && song.translation.length > 0) {
@@ -38,6 +41,15 @@ export function renderSong(song: SongData, options: { fontSize: number, showTran
       </section>`;
     }
   }
+
+    // Add a section for history if it exists
+    const historyStanza = song.lyrics.find(stanza => stanza.some(line => line.includes('History:')));
+    if (historyStanza) {
+      html += `<section id="history" class="history mb-6" style="font-size: ${fontSize}px;">
+        <h2 class="text-2xl font-semibold mb-4 ${textColor}">Tarih</h2>
+        ${renderStanzas([historyStanza], textColor)}
+      </section>`;
+    }
 
   return html;
 }

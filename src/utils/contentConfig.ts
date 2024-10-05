@@ -39,13 +39,37 @@ export const EXPLANATION_TEXT = {
       title: "Praising Allah",
       content: [
         {
-          type: "paragraph",
+          type: "quote",
           text: "In the ilahis, one is also mentioning the Beautiful Names of Allah, praising Allah! In this way, one is doing Zikr [repeated remembrance with contemplation]."
         }
-      ]
+      ],
+      author: "Shaykh Nishaat Siddiqi"
     },
     {
-      title: "Zikr Practice",
+      title: "Honoring Allah with Heart and Love",
+      content: [
+        {
+          type: "quote",
+          text: "Ilahi or Nat, whatever needs voice indeed. But most important needs heart and love not to please people but to honor Allah and all His company. Ya Wadud."
+        }
+      ],
+      author: "Shaykh Sadeck el Ansari"
+    
+    },
+    {
+      title: "Maqam of Ilahis in Zikr",
+      content: [
+        {
+          type: "quote",
+          text: "Ilahis can be sung in different maqams according to the zikrs being done. And there are other maqams in which the ilahis can be sung as well."
+        }
+      ],
+      author: "Es-Seyyida Es-Shaykha Muzeyyen Vargonen el Ansari"
+    
+    },
+
+    {
+      title: "Zikr",
       content: [
         {
           type: "quote",

@@ -78,6 +78,14 @@ export const useSongStore = defineStore('song', () => {
     selectedSongs.value = []
   }
 
+  const songsWithHistory = computed(() => {
+    return songs.value.filter(song => song.lyrics.some(stanza => stanza.some(line => line.includes('History:'))));
+  });
+  
+  function getSongsWithHistory() {
+    return songsWithHistory.value;
+  }
+
   return { 
     songs, 
     categories,
@@ -87,6 +95,8 @@ export const useSongStore = defineStore('song', () => {
     selectedSongs, 
     selectSong, 
     deselectSong, 
-    clearSelectedSongs 
+    clearSelectedSongs,
+    songsWithHistory,
+    getSongsWithHistory
   }
 })

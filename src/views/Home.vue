@@ -8,6 +8,17 @@
     <div class="p-4">
       <h1 class="text-4xl font-bold text-green-800 mb-6">Welcome to Ilahi Book App</h1>
       
+      <div class="card bg-base-200 shadow-xl m-4">
+    <div class="card-body">
+      <blockquote class="text-lg italic text-center text-base-content">
+        "Ilahis are the flowers that sprout from the hearts of lovers"
+      </blockquote>
+      <p class="text-right font-semibold mt-2 text-base-content">— Shaykh Nishaat Ahmed Siddiqi</p>
+    </div>
+  </div>
+
+
+
 
       <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
         <p class="text-xl mb-4">Explore our collection of Sacred Sufi Songs and Hymns.</p>

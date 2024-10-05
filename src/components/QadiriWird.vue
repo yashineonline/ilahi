@@ -1,6 +1,9 @@
 <template>
   <div class="qadiri-wird-container p-4" :class="{ 'fullscreen': isFullscreen }">
     <div class="flex justify-between items-center mb-4">
+      <button @click="goBack" class="btn btn-circle btn-sm">
+          <font-awesome-icon :icon="['fas', 'arrow-left']" />
+        </button>
       <h1 class="text-3xl font-bold" v-if="!isFullscreen">Qadiri Wird</h1>
       <div class="flex gap-2">
         <button @click="toggleFullscreen" class="btn btn-circle btn-sm">
@@ -8,9 +11,6 @@
         </button>
         <button @click="toggleSettings" class="btn btn-circle btn-sm">
           <font-awesome-icon :icon="['fas', 'cog']" />
-        </button>
-        <button @click="goBack" class="btn btn-circle btn-sm" v-if="isFullscreen">
-          <font-awesome-icon :icon="['fas', 'arrow-left']" />
         </button>
       </div>
     </div>
@@ -360,9 +360,12 @@ const toggleSettings = () => {
   showSettings.value = !showSettings.value;
 };
 
+const emit = defineEmits(['go-back']);
+
 const goBack = () => {
   isFullscreen.value = false;
   navigationStore.setNavigationVisibility(true);
+  emit('go-back');
 };
 
 const adjustedFontSize = computed(() => {
