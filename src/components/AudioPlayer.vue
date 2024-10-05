@@ -19,6 +19,15 @@
         class="google-drive-player"
       ></iframe>
     </div>
+    <div class="player-wrapper" v-else-if="playerType === 'soundcloud'">
+      <iframe
+        width="100%"
+        height="166"
+        scrolling="no"
+        frameborder="no"
+        :src="getSoundCloudEmbedUrl(audioSrc)"
+      ></iframe>
+    </div>
     <div v-else class="audio-controls">
       <audio ref="audioElement" :src="audioSrc" preload="auto"></audio>
     </div>
@@ -41,7 +50,7 @@ import { Howl } from 'howler';
 
 const props = defineProps<{
   audioSrc: string;
-  playerType: 'youtube' | 'audio' | 'googledrive';
+  playerType: 'youtube' | 'audio' | 'googledrive' | 'soundcloud';
   startTime?: number;
   endTime?: number;
 }>();
@@ -318,6 +327,11 @@ const setPlaybackRate = () => {
     howl.value.rate(playbackRate.value)
   }
 }
+
+const getSoundCloudEmbedUrl = (url: string) => {
+  const trackUrl = encodeURIComponent(url);
+  return `https://w.soundcloud.com/player/?url=${trackUrl}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true`;
+};
 
 </script>
 

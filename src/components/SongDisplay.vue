@@ -89,7 +89,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, nextTick } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { useSongStore } from '../stores/songStore'
 import { useThemeStore } from '../stores/themeStore'
@@ -104,7 +104,6 @@ import { slugify } from '../utils/search';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faFilePdf, faQrcode, faMusic, faPause, faLanguage } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import Modal from './Modal.vue'
 
 library.add(faFilePdf, faQrcode, faMusic, faPause, faLanguage)
 
@@ -119,7 +118,7 @@ const loading = ref(true)
 const showMusicPlayer = computed(() => {
   return hasAudioLinks.value && !hideMusicPlayer.value
 })
-const hideMusicPlayer = ref(false)
+const hideMusicPlayer = ref(true)
 const player = ref(null)
 const isPlaying = ref(false)
 const showQRCodeFlag = ref(false)
@@ -234,16 +233,17 @@ const isYoutubeLink = (url: string) => {
   return url && (url.includes('youtube.com') || url.includes('youtu.be'));
 }
 
-function getPlayerType(url: string): 'youtube' | 'audio' | 'googledrive' {
+function getPlayerType(url: string): 'youtube' | 'audio' | 'googledrive' | 'soundcloud' {
   if (isYoutubeLink(url)) {
     return 'youtube';
   } else if (url.includes('drive.google.com')) {
     return 'googledrive';
+  } else if (url.includes('soundcloud.com')) {
+    return 'soundcloud';
   } else {
     return 'audio';
   }
 }
-
 const getLinkType = (url: string) => {
   if (isYoutubeLink(url)) return 'YouTube';
   if (url.includes('soundcloud.com')) return 'SoundCloud';
@@ -288,6 +288,20 @@ const updateFontSize = (event: Event) => {
   const newSize = parseInt((event.target as HTMLInputElement).value);
   fontSize.value = newSize;
 }
+
+const scrollToHistory = () => {
+  if (route.hash === '#history') {
+    nextTick(() => {
+      const historyElement = document.getElementById('history');
+      if (historyElement) {
+        historyElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
+};
+
+onMounted(scrollToHistory);
+watch(() => route.hash, scrollToHistory);
 </script>
 
 <style scoped>

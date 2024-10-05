@@ -11,6 +11,8 @@ import Wirds from '../views/Wirds.vue'
 import BooksView from '../views/BooksView.vue'
 import HistoryView from '../views/HistoryView.vue'
 import MiscellaneousView from '../views/MiscellaneousView.vue'
+import AuthorPoems from '../views/AuthorPoems.vue';
+
 
 import { useSongStore } from '../stores/songStore'
 
@@ -90,7 +92,11 @@ const routes = [
     name: 'Miscellaneous',
     component: MiscellaneousView
   },
-
+  {
+    path: '/poems/:authorName',
+    name: 'AuthorPoems',
+    component: AuthorPoems
+  }
 ]
 
 const router = createRouter({
