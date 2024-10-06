@@ -44,7 +44,7 @@
       <div class="mb-6" v-html="renderedSong"></div>
       <div v-if="!hideMusicPlayer && currentSong.mainLinks && currentSong.mainLinks.length > 1" class="mt-4">
         <h2 class="text-2xl font-semibold mb-2">More Versions</h2>
-        <div v-for="(link, index) in currentSong.mainLinks.slice(1)" :key="link" class="mb-2">
+        <div v-for="(link, index) in currentSong.mainLinks.slice(1)" :key="index" class="mb-2">
           <audio-player
             :audio-src="link"
             :player-type="getPlayerType(link)"
@@ -104,9 +104,11 @@ import { slugify } from '../utils/search';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faFilePdf, faQrcode, faMusic, faPause, faLanguage } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import type { PlayerType } from './AudioPlayer.vue' // Assuming you've exported this type from AudioPlayer.vue
 
 library.add(faFilePdf, faQrcode, faMusic, faPause, faLanguage)
 
+const playerType = ref<PlayerType | null>(null)
 const route = useRoute()
 const songStore = useSongStore()
 const themeStore = useThemeStore()
@@ -122,7 +124,6 @@ const hideMusicPlayer = ref(true)
 const player = ref(null)
 const isPlaying = ref(false)
 const showQRCodeFlag = ref(false)
-const playerType = ref<'youtube' | 'audio' | 'googledrive' | null>(null)
 const showNoTranslationModal = ref(false)
 
 const currentSong = computed(() => {
@@ -202,9 +203,11 @@ const toggleMusicPlayer = () => {
   hideMusicPlayer.value = !hideMusicPlayer.value
 }
 
-const onPlayerReady = (playerData: { player: any, type: 'youtube' | 'audio' | 'googledrive' }) => {
+const onPlayerReady = (playerData: { player: any, type: PlayerType }) => {
   player.value = playerData.player;
   playerType.value = playerData.type;
+  // You might want to handle multiple players differently
+  console.log('Player ready:', playerData);
 }
 
 const playPause = () => {

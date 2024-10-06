@@ -7,9 +7,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "composite": false,
+    "target": "ES2015",
+    "lib": ["ES2015", "DOM", "DOM.Iterable"],
     "allowSyntheticDefaultImports": true,
     "module": "ESNext",
     "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "types": ["firebase"],
     "paths": {
       "@/*": ["src/*"]
     },

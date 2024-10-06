@@ -48,6 +48,8 @@ import { ref, onMounted, watch, computed } from 'vue';
 import YouTube from 'vue3-youtube';
 import { Howl } from 'howler';
 
+export type PlayerType = 'youtube' | 'audio' | 'googledrive' | 'soundcloud'
+
 const props = defineProps<{
   audioSrc: string;
   playerType: 'youtube' | 'audio' | 'googledrive' | 'soundcloud';
