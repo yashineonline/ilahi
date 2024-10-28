@@ -8,6 +8,7 @@
         <div class="dropdown">
       <label tabindex="0" class="btn btn-ghost btn-sm text-xl mb-2">More</label>
       <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+        <li><router-link to="/zikr-practice" class="btn btn-ghost btn-sm">Zikr Practice</router-link></li>
         <li><router-link to="/book" class="btn btn-ghost btn-sm">Download Ilahi Book</router-link></li>
         <li><router-link to="/about" class="btn btn-ghost btn-sm">About Ilahi</router-link></li>
         <li><router-link to="/history" class="btn btn-ghost btn-sm">History</router-link></li>

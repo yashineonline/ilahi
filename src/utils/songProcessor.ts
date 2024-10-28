@@ -1,4 +1,4 @@
-import { SongData } from './types';
+import { SongData, ZikrItem } from './types';
 import * as unorm from 'unorm';
 
 export function processStanzas(stanzas: string[][]): string[][] {
@@ -68,18 +68,72 @@ function renderStanzas(stanzas: string[][], textColor: string): string {
 
 import { slugify } from '../utils/search';
 
-export function processSongsFile(fileContent: string): { songs: SongData[], subcategories: Record<string, string[]> } {
+export function processSongsFile(fileContent: string): { songs: SongData[], subcategories: Record<string, string[]>,  zikrItems: ZikrItem[]} {
   const lines = fileContent.split('\n');
   const subcategories: Record<string, string[]> = {};
   let songSections: string[] = [];
+  let zikrItems: ZikrItem[] = [];
 
   let isParsingNotes = true;
+  let isParsingZikr = false;
   let isParsingSubcategories = false;
   let currentSection = '';
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
     
+    if (line === 'ZIKRPRACTICE:') {
+      isParsingZikr = true;
+      continue;
+    }
+
+    if (line === 'ENDOFZIKRPRACTICE') {
+      isParsingZikr = false;
+      continue;
+    }
+
+    if (isParsingZikr && line) {
+      // Skip empty lines between zikr entries
+      if (line.includes('drive.google.com')) {
+        const link = line;
+        let i = lines.indexOf(line) + 1;
+        const title = lines[i]?.trim();
+        const lyricsStanzas: string[][] = [];
+        let currentStanza: string[] = [];
+        
+        i++; // Move to the first potential lyrics line
+
+    // Keep reading until we hit another link or end of zikr section
+    while (i < lines.length && !lines[i].includes('drive.google.com') && lines[i].trim() !== 'ENDOFZIKRPRACTICE') {
+          const lyricLine = lines[i].trim();
+          
+          if (lyricLine === '') {
+            if (currentStanza.length > 0) {
+              lyricsStanzas.push([...currentStanza]);
+              currentStanza = [];
+            }
+          } else {
+            currentStanza.push(lyricLine);
+          }
+        i++;
+        }
+        
+        // Add final stanza if exists
+        if (currentStanza.length > 0) {
+          lyricsStanzas.push([...currentStanza]);
+        }
+        
+        if (title && link) {
+          zikrItems.push({
+            zikrTitle: title,
+            zikrLink: link,
+            zikrLyrics: lyricsStanzas.length > 0 ? lyricsStanzas : undefined
+          });
+        }
+        i--; // Step back one line since we'll increment in the loop
+      }
+    }  
+
     if (isParsingNotes) {
       if (line === 'SUBCATEGORIES:') {
         isParsingNotes = false;
@@ -197,10 +251,15 @@ export function processSongsFile(fileContent: string): { songs: SongData[], subc
     };
   }).filter(song => song !== null);
 
-  return { songs: songs.sort((a, b) => a.title.localeCompare(b.title, 'tr')), subcategories };
+  return { songs: songs.sort((a, b) => a.title.localeCompare(b.title, 'tr')), subcategories, zikrItems };
 }
 
 export function getProcessedSongsCount(fileContent: string): number {
   const { songs } = processSongsFile(fileContent);
   return songs.length;
+}
+
+export function extractZikrPracticeFolderLink(fileContent: string): string {
+  const zikrSection = fileContent.split('ZIKRPRACTICE:')[1]?.split('\n\n')[0]?.trim();
+  return zikrSection || '';
 }

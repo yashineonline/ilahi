@@ -12,11 +12,9 @@ import BooksView from '../views/BooksView.vue'
 import HistoryView from '../views/HistoryView.vue'
 import MiscellaneousView from '../views/MiscellaneousView.vue'
 import AuthorPoems from '../views/AuthorPoems.vue';
-
-
 import { useSongStore } from '../stores/songStore'
+import ZikrPlayer from '../components/ZikrPlayer.vue'
 
-// const SongList = () => import('./components/SongList.vue');
 
 const routes = [
   {
@@ -96,7 +94,13 @@ const routes = [
     path: '/poems/:authorName',
     name: 'AuthorPoems',
     component: AuthorPoems
-  }
+  },
+  {
+    path: '/zikr-practice',
+    name: 'ZikrPlayer',
+    component: ZikrPlayer
+  },
+  
 ]
 
 const router = createRouter({
