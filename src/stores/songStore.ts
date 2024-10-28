@@ -2,13 +2,14 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { processSongsFile } from '../utils/songProcessor'
-import { SongData } from '../utils/types'
+import { SongData, ZikrItem } from '../utils/types'
 import { searchSongs } from '../utils/search'
 import { setSubcategories, getAllCategories } from '../utils/categoryUtils'
 
 export const useSongStore = defineStore('song', () => {
   const songs = ref<SongData[]>([]);
   const categories = ref<string[]>([]);
+  const zikrItems = ref<ZikrItem[]>([]);
   const searchQuery = ref('');
   const selectedSongs = ref<SongData[]>([]);
 
@@ -45,8 +46,9 @@ export const useSongStore = defineStore('song', () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const text = await response.text()
-      const { songs: processedSongs, subcategories } = processSongsFile(text)
+      const { songs: processedSongs, subcategories, zikrItems: processedZikrItems } = processSongsFile(text)
       songs.value = processedSongs
+      zikrItems.value = processedZikrItems
       setSubcategories(subcategories)
       categories.value = getAllCategories(processedSongs)
       localStorage.setItem('cachedSongs', JSON.stringify(songs.value))
@@ -58,6 +60,7 @@ export const useSongStore = defineStore('song', () => {
       console.error('Error fetching songs:', error)
       songs.value = []
       categories.value = []
+      zikrItems.value = []
       throw error // Rethrow the error
     }
   };
@@ -89,6 +92,7 @@ export const useSongStore = defineStore('song', () => {
   return { 
     songs, 
     categories,
+    zikrItems,
     filteredSongs, 
     fetchSongs, 
     setSearchQuery, 

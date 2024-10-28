@@ -10,3 +10,9 @@ export interface SongData {
   isUnderEdit: boolean;
   slug: string;
 }
+
+export interface ZikrItem {
+  zikrTitle: string;  // Changed from 'title' to 'zikrTitle' to avoid confusion
+  zikrLink: string;
+  zikrLyrics?: string[][];  // Add optional lyrics property
+}
