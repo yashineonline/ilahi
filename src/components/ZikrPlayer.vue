@@ -1,48 +1,73 @@
 <template>
   <div class="w-full max-w-4xl mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-6 text-center">AQRT Zikr Practice</h1>
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold mb-2">AQRT Zikr Practice</h1>
+      <p class="text-base-content/70">Do zikr and follow along with the audio recordings of Shaykh Taner!</p>
 
-    <div v-if="loading" class="text-center">
-      <div class="loading loading-spinner loading-lg"></div>
+      <!-- Add instruction message when no zikrs are loaded -->
+      <div v-if="songStore.zikrItems.length === 0 && !loading" class="alert alert-info shadow-lg mt-4">
+        <font-awesome-icon icon="info-circle" class="h-6 w-6" />
+        <span>Click the refresh button <font-awesome-icon icon="rotate" class="text-primary mx-1" /> above to load the zikr recordings.</span>
+      </div>
+
+      <!-- Add instruction for using the cards -->
+      <div v-else class="alert alert-info shadow-lg mt-4">
+        <span>Tap on the zikr below that you wish to listen and recite at the same time.</span>
+        <font-awesome-icon icon="hand-point-down" class="h-6 w-6" />
+      </div>
     </div>
 
-    <div v-else-if="error" class="alert alert-error">
-      {{ error }}
+    <div v-if="loading" class="min-h-[200px] flex items-center justify-center">
+      <div class="loading loading-spinner loading-lg text-primary"></div>
     </div>
 
-    <div v-else class="space-y-4">
+    <div v-else-if="error" class="alert alert-error shadow-lg">
+      <font-awesome-icon icon="triangle-exclamation" class="h-6 w-6" />
+      <span>{{ error }}</span>
+    </div>
+
+    <div v-else class="space-y-6">
       <div
         v-for="(zikr, index) in songStore.zikrItems"
         :key="index"
-        class="card bg-base-100 shadow-xl"
+        class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all cursor-pointer hover:-translate-y-1"
+        @click="togglePlayer(index)"
       >
         <div class="card-body">
-          <div class="flex justify-between items-center">
-            <h2 class="card-title">{{ zikr.zikrTitle }}</h2>
-            <button class="btn btn-primary btn-sm" @click="togglePlayer(index)">
-              {{ expandedIndex === index ? "Hide" : "Show" }} Player and Lyrics
-            </button>
-          </div>
+          <h2 class="card-title text-2xl">{{ zikr.zikrTitle }}</h2>
 
-          <div v-if="expandedIndex === index" class="mt-4">
-            <audio-player
-              :audio-src="zikr.zikrLink"
-              player-type="googledrive"
-              @player-ready="onPlayerReady"
-            />
-            <!-- Add lyrics display -->
-            <div v-if="zikr.zikrLyrics" class="mt-4 p-4 bg-base-200 rounded-lg">
-              <div 
-                v-for="(stanzaLines, stanzaIndex) in zikr.zikrLyrics" 
-                :key="stanzaIndex" 
-                class="mb-6 border-b border-base-300 pb-4"
+          <div 
+            v-if="expandedIndex === index" 
+            class="mt-6 space-y-6"
+          >
+            <div class="card bg-base-200">
+              <div class="card-body">
+                <audio-player
+                  :audio-src="zikr.zikrLink"
+                  player-type="googledrive"
+                  @player-ready="onPlayerReady"
+                />
+              </div>
+            </div>
+
+            <div 
+              v-if="zikr.zikrLyrics" 
+              class="card bg-base-200"
+            >
+              <div class="card-body prose max-w-none">
+                <h3 class="card-title text-xl mb-4">Words</h3>
+                <div 
+                  v-for="(stanzaLines, stanzaIndex) in zikr.zikrLyrics" 
+                  :key="stanzaIndex" 
+                  class="mb-6 last:mb-0"
                 >
-                <div
-                  v-for="(line, lineIndex) in stanzaLines"
-                  :key="lineIndex"
-                  class="text-lg leading-relaxed"
+                  <p 
+                    v-for="(line, lineIndex) in stanzaLines"
+                    :key="lineIndex"
+                    class="text-lg leading-relaxed"
                   >
-                  {{ line }}
+                    {{ line }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -71,27 +96,17 @@ const onPlayerReady = (playerData: any) => {
   console.log("Player ready:", playerData);
 };
 
-onMounted(async () => {
+const fetchData = async () => {
   loading.value = true;
   try {
-    if (songStore.songs.length === 0) {
-      await songStore.fetchSongs();
-    }
-// Add debug logging
-console.log('Zikr items:', songStore.zikrItems);
-    songStore.zikrItems.forEach((zikr, index) => {
-      console.log(`Zikr ${index}:`, {
-        title: zikr.zikrTitle,
-        hasLyrics: !!zikr.zikrLyrics,
-        lyricsLength: zikr.zikrLyrics?.length
-      });
-    });
-
+    await songStore.fetchSongs();
   } catch (err) {
     console.error("Error:", err);
     error.value = "Failed to load zikr samples. Please try again later.";
   } finally {
     loading.value = false;
   }
-});
+};
+
+onMounted(fetchData);
 </script>
