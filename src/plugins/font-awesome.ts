@@ -8,11 +8,14 @@ import {
   faCog,
   faArrowLeft,
   faChevronLeft,
-  faChevronRight
+  faChevronRight,
+  faChevronUp, faChevronDown, faTriangleExclamation,
+  faInfoCircle, faHandPointer, faHandPointDown,
+  faFilePdf, faQrcode, faMusic, faPause, faLanguage 
 } from '@fortawesome/free-solid-svg-icons'
+
 import { faCircleDown as farCircleDown } from '@fortawesome/free-regular-svg-icons'
 import { faWhatsapp, faYoutube } from '@fortawesome/free-brands-svg-icons'
-import { faFilePdf, faQrcode, faMusic, faPause, faLanguage } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
   fasCircleDown, 
@@ -30,7 +33,13 @@ library.add(
   faCog,
   faArrowLeft,
   faChevronLeft,
-  faChevronRight
+  faChevronRight,
+  faChevronUp, 
+  faChevronDown, 
+  faTriangleExclamation,
+  faInfoCircle,
+  faHandPointer,
+  faHandPointDown
 )
 
 export { FontAwesomeIcon }
