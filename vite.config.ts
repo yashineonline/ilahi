@@ -9,6 +9,9 @@ export default defineConfig({
     vue(),
     VitePWA({
       registerType: 'autoUpdate',
+      workbox: {
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3MB
+      },
       includeAssets: [
         '16.png', '20.png', '29.png', '32.png', '40.png', '48.png', '50.png', 
         '57.png', '58.png', '60.png', '64.png', '72.png', '76.png', '80.png', 
