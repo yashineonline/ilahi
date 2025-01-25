@@ -8,7 +8,7 @@
     <!-- A-Z filter -->
     <div class="flex flex-wrap justify-center my-4">
       <button
-        v-for="letter in 'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZ'"
+        v-for="letter in 'ABCÇDEFGĞHIİJKLMNOÖPQRSŞTUÜVYZ'"
         :key="letter"
         @click="filterByLetter(letter)"
         :class="['btn btn-sm m-1', { 'btn-primary': currentLetter === letter }]"
