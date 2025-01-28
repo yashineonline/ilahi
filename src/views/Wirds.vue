@@ -2,11 +2,11 @@
     <div class="wirds-container">
       <h1 class="text-3xl font-bold mb-4" v-if="!showQadiriWird && !showRifaiWird">Wirds</h1>
       <div class="flex flex-col gap-4" v-if="!showQadiriWird && !showRifaiWird">
-        <button @click="toggleRifaiWird" class="btn btn-primary text-xl">
-          Show Rifai Wird
-        </button>
         <button @click="toggleQadiriWird" class="btn btn-primary text-xl">
           Show Qadiri Wird
+        </button>
+        <button @click="toggleRifaiWird" class="btn btn-primary text-xl">
+          Show Rifai Wird
         </button>
       </div>
       <Suspense v-if="showQadiriWird">
