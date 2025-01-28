@@ -14,7 +14,7 @@
     "moduleResolution": "Node",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "types": ["firebase"],
+    "types": ["firebase", "node"],
     "paths": {
       "@/*": ["src/*"]
     },
