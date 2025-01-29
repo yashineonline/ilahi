@@ -1,6 +1,6 @@
 <template>
   <div class="w-full max-w-4xl mx-auto p-4">
-    <h2 class="text-2xl font-bold mb-4">Ilahi List</h2>
+    <h2 class="text-2xl font-bold mb-4">ilahi List</h2>
     <div class="flex justify-center my-4">
       <button @click="resetSearch" class="btn btn-secondary">Reset Search</button>
     </div>
@@ -29,7 +29,7 @@
             value="Basic"
             class="checkbox checkbox-primary mr-2 custom-checkbox"
           />
-          <label for="basicCategory" class="text-lg font-semibold text-primary">Basic Ilahis For Zikr</label>
+          <label for="basicCategory" class="text-lg font-semibold text-primary">Basic ilahis For Zikr</label>
         </div>
         <div class="dropdown">
           <label tabindex="0" class="btn m-1" @click="isDropdownOpen = !isDropdownOpen">More Categories</label>

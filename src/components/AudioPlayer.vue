@@ -132,6 +132,17 @@ function wrapAudioElement(audio: HTMLAudioElement) {
   };
 }
 
+function wrapYoutubePlayer(player: any) {
+  return {
+    pauseVideo: () => player.pauseVideo(),
+    playVideo: () => player.playVideo(),
+    getCurrentTime: () => player.getCurrentTime(),
+    seekTo: (time: number) => player.seekTo(time, true),
+    getPlaybackRate: () => player.getPlaybackRate(),
+    setPlaybackRate: (rate: number) => player.setPlaybackRate(rate)
+  };
+}
+
 watch(() => props.audioSrc, () => {
   console.log('Audio source changed:', props.audioSrc);
   if (props.playerType === 'youtube' && youtubePlayer.value) {
@@ -148,25 +159,55 @@ watch(() => props.audioSrc, () => {
 
 function onYoutubeReady(event: any) {
   console.log('YouTube player ready');
-  const { startTime, endTime } = getYoutubeVideoId(props.audioSrc);
-  if (startTime > 0) {
-    event.target.seekTo(startTime);
-    event.target.playVideo();
-  }
-  emit('player-ready', { player: event.target, type: 'youtube' });
+  const player = event.target;
+// Immediately stop any playback
+player.stopVideo();
 
-  if (endTime > 0) {
-    console.log('Setting up end time check for:', endTime);
-    const checkTime = setInterval(() => {
-      const currentTime = event.target.getCurrentTime();
-      if (currentTime >= endTime) {
-        console.log('Reached end time, pausing video');
-        event.target.pauseVideo();
-        clearInterval(checkTime);
-      }
-    }, 1000); // Check every second
-  }
+  const { videoId, startTime: start, endTime: end } = getYoutubeVideoId(props.audioSrc);
+  startTime.value = start;
+  endTime.value = end;
+
+  // Use cueVideoById instead of loadVideoById
+  player.cueVideoById({
+    videoId: videoId,
+    startSeconds: start,
+    endSeconds: end || undefined
+  });
+
+  isLoaded.value = true;
+  emit('player-ready', { 
+    player: wrapYoutubePlayer(player),
+    type: 'youtube' 
+  });
 }
+watch(() => props.audioSrc, () => {
+  console.log('Audio source changed:', props.audioSrc);
+  if (props.playerType === 'youtube' && youtubePlayer.value) {
+    const { videoId, startTime: start, endTime: end } = getYoutubeVideoId(props.audioSrc);
+    console.log('YouTube video ID:', videoId);
+    youtubePlayer.value.cueVideoById({ 
+      videoId, 
+      startSeconds: start,
+      endSeconds: end || undefined
+     });
+    startTime.value = start;
+    endTime.value = end;
+  } else {
+    isLoaded.value = false;
+  }
+});
+//   if (endTime > 0) {
+//     console.log('Setting up end time check for:', endTime);
+//     const checkTime = setInterval(() => {
+//       const currentTime = event.target.getCurrentTime();
+//       if (currentTime >= endTime) {
+//         console.log('Reached end time, pausing video');
+//         event.target.pauseVideo();
+//         clearInterval(checkTime);
+//       }
+//     }, 1000); // Check every second
+//   }
+// }
 
 function wrapHowlInstance(howl: Howl) {
   return {
@@ -280,7 +321,7 @@ function onIframeLoad(event: Event) {
 const playSegment = () => {
   if (youtubePlayer.value && props.playerType === 'youtube') {
     const { videoId, startTime, endTime } = getYoutubeVideoId(props.audioSrc);
-    youtubePlayer.value.loadVideoById({
+    youtubePlayer.value.cueVideoById({
       videoId: videoId,
       startSeconds: startTime,
       endSeconds: endTime || undefined,

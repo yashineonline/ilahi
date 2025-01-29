@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-6">Ilahi Books</h1>
+    <h1 class="text-3xl font-bold mb-6">ilahi Books</h1>
     
     <div v-if="loading" class="text-center text-xl">Loading books...</div>
     

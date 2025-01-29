@@ -13,7 +13,7 @@
     </div>
     <p class="text-center mt-8">
       <a href="https://aqrtsufi.org/ilahis/" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primary-focus underline">
-        Read more about Ilahis
+        Read more about ilahis
       </a>
     </p>
     <router-link to="/poems" class="btn btn-link text-primary hover:text-primary-focus underline">

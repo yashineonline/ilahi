@@ -20,8 +20,8 @@ export default defineConfig({
       ],
       manifest: {
         name: "ilahi Book App",
-        short_name: "Ilahi",
-        description: "Collection of Ilahis",
+        short_name: "ilahi",
+        description: "Collection of ilahis",
         start_url: "/ilahi/",
         scope: "/ilahi/",
         display: "standalone",

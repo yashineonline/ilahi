@@ -1,23 +1,23 @@
 <template>
   <div class="w-full max-w-4xl mx-auto p-6 bg-blue-500 text-white rounded-lg space-y-4">
-    <h1 class="text-2xl font-bold">Ilahi Book</h1>
-    <p>Download our collection of Ilahis as a PDF book.</p>
+    <h1 class="text-2xl font-bold">ilahi Book</h1>
+    <p>Download our collection of ilahis as a PDF book.</p>
     <div v-if="isLoading" class="text-center">
       <p>Loading... Please wait.</p>
       <ProgressBar :progress="progress" />
     </div>
     <div v-else class="space-y-2">
       <button @click="downloadBasicBook" :disabled="isLoading" class="px-4 py-2 bg-white text-blue-600 border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-        Download {{ basicSongs.length }} Basic Ilahis
+        Download {{ basicSongs.length }} Basic ilahis
       </button>
       <button @click="downloadIntermediateBook" :disabled="isLoading" class="px-4 py-2 bg-white text-red-600 border border-red-600 rounded hover:bg-red-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-        {{ intermediateSongs.length }} Ilahis (including Basic)
+        {{ intermediateSongs.length }} ilahis (including Basic)
       </button>
       <button @click="showSongSelector = true" :disabled="isLoading" class="px-4 py-2 bg-white text-purple-600 border border-purple-600 rounded hover:bg-purple-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         Create Custom Book
       </button>
       <button @click="confirmDownload('all')" :disabled="isLoading" class="px-4 py-2 bg-white text-green-600 border border-green-600 rounded hover:bg-green-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-        {{ songStore.songs.length }} Ilahis
+        {{ songStore.songs.length }} ilahis
       </button>
     </div>
     <div v-if="showSongSelector && !isLoading" class="mt-4">
@@ -128,7 +128,7 @@ const downloadFullBook = async () => {
       progress.value = p;
     });
     progress.value = 99; // Set to 99% before starting download
-    await downloadPDF(pdfBytes, 'AQRT_Ilahi_DraftBook.pdf');
+    await downloadPDF(pdfBytes, 'AQRT_ilahi_DraftBook.pdf');
     progress.value = 100; // Set to 100% when download is complete
   } catch (error) {
     console.error('Error generating PDF:', error);
@@ -151,7 +151,7 @@ const downloadBasicBook = async () => {
       progress.value = p;
     });
     progress.value = 99; // Set to 99% before starting download
-    await downloadPDF(pdfBytes, 'AQRT_Basic_Ilahi.pdf');
+    await downloadPDF(pdfBytes, 'AQRT_Basic_ilahi.pdf');
     progress.value = 100; // Set to 100% when download is complete
   } catch (error) {
     console.error('Error generating PDF:', error);
@@ -173,7 +173,7 @@ const downloadIntermediateBook = async () => {
       progress.value = p;
     });
     progress.value = 99; // Set to 99% before starting download
-    await downloadPDF(pdfBytes, 'AQRT_Intermediate_Ilahi.pdf');
+    await downloadPDF(pdfBytes, 'AQRT_Intermediate_ilahi.pdf');
     progress.value = 100; // Set to 100% when download is complete
   } catch (error) {
     console.error('Error generating PDF:', error);
@@ -190,7 +190,7 @@ const generateCustomBook = async () => {
   }
   isLoading.value = true;
   const { pdfBytes } = await generateFullBookPDF(selectedSongs.value, true);
-  await downloadPDF(pdfBytes, 'AQRT_Custom_Ilahi_Book.pdf');
+  await downloadPDF(pdfBytes, 'AQRT_Custom_ilahi_Book.pdf');
   isLoading.value = false;
 };
 
