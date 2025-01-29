@@ -14,7 +14,7 @@ import MiscellaneousView from '../views/MiscellaneousView.vue'
 import AuthorPoems from '../views/AuthorPoems.vue';
 import { useSongStore } from '../stores/songStore'
 import ZikrPlayer from '../components/ZikrPlayer.vue'
-
+// import IlahiClasses from '../components/IlahiClasses.vue'
 
 const routes = [
   {
@@ -100,6 +100,11 @@ const routes = [
     name: 'ZikrPlayer',
     component: ZikrPlayer
   },
+  // {
+  //   path: '/ilahi-classes',
+  //   name: 'IlahiClasses',
+  //   component: IlahiClasses
+  // },
   
 ]
 
