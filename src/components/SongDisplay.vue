@@ -254,6 +254,25 @@ const getLinkType = (url: string) => {
   return 'Listen';
 }
 
+// Modify the computed property to get all YouTube links
+const youtubeLinks = computed(() => {
+  const links: string[] = [];
+  
+  if (currentSong.value?.mainLinks) {
+    links.push(...currentSong.value.mainLinks.filter(link => 
+      link.includes('youtube.com') || link.includes('youtu.be')
+    ));
+  }
+  
+  if (currentSong.value?.alternateTunes) {
+    links.push(...currentSong.value.alternateTunes.filter(link => 
+      link.includes('youtube.com') || link.includes('youtu.be')
+    ));
+  }
+  
+  return links;
+});
+
 watch(() => route.params.slug, async (newSlug) => {
   if (newSlug) {
     loading.value = true;

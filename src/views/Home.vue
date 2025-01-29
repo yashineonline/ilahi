@@ -1,17 +1,19 @@
 <template>
   <div class="container mx-auto">
+    
+
     <div class="bg-base-200 p-4 rounded-lg mb-6">
       <Quotes />
       
     </div>
     
     <div class="p-4">
-      <h1 class="text-4xl font-bold text-green-800 mb-6">Welcome to ilahi Book App</h1>
+      <h1 class="text-4xl font-bold text-green-800 mb-6">Welcome to İlahi Book App</h1>
       
       <div class="card bg-base-200 shadow-xl m-4">
     <div class="card-body">
       <blockquote class="text-lg italic text-center text-base-content">
-        "ilahis are the flowers that sprout from the hearts of lovers"
+        "İlahis are the flowers that sprout from the hearts of lovers"
       </blockquote>
       <p class="text-right font-semibold mt-2 text-base-content">— Shaykh Nishaat Ahmed Siddiqi</p>
     </div>

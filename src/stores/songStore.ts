@@ -12,6 +12,27 @@ export const useSongStore = defineStore('song', () => {
   const zikrItems = ref<ZikrItem[]>([]);
   const searchQuery = ref('');
   const selectedSongs = ref<SongData[]>([]);
+  const youtubeLinks = ref<string[]>([]);
+
+  const getAllYoutubeLinks = computed(() => {
+    const links: string[] = [];
+    
+    songs.value.forEach(song => {
+      if (song.mainLinks) {
+        links.push(...song.mainLinks.filter(link => 
+          link.includes('youtube.com') || link.includes('youtu.be')
+        ));
+      }
+      
+      if (song.alternateTunes) {
+        links.push(...song.alternateTunes.filter(link => 
+          link.includes('youtube.com') || link.includes('youtu.be')
+        ));
+      }
+    });
+    
+    return links;
+  });
 
   const filteredSongs = computed(() => {
     return searchSongs(songs.value, searchQuery.value);
@@ -49,6 +70,9 @@ export const useSongStore = defineStore('song', () => {
       const { songs: processedSongs, subcategories, zikrItems: processedZikrItems } = processSongsFile(text)
       songs.value = processedSongs
       zikrItems.value = processedZikrItems
+
+      youtubeLinks.value = getAllYoutubeLinks.value;
+
       setSubcategories(subcategories)
       categories.value = getAllCategories(processedSongs)
       localStorage.setItem('cachedSongs', JSON.stringify(songs.value))
@@ -61,6 +85,7 @@ export const useSongStore = defineStore('song', () => {
       songs.value = []
       categories.value = []
       zikrItems.value = []
+      youtubeLinks.value = [] // Clear YouTube links on error
       throw error // Rethrow the error
     }
   };
@@ -94,6 +119,8 @@ export const useSongStore = defineStore('song', () => {
     categories,
     zikrItems,
     filteredSongs, 
+    youtubeLinks, // Expose YouTube links
+    getAllYoutubeLinks, // Expose computed property
     fetchSongs, 
     setSearchQuery, 
     selectedSongs, 

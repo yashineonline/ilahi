@@ -11,6 +11,7 @@
         <li><router-link to="/zikr-practice" class="btn btn-ghost btn-sm">Zikr Practice</router-link></li>
         <li><router-link to="/book" class="btn btn-ghost btn-sm">Download ilahi Book</router-link></li>
         <li><router-link to="/about" class="btn btn-ghost btn-sm">About ilahi</router-link></li>
+        <li> <button @click="handleIlahiClassesClick" class="btn btn-ghost btn-sm w-full text-left">Join ilahi classes</button></li>
         <li><router-link to="/history" class="btn btn-ghost btn-sm">History</router-link></li>
         <li><router-link to="/poems" class="btn btn-ghost btn-sm">Poems</router-link></li>
         <li><router-link to="/books" class="btn btn-ghost btn-sm">Other ilahi Books</router-link></li>
@@ -23,14 +24,17 @@
         <button @click="refreshSongs" class="btn btn-ghost btn-circle" aria-label="Refresh songs">
           <font-awesome-icon :icon="['fas', 'rotate']" spin style="color: #17a6ee;" aria-hidden="true" />
         </button>
-        <button class="btn btn-ghost" @click="handleIconClick('whatsapp')" aria-label="Join ilahi Classes via WhatsApp">
+        <!-- <button class="btn btn-ghost" @click="handleIconClick('whatsapp')" aria-label="Join ilahi Classes via WhatsApp">
           <font-awesome-icon :icon="['fab', 'whatsapp']" style="color: #63E6BE;" size="2xl" aria-hidden="true" />
-        </button>
+        </button> -->
         <button class="btn btn-ghost" @click="handleIconClick('youtube')" aria-label="Play ilahis on YouTube">
           <font-awesome-icon :icon="['fab', 'youtube']" style="color: #ff3d3d;" size="2xl" aria-hidden="true" />
         </button>
-        
       </div>
+
+      <IlahiClasses ref="ilahiClasses" />
+
+
       <!-- Large pop-up box -->
       <div v-if="showPopup" class="modal modal-open" @click="closePopup">
         <div class="modal-box relative" @click.stop role="dialog" aria-labelledby="popupTitle">
@@ -52,6 +56,8 @@ import { useSongStore } from '../stores/songStore'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import Installation from './Installation.vue'
+import IlahiClasses from './IlahiClasses.vue' // Import the IlahiClasses component
+
 
 const themeStore = useThemeStore()
 const songStore = useSongStore()
@@ -64,6 +70,15 @@ const popupContent = ref({
   actionText: '',
   action: () => {}
 })
+
+const ilahiClasses = ref(null) // Create a ref for IlahiClasses
+
+const handleIlahiClassesClick = () => {
+  console.log('Click handled', ilahiClasses.value) // Debug log
+  if (ilahiClasses.value) {
+    ilahiClasses.value.openPopup()
+  }
+}
 
 function refreshSongs() {
   songStore.fetchSongs(true)
@@ -96,6 +111,9 @@ const handlePopupAction = () => {
   popupContent.value.action()
   closePopup()
 }
+
+// Expose the ilahiClasses ref
+defineExpose({ ilahiClasses })
 </script>
 
 <style scoped>
