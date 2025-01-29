@@ -1,5 +1,5 @@
 export const EXPLANATION_TEXT = {
-  title: "About Ilahi",
+  title: "About ilahi",
   sections: [
     {
       title: "Harmonies of the Universe",
@@ -15,11 +15,11 @@ export const EXPLANATION_TEXT = {
       ]
     },
     {
-      title: "The Importance of Ilahis",
+      title: "The Importance of ilahis",
       content: [
         {
           type: "paragraph",
-          text: "During Zikr, we sing Ilahis (sacred songs) which are designed to provide motivation. These songs tell us of our philosophy, of the wisdom of Sufism."
+          text: "During Zikr, we sing ilahis (sacred songs) which are designed to provide motivation. These songs tell us of our philosophy, of the wisdom of Sufism."
         },
         {
           type: "paragraph",
@@ -50,18 +50,18 @@ export const EXPLANATION_TEXT = {
       content: [
         {
           type: "quote",
-          text: "Ilahi or Nat, whatever needs voice indeed. But most important needs heart and love not to please people but to honor Allah and all His company. Ya Wadud."
+          text: "ilahi or Nat, whatever needs voice indeed. But most important needs heart and love not to please people but to honor Allah and all His company. Ya Wadud."
         }
       ],
       author: "Shaykh Sadeck el Ansari"
     
     },
     {
-      title: "Maqam of Ilahis in Zikr",
+      title: "Maqam of ilahis in Zikr",
       content: [
         {
           type: "quote",
-          text: "Ilahis can be sung in different maqams according to the zikrs being done. And there are other maqams in which the ilahis can be sung as well."
+          text: "ilahis can be sung in different maqams according to the zikrs being done. And there are other maqams in which the ilahis can be sung as well."
         }
       ],
       author: "Es-Seyyida Es-Shaykha Muzeyyen Vargonen el Ansari"

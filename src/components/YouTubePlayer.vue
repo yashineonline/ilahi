@@ -2,7 +2,7 @@
   <div class="card shadow-lg w-full max-w-4xl mx-auto">
     <div class="card-body">
 
-        <h1 class="text-3xl font-bold mb-4">AQRT Ilahi Playlist</h1>
+        <h1 class="text-3xl font-bold mb-4">AQRT ilahi Playlist</h1>
         <div class="youtube-player-container w-full">
           <YouTube
             :src="playlistUrl"

@@ -35,7 +35,7 @@ export async function generateFullBookPDF(songs: SongData[], isCustom: boolean =
 
   // Original cover content (Page 2)
   log('Creating original cover content');
-  const originalCoverPage = await createCoverPage(pdfDoc, font, 'Ilahi Book', isCustom);
+  const originalCoverPage = await createCoverPage(pdfDoc, font, 'ilahi Book', isCustom);
 
   // Second image (Page 3)
   log('Creating second image');

@@ -9,9 +9,9 @@ export async function createCoverPage(pdfDoc: PDFLib, font: PDFFont, title: stri
 
   const lines = [
     'Ansari Qadiri Rifai Tariqa',
-    'Ilahi Book',
+    'ilahi Book',
     isCustom ? 'Customized Version' : '',
-    'Generated and Downloaded from Ilahi Book App',
+    'Generated and Downloaded from ilahi Book App',
     `Draft Copy of ${currentDate}`,
     'For any queries, email aqrtsufi@gmail.com'
   ].filter(line => line !== '');
@@ -314,8 +314,8 @@ export async function createTemporaryPlaceholderPages(pdfDoc: PDFLib, font: PDFF
   pages.push(page);
   const { width, height } = page.getSize();
 
-  // About Ilahi
-  page.drawText('About Ilahi', {
+  // About ilahi
+  page.drawText('About ilahi', {
     x: 50,
     y: height - 100,
     size: 24,

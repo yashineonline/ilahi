@@ -63,7 +63,7 @@
         </div>
       </div>
       <div v-if="showQRCodeFlag && qrCodeDataUrl" class="mt-4 text-center">
-        <h3 class="text-xl font-semibold mb-2">QR Code For This Ilahi</h3>
+        <h3 class="text-xl font-semibold mb-2">QR Code For This ilahi</h3>
         <img :src="qrCodeDataUrl" alt="QR Code" class="mx-auto" />
       </div>
     </div>

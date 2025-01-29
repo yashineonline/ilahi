@@ -22,18 +22,18 @@ const songStore = useSongStore();
 
 const downloadFullBook = async () => {
   const { pdfBytes } = await generateFullBookPDF(songStore.songs);
-  await downloadPDF(pdfBytes, 'AQRT_Ilahi_FullBook.pdf');
+  await downloadPDF(pdfBytes, 'AQRT_ilahi_FullBook.pdf');
 };
 
 const downloadBasicBook = async () => {
   const basicSongs = filterSongsByCategory(songStore.songs, [CATEGORIES.BASIC]);
   const { pdfBytes } = await generateFullBookPDF(basicSongs);
-  await downloadPDF(pdfBytes, 'AQRT_Ilahi_BasicBook.pdf');
+  await downloadPDF(pdfBytes, 'AQRT_ilahi_BasicBook.pdf');
 };
 
 const downloadIntermediateBook = async () => {
   const intermediateSongs = filterSongsByCategory(songStore.songs, [CATEGORIES.INTERMEDIATE]);
   const { pdfBytes } = await generateFullBookPDF(intermediateSongs);
-  await downloadPDF(pdfBytes, 'AQRT_Ilahi_IntermediateBook.pdf');
+  await downloadPDF(pdfBytes, 'AQRT_ilahi_IntermediateBook.pdf');
 };
 </script>
