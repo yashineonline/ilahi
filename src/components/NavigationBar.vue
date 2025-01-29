@@ -3,7 +3,7 @@
     <div class="w-full px-4 flex flex-col items-center">
       <Installation class="mb-2" />
       <ul class="flex flex-col w-full mb-4 list-none p-0 space-x-2">
-        <li><router-link to="/songs" class="btn btn-ghost btn-sm text-xl mb-2">View ilahi List</router-link></li>
+        <li><router-link to="/songs" class="btn btn-ghost btn-sm text-xl mb-2">View İlahi List</router-link></li>
         <div class="dropdown">
       <label tabindex="0" class="btn btn-ghost btn-sm text-xl mb-2">More</label>
       <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
