@@ -1,5 +1,6 @@
 import { SongData, ZikrItem } from './types';
 import * as unorm from 'unorm';
+import { getZikrOrder } from './zikrOrder';
 
 export function processStanzas(stanzas: string[][]): string[][] {
   return stanzas;
@@ -58,49 +59,9 @@ function renderStanzas(stanzas: string[][], textColor: string): string {
   console.log('Rendering stanzas:');
   return stanzas.map((stanza, index) => {
     console.log(`Stanza ${index}:`, JSON.stringify(stanza, null, 2));
-    
-    // Special handling for history stanza
-    if (stanza.some(line => line.startsWith('History:'))) {
-      // Group lines into paragraphs based on empty lines
-      const paragraphs: string[][] = [];
-      let currentParagraph: string[] = [];
-      
-      stanza.forEach(line => {
-        if (line === '') {
-          if (currentParagraph.length > 0) {
-            paragraphs.push(currentParagraph);
-            currentParagraph = [];
-          }
-        } else {
-          currentParagraph.push(line);
-        }
-      });
-      
-      // Add the last paragraph if it exists
-      if (currentParagraph.length > 0) {
-        paragraphs.push(currentParagraph);
-      }
-
-      // Render history with paragraphs
-      return `
-        <div class="mb-8 pb-4 border-b border-gray-300" data-stanza-index="${index}">
-          ${paragraphs.map(paragraph => `
-            <div class="mb-4">
-              ${paragraph.map(line => 
-                `<p class="mb-1 ${textColor}" data-line-index="${index}">${unorm.nfc(line)}</p>`
-              ).join('')}
-            </div>
-          `).join('')}
-        </div>
-      `;
-    }
-    
-    // Normal stanza rendering
     return `
       <div class="mb-8 pb-4 border-b border-gray-300" data-stanza-index="${index}">
-        ${stanza.map((line, lineIndex) => 
-          `<p class="mb-1 ${textColor}" data-line-index="${lineIndex}">${unorm.nfc(line)}</p>`
-        ).join('')}
+        ${stanza.map((line, lineIndex) => `<p class="mb-1 ${textColor}" data-line-index="${lineIndex}">${unorm.nfc(line)}</p>`).join('')}
       </div>
     `;
   }).join('');
@@ -108,7 +69,7 @@ function renderStanzas(stanzas: string[][], textColor: string): string {
 
 import { slugify } from '../utils/search';
 
-export function processSongsFile(fileContent: string): { songs: SongData[], subcategories: Record<string, string[]>,  zikrItems: ZikrItem[]} {
+export function processSongsFile(fileContent: string): { songs: SongData[], subcategories: Record<string, string[]>, zikrItems: ZikrItem[] } {
   const lines = fileContent.split('\n');
   const subcategories: Record<string, string[]> = {};
   let songSections: string[] = [];
@@ -209,53 +170,35 @@ export function processSongsFile(fileContent: string): { songs: SongData[], subc
     songSections.push(currentSection.trim());
   }
 
-  const splitStanzas = (text: string): string[][] => {
+  const splitStanzas = (text: string, isHistory: boolean = false): string[][] => {
     const lines = text.split('\n');
     const result: string[][] = [];
     let currentStanza: string[] = [];
-    let isInHistory = false;
-    let historyStanza: string[] = [];
 
     for (const line of lines) {
-      const trimmedLine = line.trim();
-      
-      // Check if we're entering history section
-      if (trimmedLine.startsWith('History:')) {
-        isInHistory = true;
-        historyStanza = [trimmedLine];
-        continue;
-      }
-
-      if (isInHistory) {
-        // For history content, handle empty lines as paragraph separators
-        if (trimmedLine === '') {
-          if (historyStanza.length > 0) {
-            historyStanza.push(''); // Add empty line to maintain paragraph separation
-          }
-        } else {
-          historyStanza.push(trimmedLine);
-        }
-      } else {
-        // Normal stanza processing for non-history content
-        if (trimmedLine === '') {
-          if (currentStanza.length > 0) {
+      if (line.trim() === '') {
+        if (currentStanza.length > 0) {
+          if (isHistory) {
+            // For history, preserve the paragraph as is
             result.push(currentStanza);
             currentStanza = [];
+          } else {
+            result.push([...currentStanza]);
+            currentStanza = [];
           }
-        } else {
-          currentStanza.push(trimmedLine);
         }
+      } else {
+        // For history, don't trim to preserve formatting
+        currentStanza.push(isHistory ? line : line.trim());
       }
     }
 
-    // Add any remaining non-history stanza
-    if (!isInHistory && currentStanza.length > 0) {
-      result.push(currentStanza);
-    }
-
-    // Add history stanza if it exists
-    if (historyStanza.length > 0) {
-      result.push(historyStanza);
+    if (currentStanza.length > 0) {
+      if (isHistory) {
+        result.push(currentStanza);
+      } else {
+        result.push([...currentStanza]);
+      }
     }
 
     return result;
@@ -270,6 +213,7 @@ export function processSongsFile(fileContent: string): { songs: SongData[], subc
     let categories: string[] = [];
     let tags: string[] = [];
     let titleIndex = -1;
+    let pronunciation: string[][] = [];
 
     // Find the links, categories, and title
     for (let i = 0; i < lines.length; i++) {
@@ -295,75 +239,104 @@ export function processSongsFile(fileContent: string): { songs: SongData[], subc
     }
 
     const lyricsStartIndex = titleIndex + 1;
-    const translationStart = lines.findIndex((line, index) => index > lyricsStartIndex && line.trim() === 'T:');
-    const historyStart = lines.findIndex((line, index) => index > lyricsStartIndex && line.trim().startsWith('History:'));
-    const pronunciationStart = lines.findIndex((line, index) => index > lyricsStartIndex && line.trim().startsWith('Pronunciation:'));
+    let translationStart = -1;
+    let pronunciationStart = -1;
+    let historyStart = -1;
+    // const translationStart = lines.findIndex((line, index) => index > 
+    // lyricsStartIndex && line.trim() === 'T:');
+    // const lyricsText = lines.slice(lyricsStartIndex, translationStart !== -1 ? 
+    //   translationStart : undefined).join('\n');
+    // Find section markers
+    for (let i = lyricsStartIndex; i < lines.length; i++) {
+      const trimmedLine = lines[i].trim();
+      if (trimmedLine === 'T:') translationStart = i;
+      else if (trimmedLine === 'Pronunciation:') pronunciationStart = i;
+      else if (trimmedLine.startsWith('History:')) historyStart = i;
+    }
 
-    // Determine where lyrics end based on what comes first: translation, history, or pronunciation
-    const lyricsEndIndex = Math.min(
-      ...[translationStart, historyStart, pronunciationStart]
-        .filter(x => x !== -1)
-    );
-
-    // Get lyrics text
+    // Process lyrics
     const lyricsText = lines.slice(
       lyricsStartIndex, 
-      lyricsEndIndex !== Infinity ? lyricsEndIndex : undefined
+      Math.min(...[translationStart, pronunciationStart, historyStart]
+        .filter(x => x !== -1))
     ).join('\n');
     const lyrics = splitStanzas(lyricsText);
 
-    // Get translation if it exists
-    let translation: string[][] = [];
-    if (translationStart !== -1) {
-      const translationEndIndex = Math.min(
-        ...[historyStart, pronunciationStart]
-          .filter(x => x !== -1 && x > translationStart)
-      );
-      const translationText = lines.slice(
+    const translationText = translationStart !== -1
+      ? lines.slice(translationStart + 1).join('\n')
+      : '';
+    // const translation = translationStart !== -1 ? splitStanzas(translationText) 
+    // : [];
+
+    // Process translation if exists
+    const translation = translationStart !== -1 ? 
+      splitStanzas(lines.slice(
         translationStart + 1,
-        translationEndIndex !== Infinity ? translationEndIndex : undefined
-      ).join('\n');
-      translation = splitStanzas(translationText);
-    }
+        Math.min(...[pronunciationStart, historyStart]
+          .filter(x => x !== -1 && x > translationStart))
+      ).join('\n')) : 
+      [];
 
-    // Get pronunciation if it exists
-    let pronunciation: string[][] = [];
-    if (pronunciationStart !== -1) {
-      const pronunciationEndIndex = Math.min(
-        ...[historyStart, translationStart]
-          .filter(x => x !== -1 && x > pronunciationStart)
-      );
-      const pronunciationText = lines.slice(
+    // Process pronunciation if exists and category is Basic
+    if (pronunciationStart !== -1 && categories.includes('Basic')) {
+      pronunciation = splitStanzas(lines.slice(
         pronunciationStart + 1,
-        pronunciationEndIndex !== Infinity ? pronunciationEndIndex : undefined
-      ).join('\n');
-      pronunciation = splitStanzas(pronunciationText);
+        historyStart !== -1 ? historyStart : undefined
+      ).join('\n'));
     }
 
-    // Add history to lyrics if it exists
+    // Process history if exists (preserving paragraphs)
+    let history: string[][] = [];
     if (historyStart !== -1) {
-      const historyText = lines.slice(historyStart).join('\n');
-      const historyStanzas = splitStanzas(historyText);
-      lyrics.push(...historyStanzas);
+      console.log('Found history at index:', historyStart);
+      // Get all lines after "History:" until the next section or end
+      const historyText = lines.slice(historyStart)
+        .filter(line => !line.startsWith('T:') && !line.startsWith('Pronunciation:'));
+      
+      console.log('History text before processing:', historyText);
+      
+      // Remove the "History:" line and process the rest
+      const historyContent = historyText.join('\n').replace(/^History:/, '').trim();
+      console.log('History content after cleanup:', historyContent);
+      
+      history = splitStanzas(historyContent, true);
+      console.log('Processed history:', history);
+    } else {
+      console.log('No history section found');
     }
 
     const slug = slugify(title);
+    const zikrOrder = categories.includes('Basic') ? getZikrOrder(title) : 999;
 
     return { 
       title, 
       lyrics, 
-      translation,
-      pronunciation, // Add pronunciation to returned object
+      translation, 
+      pronunciation,
+      history,
       mainLinks,
       alternateTunes,
       categories, 
       tags, 
       isUnderEdit: false,
-      slug
+      slug,
+      zikrOrder
     };
   }).filter(song => song !== null);
 
-  return { songs: songs.sort((a, b) => a.title.localeCompare(b.title, 'tr')), subcategories, zikrItems };
+
+  // return { songs: songs.sort((a, b) => a.title.localeCompare(b.title, 'tr')), 
+    // subcategories, zikrItems };
+
+  // Sort songs - Basic category uses zikrOrder, others use alphabetical
+  const sortedSongs = songs.sort((a, b) => {
+    if (a.categories.includes('Basic') && b.categories.includes('Basic')) {
+      return a.zikrOrder - b.zikrOrder;
+    }
+    return a.title.localeCompare(b.title, 'tr');
+  });
+
+  return { songs: sortedSongs, subcategories, zikrItems };
 }
 
 export function getProcessedSongsCount(fileContent: string): number {

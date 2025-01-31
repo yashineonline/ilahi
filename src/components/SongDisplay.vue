@@ -1,6 +1,12 @@
 <template>
   <div class="w-full max-w-4xl mx-auto p-2 flex flex-col items-center">
     <div class="w-full flex flex-wrap gap-1 mb-2">
+      <PronunciationGuide
+        v-if="currentSong"
+        :song-id="currentSong.slug"
+        :lyrics="currentSong.lyrics"
+        @shown="scrollToPronunciation"
+      />
       <button v-if="hasAudioLinks" class="btn btn-primary btn-sm" @click="toggleMusicPlayer">
         <font-awesome-icon :icon="['fas', hideMusicPlayer ? 'music' : 'pause']" class="mr-2" />
         {{ hideMusicPlayer ? 'Show' : 'Hide' }} Music
@@ -105,6 +111,8 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { faFilePdf, faQrcode, faMusic, faPause, faLanguage } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import type { PlayerType } from './AudioPlayer.vue' // Assuming you've exported this type from AudioPlayer.vue
+import PronunciationGuide from './PronunciationGuide.vue'
+
 
 library.add(faFilePdf, faQrcode, faMusic, faPause, faLanguage)
 
@@ -321,6 +329,15 @@ const scrollToHistory = () => {
     });
   }
 };
+
+const scrollToPronunciation = () => {
+  nextTick(() => {
+    const pronunciationElement = document.getElementById('pronunciation')
+    if (pronunciationElement) {
+      pronunciationElement.scrollIntoView({ behavior: 'smooth' })
+    }
+  })
+}
 
 onMounted(scrollToHistory);
 watch(() => route.hash, scrollToHistory);

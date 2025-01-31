@@ -95,8 +95,6 @@ const progress = ref(0);
 const basicSongs = computed(() => filterSongsByCategory(songStore.songs, ['basic']));
 const intermediateSongs = computed(() => filterSongsByCategory(songStore.songs, ['intermediate']));
 
-
-
 onMounted(async () => {
   if (songStore.songs.length === 0) {
     isLoading.value = true;
@@ -142,12 +140,17 @@ const downloadBasicBook = async () => {
   if (basicSongs.value.length === 0) {
     alert('No basic ilahis available. Please try again later.');
     return;
-
   }
+  
   isLoading.value = true;
   progress.value = 0;
   try {
-    const { pdfBytes, logs } = await generateFullBookPDF(basicSongs.value, false, (p) => {
+    // Sort basic songs by order number before generating PDF
+    const sortedBasicSongs = [...basicSongs.value].sort((a, b) => 
+      (a.order || 999999) - (b.order || 999999)
+    );
+    
+    const { pdfBytes, logs } = await generateFullBookPDF(sortedBasicSongs, false, (p) => {
       progress.value = p;
     });
     progress.value = 99; // Set to 99% before starting download
