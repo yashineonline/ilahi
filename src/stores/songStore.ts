@@ -5,7 +5,7 @@ import { processSongsFile } from '../utils/songProcessor'
 import { SongData, ZikrItem } from '../utils/types'
 import { searchSongs } from '../utils/search'
 import { setSubcategories, getAllCategories } from '../utils/categoryUtils'
-import.meta.env.VITE_GITHUB_TOKEN
+// import.meta.env.VITE_GITHUB_TOKEN
 
 export const useSongStore = defineStore('song', () => {
   const songs = ref<SongData[]>([]);
@@ -61,7 +61,7 @@ export const useSongStore = defineStore('song', () => {
       const response = await fetch(url, {
         headers: {
           'Accept': 'application/vnd.github.v3.raw',
-          'Authorization': `token ${import.meta.env.VITE_GITHUB_TOKEN}`
+          // 'Authorization': `token ${import.meta.env.VITE_GITHUB_TOKEN}`
         }
       });
 
