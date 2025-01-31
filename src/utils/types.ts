@@ -1,11 +1,14 @@
 export interface SongData {
   title: string;
   lyrics: string[][];
-  translation: string[][];
+  translation?: string[][];
+  pronunciation?: string[][];
+  // history?: string[][];  // Add this line
   audioLink?: string;
   mainLinks: string[];
   alternateTunes: string[];
   categories: string[];
+  order?: number; // Add this line
   tags: string[];
   isUnderEdit: boolean;
   slug: string;

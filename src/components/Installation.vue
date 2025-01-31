@@ -1,4 +1,7 @@
 <template>
+  <div>
+    
+  
   <div v-if="!isAppInstalled" class="flex items-center mb-2 p-2 bg-blue-100 rounded-md cursor-pointer" @click="showInstallInstructions">
     <font-awesome-icon :icon="['far', 'circle-down']" shake style="color: #B197FC;" class="mr-2" size="lg" />
     <span class="text-sm font-medium">Install App</span>
@@ -22,6 +25,7 @@
         </button>
       </div>
     </div>
+  </div>
   </div>
 </template>
 

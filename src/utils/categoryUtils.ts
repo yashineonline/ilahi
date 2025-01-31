@@ -37,6 +37,10 @@ export const filterSongsByCategory = (songs: SongData[], categories: string[]): 
     categories.some((category) => {
       const normalizedCategory = normalizeCategory(category);
       if (normalizedCategory === 'basic') {
+        const orderCategory = song.categories.find(cat => cat.startsWith('Order:'));
+        if (orderCategory) {
+          song.order = parseInt(orderCategory.split(':')[1], 10);
+        }
         return song.categories.some(songCategory => 
             normalizeCategory(songCategory).includes('basic') ||
           normalizeCategory(songCategory).includes('basic zikr')

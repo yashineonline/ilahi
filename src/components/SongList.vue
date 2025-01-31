@@ -181,6 +181,11 @@ const sortedFilteredSongs = computed(() => {
 
   if (selectedCategories.value.length > 0 && !selectedCategories.value.includes('All')) {
     songsToDisplay = filterSongsByCategory(songsToDisplay, selectedCategories.value);
+    
+    // If only Basic category is selected, sort by order number
+    if (selectedCategories.value.length === 1 && selectedCategories.value[0] === CATEGORIES.BASIC) {
+      return songsToDisplay.sort((a, b) => (a.order || 999999) - (b.order || 999999));
+    }
   }
 
   if (currentLetter.value && selectedCategories.value.length === 0) {
