@@ -5,6 +5,7 @@
     </header>
     <NavigationBar v-if="navigationStore.isNavigationVisible" />
     <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+      <Notification /> <!-- Import and use the Notification component here -->
       <SearchBar ref="searchBarRef" v-if="navigationStore.isNavigationVisible" />
       <RouterView />
     </main>
@@ -12,15 +13,17 @@
       <p class="text-center">&copy; AQRT İlahi Book App 2024. All rights reserved.</p>
     </footer>
     <ThemeToggle class="fixed top-16 right-4" />
+
   </div>
 </template>
 
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import NavigationBar from './components/NavigationBar.vue'
+import Notification from './components/Notification.vue'; // Import the Notification component
 import SearchBar from './components/SearchBar.vue'
 import ThemeToggle from './components/ThemeToggle.vue'
-import { ref, provide } from 'vue'
+import { ref, provide, onMounted } from 'vue'
 import { useNavigationStore } from './stores/navigationStore'
 
 const navigationStore = useNavigationStore()
@@ -33,8 +36,14 @@ const resetGlobalSearch = () => {
 }
 
 provide('resetGlobalSearch', resetGlobalSearch)
+
+
+
+
+
 </script>
 
 <style>
 @import './style.css';
+
 </style>

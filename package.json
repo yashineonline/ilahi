@@ -1,9 +1,10 @@
 {
   "name": "ilahi-app",
-  "version": "0.0.0",
+  "version": "5.1.11",
   "private": true,
   "scripts": {
-    "build": "vue-tsc --noEmit && vite build && cp dist/index.html dist/404.html",
+    "increment-version": "node incrementVersion.mjs",
+    "build": "vue-tsc --noEmit && npm run increment-version && vite build && cp docs/index.html docs/404.html",
     "dev": "vite",
     "preview": "vite preview",
     "start-server": "node server.mjs"

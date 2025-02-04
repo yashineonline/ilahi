@@ -1,12 +1,14 @@
 <template>
+    <div>
     <button @click="toggleTheme" class="p-2 rounded-full">
       {{ themeStore.theme === 'light-theme' ? '🌙' : '☀️' }}
     </button>
+  </div>
   </template>
   
   <script setup lang="ts">
   import { useThemeStore } from '../stores/themeStore'
-  import { onMounted } from 'vue'
+  import { ref, onMounted } from 'vue'
 
   const themeStore = useThemeStore()
 
@@ -15,7 +17,9 @@
     document.body.className = themeStore.theme
   }
 
-  onMounted(() => {
-    document.body.className = themeStore.theme
-  })
+
+onMounted(() => {
+  document.body.className = themeStore.theme; // Set initial theme
+
+});
   </script>

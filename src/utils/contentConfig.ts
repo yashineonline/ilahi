@@ -83,6 +83,7 @@ export const EXPLANATION_TEXT = {
 
 export const QUOTES = [
   "Love is the greatest power on earth and the universe.",
+
   "Love is hard to get but it is the combining chemistry of everything.",
 
   "Love is the fusion between you and everything and everything and everything.",
@@ -97,7 +98,18 @@ export const QUOTES = [
 
   "Have you ever asked love where she is coming from, where is she going to and where is her home?",
 
-  "Love is giving yourself to the beloved and not asking it back." 
+  "Love is giving yourself to the beloved and not asking it back.",
+  
+  "Make your goal to love Allah. Surrender to that.", 
+  
+  "The biggest action is love.", 
+  
+  "The biggest being is love.", 
+  
+  "The shortest distance to Allah is love.", 
+  
+  "The biggest asset that burns all incompleteness is love.",
+
 ];
 
 export const POEMS = [
@@ -143,6 +155,35 @@ Love is the oasis in the desert, lifesaver in the sea.
 It's the rope for the mountaineers.
 It's the hope for the hopeless.`
   },
+
+  {
+  title: "Love in the Universe",
+    content: `The universe is a manifestation 
+    of Allah's mercy and love. 
+    To know this is to see that everything, 
+    even our struggles, 
+    is  designed to bring us closer to Him.`
+},
+
+{
+  title: "Uniting Love",
+    content: `The goal of Sufism is to unite your purpose with Allah's purpose, 
+    to unite your existence with Allah's existence, 
+    to unite your love with Allah's love. 
+    Everything needs to be aligned. 
+    When you start doing this, then the purpose becomes one. 
+    We call this tawhid, oneness.`
+},
+
+{
+  title: "Observe Love with Love",
+    content: `Our job is to observe, appreciate, love Allah 
+    with the love He is giving us. 
+    And not to object to whatever He is trying to teach us. 
+    He can put you into different situations to teach you different things. 
+    If you keep objecting, how are you going to learn?`
+},
+
 ];
 
 export const AUTHOR = "Shaykh Taner Vargonen Ansari";

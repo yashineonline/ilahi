@@ -2,6 +2,8 @@
     <div>
       <h1>Miscellaneous</h1>
       test run
+      update test 1
+      update test 2 autoupdate notification
       <!-- Add your content here -->
     </div>
   </template>

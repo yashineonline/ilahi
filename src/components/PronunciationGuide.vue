@@ -7,7 +7,7 @@
       :aria-expanded="showPronunciation"
       aria-controls="pronunciation-guide"
     >
-      {{ showPronunciation ? 'Hide' : 'Show' }} Pronunciation Guide
+      {{ showPronunciation ? 'Hide' : 'Show' }} Pronunciation Guide - soon!
     </button>
 
     <div v-if="isGenerating" class="text-center" role="status">

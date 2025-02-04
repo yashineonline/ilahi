@@ -16,6 +16,7 @@ const urlsToCache = [
 ];
 
 self.addEventListener('install', (event) => {
+  self.skipWaiting(); // Activate the new service worker immediately
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(urlsToCache))
@@ -34,7 +35,16 @@ self.addEventListener('activate', (event) => {
         );
       })
     );
+    self.clients.claim(); // Claim clients immediately
+
   });
+
+  // Listen for the 'message' event to notify users
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting(); // Skip waiting and activate the new service worker
+  }
+});
 
 self.addEventListener('fetch', (event) => {
     event.respondWith(
