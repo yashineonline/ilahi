@@ -4,6 +4,7 @@
       test run
       update test 1
       update test 2 autoupdate notification
+      message for  notification?
       <!-- Add your content here -->
     </div>
   </template>
