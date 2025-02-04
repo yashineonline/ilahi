@@ -8,11 +8,17 @@
     "baseUrl": ".",
     "composite": false,
     "target": "ES2020",
+    "noEmit": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "allowSyntheticDefaultImports": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
+    // "strict": true,
+    "allowJs": true,
+    "checkJs": false,
     "skipLibCheck": true,
     "types": ["firebase", "node"],
     "paths": {
@@ -20,7 +26,7 @@
     },
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/vite-version.d.ts", "resetGlobal.d.ts", "src/components/Entrance with api.ignore", "src/components/Modal.yashine"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/version.d.ts", "resetGlobal.d.ts", "src/components/Entrance with api.ignore", "src/components/Modal.yashine", "src/version.mts"],
   
   "exclude": [
     // ... other exclusions ...

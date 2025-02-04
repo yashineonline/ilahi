@@ -5,7 +5,7 @@
     </header>
     <NavigationBar v-if="navigationStore.isNavigationVisible" />
     <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-      <Notification /> <!-- Import and use the Notification component here -->
+      <VersionDisplay /> <!-- Import and use the Notification component here -->
       <SearchBar ref="searchBarRef" v-if="navigationStore.isNavigationVisible" />
       <RouterView />
     </main>
@@ -20,11 +20,11 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
 import NavigationBar from './components/NavigationBar.vue'
-import Notification from './components/Notification.vue'; // Import the Notification component
+import VersionDisplay from './components/VersionDisplay.vue'; // Import the Notification component
 import SearchBar from './components/SearchBar.vue'
 import ThemeToggle from './components/ThemeToggle.vue'
-import { ref, provide, onMounted } from 'vue'
-import { useNavigationStore } from './stores/navigationStore'
+import { ref, provide } from 'vue'
+ import { useNavigationStore } from './stores/navigationStore'
 
 const navigationStore = useNavigationStore()
 const searchBarRef = ref<InstanceType<typeof SearchBar> | null>(null)
