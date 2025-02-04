@@ -7,7 +7,7 @@
       <!-- Add instruction message when no zikrs are loaded -->
       <div v-if="songStore.zikrItems.length === 0 && !loading" class="alert alert-info shadow-lg mt-4">
         <font-awesome-icon icon="info-circle" class="h-6 w-6" />
-        <span>Click the refresh button <font-awesome-icon icon="rotate" class="text-primary mx-1" /> above to load the zikr recordings.</span>
+        <span>Tap on the refresh button <font-awesome-icon icon="rotate" class="text-primary mx-1" /> above to load the zikr recordings.</span>
       </div>
 
       <!-- Add instruction for using the cards -->
