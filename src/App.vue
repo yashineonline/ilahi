@@ -26,8 +26,16 @@ import NavigationBar from './components/NavigationBar.vue'
 import VersionDisplay from './components/VersionDisplay.vue'; // Import the Notification component
 import SearchBar from './components/SearchBar.vue'
 import ThemeToggle from './components/ThemeToggle.vue'
-import { ref, provide } from 'vue'
+import { ref, provide, onMounted } from 'vue'
  import { useNavigationStore } from './stores/navigationStore'
+ import { useSongStore } from './stores/songStore';
+
+ const songStore = useSongStore();
+
+// Automatically fetch songs when the app is mounted
+onMounted(async () => {
+  await songStore.fetchSongs();
+});
 
 const navigationStore = useNavigationStore()
 const searchBarRef = ref<InstanceType<typeof SearchBar> | null>(null)

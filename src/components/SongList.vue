@@ -8,7 +8,10 @@
     <!-- Add this after the pagination buttons -->
     <div v-if="randomIlahi" class="mt-4 text-center">
       <p>Try to Sing:</p>
-      <router-link :to="`/songs/${randomIlahi.slug}`" class="text-primary hover:underline">
+      <router-link 
+      :to="{ name: 'SongDisplay', params: { slug: randomIlahi.slug } }" 
+        class="text-primary hover:underline"
+        >
         {{ randomIlahi.title }}
       </router-link>
     </div>
