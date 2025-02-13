@@ -1,11 +1,19 @@
 <template>
   <nav class="navbar shadow-lg flex-col w-full" aria-label="Main navigation">
     <div class="w-full px-4 flex flex-col items-center">
-      <Installation class="mb-2" />
-      <ul class="flex flex-col w-full mb-4 list-none p-0 space-x-2">
-        <li><router-link to="/songs" class="btn btn-ghost btn-sm text-xl mb-2">View İlahi List</router-link></li>
-        <div class="dropdown">
-      <label tabindex="0" class="btn btn-ghost btn-sm text-xl mb-2">More</label>
+      <ul class="flex flex-col w-full mb-4 list-none p-0">
+        <li class="flex justify-center items-center gap-2">
+          <router-link to="/songs" class="btn btn-ghost btn-sm text-xl mb-2">View İlahi List</router-link>
+          <div class="flex items-center gap-2"> <!-- Group the icons -->
+          <button v-if="isSongListView" @click="refreshSongs" class="btn btn-ghost btn-circle" aria-label="Update ilahi list">
+          <font-awesome-icon :icon="['fas', 'rotate']" spin style="color: #17a6ee;" aria-hidden="true" />
+        </button>
+        <Installation v-if="!isSongListView"/>
+      </div>
+      </li>
+        <div v-if="isHomePage" class="dropdown">
+          
+          <label tabindex="0" class="btn btn-ghost btn-sm text-xl mb-2">Menu</label>
       <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
         <li><router-link to="/wirds" class="btn btn-ghost btn-sm">Wird Slide</router-link></li>
         <li><router-link to="/zikr-practice" class="btn btn-ghost btn-sm">Zikr Practice</router-link></li>
@@ -18,16 +26,15 @@
         <li><router-link to="/miscellaneous" class="btn btn-ghost btn-sm">Miscellaneous</router-link></li>
       </ul>
     </div>
-        <li><router-link to="/" class="btn btn-ghost btn-sm text-xl mb-2" aria-label="Home">Home</router-link></li>
+    <li v-if="!isHomePage"><router-link to="/" class="btn btn-ghost btn-sm text-xl mb-2" aria-label="Home">Home</router-link></li>
       </ul>
       <div class="flex items-center space-x-4" role="group" aria-label="Additional actions">
-        <button @click="refreshSongs" class="btn btn-ghost btn-circle" aria-label="Refresh songs">
-          <font-awesome-icon :icon="['fas', 'rotate']" spin style="color: #17a6ee;" aria-hidden="true" />
-        </button>
+        
         <!-- <button class="btn btn-ghost" @click="handleIconClick('whatsapp')" aria-label="Join ilahi Classes via WhatsApp">
           <font-awesome-icon :icon="['fab', 'whatsapp']" style="color: #63E6BE;" size="2xl" aria-hidden="true" />
         </button> -->
-        <button class="btn btn-ghost" @click="handleIconClick('youtube')" aria-label="Play ilahis on YouTube">
+        <button v-if="isHomePage" class="btn btn-ghost" @click="handleIconClick('youtube')" aria-label="Play ilahis on YouTube">
+          Play ilahis
           <font-awesome-icon :icon="['fab', 'youtube']" style="color: #ff3d3d;" size="2xl" aria-hidden="true" />
         </button>
       </div>
@@ -53,15 +60,18 @@
 <script setup lang="ts">
 import { useThemeStore } from '../stores/themeStore'
 import { useSongStore } from '../stores/songStore'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import Installation from './Installation.vue'
 import IlahiClasses from './IlahiClasses.vue' // Import the IlahiClasses component
 
 
 const themeStore = useThemeStore()
 const songStore = useSongStore()
+const route = useRoute()
 const router = useRouter()
+
+const isSongListView = computed(() => route.path === '/songs')
 
 const showPopup = ref(false)
 const popupContent = ref({
@@ -72,6 +82,9 @@ const popupContent = ref({
 })
 
 const ilahiClasses = ref(null) // Create a ref for IlahiClasses
+
+// Add computed property to check if we're on the Home page
+const isHomePage = computed(() => route.path === '/')
 
 const handleIlahiClassesClick = () => {
   console.log('Click handled', ilahiClasses.value) // Debug log

@@ -5,12 +5,14 @@
     </header>
     <NavigationBar v-if="navigationStore.isNavigationVisible" />
     <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-      <VersionDisplay /> <!-- Import and use the Notification component here -->
+      
       <SearchBar ref="searchBarRef" v-if="navigationStore.isNavigationVisible" />
       <RouterView />
     </main>
     <footer class="bg-green-600 text-white p-4 mt-8" v-if="navigationStore.isNavigationVisible">
-      <p class="text-center">&copy; AQRT İlahi Book App 2024. All rights reserved.</p>
+      <VersionDisplay /> <!-- Import and use the Notification component here -->
+      <p class="text-center">&copy; 2024-2025 Copyright by AQRT. </p>
+       <p class="text-center">İlahi Book App. All rights reserved.</p>
     </footer>
     <ThemeToggle class="fixed top-16 right-4" />
 
@@ -18,6 +20,7 @@
 </template>
 
 <script setup lang="ts">
+import RandomIlahi from './components/RandomIlahi.vue';
 import { RouterView } from 'vue-router'
 import NavigationBar from './components/NavigationBar.vue'
 import VersionDisplay from './components/VersionDisplay.vue'; // Import the Notification component

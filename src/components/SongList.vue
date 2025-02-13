@@ -1,10 +1,17 @@
 <template>
   <div class="w-full max-w-4xl mx-auto p-4">
-    <h2 class="text-2xl font-bold mb-4">ilahi List</h2>
-    <div class="flex justify-center my-4">
+    <!-- <h2 class="text-2xl font-bold mb-4">ilahi List</h2> -->
+    <!-- <div class="flex justify-center my-4"> -->
       <button @click="resetSearch" class="btn btn-secondary">Reset Search</button>
+      <button @click="generateRandomIlahi" class="btn btn-primary">What to Sing?</button>
+    <!-- </div> -->
+    <!-- Add this after the pagination buttons -->
+    <div v-if="randomIlahi" class="mt-4 text-center">
+      <p>Try to Sing:</p>
+      <router-link :to="`/songs/${randomIlahi.slug}`" class="text-primary hover:underline">
+        {{ randomIlahi.title }}
+      </router-link>
     </div>
-    
     <!-- A-Z filter -->
     <div class="flex flex-wrap justify-center my-4">
       <button
@@ -127,6 +134,7 @@ import SearchBar from "./SearchBar.vue";
 import { getCurrentInstance } from "vue";
 import { slugify } from '../utils/search';
 import { CATEGORIES, getSubcategories, filterSongsByCategory, normalizeCategory, turkishToEnglish, getSortedSubcategories, processShortcuts, getMainCategories } from '../utils/categoryUtils';
+import { SongData } from "@/utils/types";
 
 const route = useRoute();
 const router = useRouter();
@@ -137,6 +145,15 @@ const currentPage = ref(1);
 const itemsPerPage = 12;
 const currentLetter = ref("");
 const selectedCategories = ref<string[]>([]);
+
+const randomIlahi = ref<SongData | null>(null)
+
+const generateRandomIlahi = () => {
+  if (sortedFilteredSongs.value.length > 0) {
+    const randomIndex = Math.floor(Math.random() * sortedFilteredSongs.value.length)
+    randomIlahi.value = sortedFilteredSongs.value[randomIndex]
+  }
+}
 
 const resetGlobalSearch = inject("resetGlobalSearch") as () => void;
 

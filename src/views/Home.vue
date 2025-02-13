@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto">
     
-
+    <RandomIlahi/> 
     <div class="bg-base-200 p-4 rounded-lg mb-6">
       <Quotes />
       
@@ -65,6 +65,7 @@
 import { RouterLink } from 'vue-router'
 // import { defineComponent } from 'vue';
 import Quotes from '@/components/Quotes.vue';
+import RandomIlahi from '@/components/RandomIlahi.vue';
 
 
 </script>

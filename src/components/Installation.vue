@@ -2,9 +2,9 @@
   <div>
     
   
-  <div v-if="!isAppInstalled" class="flex items-center mb-2 p-2 bg-blue-100 rounded-md cursor-pointer" @click="showInstallInstructions">
+  <div v-if="!isAppInstalled" class="cursor-pointer" @click="showInstallInstructions">
     <font-awesome-icon :icon="['far', 'circle-down']" shake style="color: #B197FC;" class="mr-2" size="lg" />
-    <span class="text-sm font-medium">Install App</span>
+    <!-- <span class="text-sm font-medium">Install App</span> -->
   </div>
   <div v-if="showInstructions" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @click="closeInstructions">
     <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full m-4 relative" @click.stop>
@@ -50,14 +50,15 @@ const installInstructions = {
   android: {
     title: "Install on Android",
     steps: [
-      "Tap the menu button in your browser",
-      "Select \"Add to Home screen\" or \"Install app\"",
-      "Follow the on-screen instructions"
+      "Open the link using Chrome",
+      "Tap on the 3 dots at the top right corner",
+      "Scroll down and tap on \"Add to Home screen\"",
+      "Choose \"Install\""
     ]
   },
   default: {
     title: "Install App",
-    description: "Click the button below to install the app:"
+    description: "Relevant if you are on a phone or tablet. Ignore if you are on a computer."
   }
 };
 

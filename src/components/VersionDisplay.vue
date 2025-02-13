@@ -1,8 +1,10 @@
 <template>
-  <footer class="mt-4 text-center">
+<div>
+<!-- <footer class="mt-4 text-center"> -->
     <p class="text-sm text-gray-600">Version: {{ version }}</p>
     <p class="text-sm text-gray-600">Last updated on: {{ buildDate }}</p>
-  </footer>
+  <!-- </footer> -->
+</div>
 </template>
 
 <script setup lang="ts">
