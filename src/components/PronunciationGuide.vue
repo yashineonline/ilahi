@@ -1,72 +1,150 @@
 <template>
   <div v-if="hasPronunciation">
     <button 
-      @click="togglePronunciation" 
-      class="btn btn-primary mb-4"
-      :disabled="isGenerating"
+    @click="handlePronunciationButtonClick" 
+    class="btn btn-primary mb-4"
       :aria-expanded="showPronunciation"
       aria-controls="pronunciation-guide"
     >
-      {{ showPronunciation ? 'Hide' : 'Show' }} Pronunciation Guide - soon!
+      {{ showPronunciation ? 'Hide' : 'Show' }} Pronunciation Guide
     </button>
 
-    <div v-if="isGenerating" class="text-center" role="status">
-      Generating pronunciation guide...
-    </div>
+    <button 
+        @click="openLanguagePopup" 
+        class="btn btn-ghost"
+        aria-label="Change language settings"
+      >
+        <font-awesome-icon :icon="['fas', 'language']" class="text-lg" />
+      </button>
 
-    <div v-if="error" class="text-red-500 mb-4" role="alert">
-      {{ error }}
-    </div>
+ <!-- Language Selection Popup -->
+ <LanguageSelection v-if="showLanguagePopup" @close="closeLanguagePopup" />
 
     <div 
       v-if="showPronunciation && pronunciation" 
       class="pronunciation-container"
-      v-html="pronunciation"
       id="pronunciation-guide"
       role="region"
       aria-label="Pronunciation guide"
     >
+
+
+        <div class="feedback-line mb-4">
+        <p class="text-sm italic">
+          Second phase testing for pronunciation.
+Now you have the turkish sounds replaced 
+in the langauge that you can relate to:
+English, French, German, Spanish.
+Note that this is only for basic ilahis for now.
+        </p>
+      </div>
+
+    <!-- Feedback Line for German or Spanish -->
+    <div v-if="showFeedbackLine" class="feedback-line mb-4">
+        <p class="text-sm italic">
+          Please give feedback on how we can improve the pronunciation, especially if you speak {{ selectedLanguage }}. 
+          Thank you!
+        </p>
+      </div>
+
+    <div v-for="(stanza, index) in pronunciation" :key="index" class="stanza-guide">
+        <div v-for="(line, lineIndex) in stanza" :key="lineIndex" class="line-guide">
+          <p class="original">{{ line }}</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { generatePronunciation } from '../utils/pronunciationService'
+import { ref, onMounted, watch, computed } from 'vue'
+import { getSelectedLanguage, applyPhoneticReplacements } from '../utils/pronunciationService';
 import { useSongStore } from '../stores/songStore'
+import LanguageSelection from './LanguageSelection.vue';
+import { SongData } from '../utils/types.ts';
+
 
 const props = defineProps<{
   songId: string
-  lyrics: string[][]
+  // lyrics: string[][]
 }>()
 
 const songStore = useSongStore()
 const showPronunciation = ref(false)
-const pronunciation = ref('')
-const isGenerating = ref(false)
-const error = ref('')
+const pronunciation = ref<string[][]>([]) // Update type to string[][]
 const hasPronunciation = ref(false)
+const showLanguagePopup = ref(false);
+const selectedLanguage = ref(getSelectedLanguage());
 
-onMounted(async () => {
-  // Check if this song has pronunciation data
-  const song = songStore.songs.find(s => s.slug === props.songId)
-  hasPronunciation.value = song?.pronunciation && song.pronunciation.length > 0
-})
+// Computed property to determine if the feedback line should be shown
+const showFeedbackLine = computed(() => {
+  return selectedLanguage.value === 'german' || selectedLanguage.value === 'spanish' || selectedLanguage.value === 'french' || selectedLanguage.value === 'english'
+});
+
+// Fetch and process pronunciation data
+const processPronunciationData = () => {
+  const song = songStore.songs.find((s: SongData) => s.slug === props.songId);
+  if (song?.pronunciation && song.pronunciation.length > 0) {
+    console.log('Pronunciation data found for song:', song.title);
+    hasPronunciation.value = true;
+
+    // Log the raw pronunciation data
+    console.log('Raw pronunciation data:', song.pronunciation);
+
+    // Apply phonetic replacements
+    console.log('Selected language for replacements:', selectedLanguage.value);
+    pronunciation.value = song.pronunciation.map(stanza =>
+      stanza.map(line => applyPhoneticReplacements(line, selectedLanguage.value))
+    );
+
+    // Log the processed pronunciation data
+    console.log('Processed pronunciation data:', pronunciation.value);
+  } else {
+    console.log('No pronunciation data found for song:', song?.title);
+  }
+};
+
+// Watch for changes in the selected language
+watch(selectedLanguage, () => {
+  console.log('Language changed to:', selectedLanguage.value);
+  processPronunciationData();
+});
+
+onMounted(() => {
+  console.log('PronunciationGuide mounted');
+  processPronunciationData();
+});
+
+const handlePronunciationButtonClick = () => {
+  console.log('Pronunciation button clicked');
+  if (!selectedLanguage.value) {
+    console.log('No language selected, showing popup');
+    showLanguagePopup.value = true;
+  } else {
+    console.log('Language already selected, toggling pronunciation guide');
+    togglePronunciation();
+  }
+};
+
+
+const openLanguagePopup = () => {
+  console.log('Opening language popup');
+  showLanguagePopup.value = true;
+};
 
 const togglePronunciation = async () => {
-  showPronunciation.value = !showPronunciation.value
-  if (showPronunciation.value && !pronunciation.value) {
-    isGenerating.value = true
-    try {
-      pronunciation.value = await generatePronunciation(props.lyrics)
-    } catch (e) {
-      error.value = 'Failed to generate pronunciation guide'
-      console.error(e)
-    } finally {
-      isGenerating.value = false
-    }
-  }
-}
+  // console.log('Toggling pronunciation guide. Current state:', showPronunciation.value);
+  showPronunciation.value = !showPronunciation.value;
+  // console.log('New state:', showPronunciation.value);
+};
+
+const closeLanguagePopup = () => {
+  console.log('Closing language popup');
+  showLanguagePopup.value = false;
+  // After selecting a language, show the pronunciation guide
+  selectedLanguage.value = getSelectedLanguage(); // Update the selected language
+  togglePronunciation();
+};
 </script>
 
 <style scoped lang="postcss">
@@ -74,35 +152,21 @@ const togglePronunciation = async () => {
   @apply mt-4 bg-white rounded-lg shadow-sm p-6;
 }
 
-.pronunciation-container :deep(.stanza-guide) {
+
+.stanza-guide {
   @apply border-l-4 border-primary pl-4 py-2 mb-8;
 }
 
-.pronunciation-container :deep(.line-guide) {
+.line-guide {
   @apply mb-2;
 }
 
-.pronunciation-container :deep(.original) {
+.original {
   @apply text-base font-medium;
 }
 
-.pronunciation-container :deep(.phonetic) {
-  @apply text-sm text-gray-600 ml-4 font-mono;
+.feedback-line {
+  @apply bg-gray-100 p-3 rounded-lg text-gray-700;
 }
 
-.pronunciation-container :deep(.phonetic-char) {
-  @apply font-semibold text-primary cursor-help;
-}
-
-.pronunciation-container :deep(.special-rule) {
-  @apply font-semibold text-blue-600 cursor-help;
-}
-
-.pronunciation-container :deep(.stanza-break) {
-  @apply my-6 border-t border-gray-200;
-}
-
-.pronunciation-container :deep(.pronunciation-tips) {
-  @apply mt-8 p-4 bg-gray-50 rounded-lg;
-}
 </style>

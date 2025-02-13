@@ -1,4 +1,4 @@
-import { SongData, ZikrItem } from './types';
+import { SongData, ZikrItem } from './types.ts';
 import * as unorm from 'unorm';
 
 export function processStanzas(stanzas: string[][]): string[][] {
@@ -106,7 +106,7 @@ function renderStanzas(stanzas: string[][], textColor: string): string {
   }).join('');
 }
 
-import { slugify } from '../utils/search';
+import { slugify } from '../utils/search.ts';
 
 export function processSongsFile(fileContent: string): { songs: SongData[], subcategories: Record<string, string[]>,  zikrItems: ZikrItem[]} {
   const lines = fileContent.split('\n');

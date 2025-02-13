@@ -1,10 +1,10 @@
 // songStore.ts
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import { processSongsFile } from '../utils/songProcessor'
-import { SongData, ZikrItem } from '../utils/types'
-import { searchSongs } from '../utils/search'
-import { setSubcategories, getAllCategories } from '../utils/categoryUtils'
+import { processSongsFile } from '../utils/songProcessor.ts'
+import { SongData, ZikrItem } from '../utils/types.ts'
+import { searchSongs } from '../utils/search.ts'
+import { setSubcategories, getAllCategories } from '../utils/categoryUtils.ts'
 
 export const useSongStore = defineStore('song', () => {
   const songs = ref<SongData[]>([]);
