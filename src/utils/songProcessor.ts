@@ -1,5 +1,19 @@
+/**
+ * Changes:
+ * 1. ZikrPractice section is now processed regardless of its position in the file.
+ * 2. Song parsing starts at the first `Y:` and ignores `SUBCATEGORIES:` for determining song starts.
+ * 3. Added hyperlink parsing system for cross-linking content.
+ * 4. Deleted redundant or conflicting code for ZikrPractice and song parsing.
+ */
+
 import { SongData, ZikrItem } from './types.ts';
 import * as unorm from 'unorm';
+import { slugify } from '../utils/search.ts';
+
+// Helper function to parse hyperlinks in text
+function parseHyperlinks(text: string): string {
+  return text.replace(/\$([\w-]+)/g, '<a href="#$1" class="hyperlink" data-slug="$1">$1</a>');
+}
 
 export function processStanzas(stanzas: string[][]): string[][] {
   return stanzas;
@@ -55,9 +69,9 @@ export function renderSong(song: SongData, options: { fontSize: number, showTran
 }
 
 function renderStanzas(stanzas: string[][], textColor: string): string {
-  console.log('Rendering stanzas:');
+  // console.log('Rendering stanzas:');
   return stanzas.map((stanza, index) => {
-    console.log(`Stanza ${index}:`, JSON.stringify(stanza, null, 2));
+    // console.log(`Stanza ${index}:`, JSON.stringify(stanza, null, 2));
     
     // Special handling for history stanza
     if (stanza.some(line => line.startsWith('History:'))) {
@@ -87,7 +101,7 @@ function renderStanzas(stanzas: string[][], textColor: string): string {
           ${paragraphs.map(paragraph => `
             <div class="mb-4">
               ${paragraph.map(line => 
-                `<p class="mb-1 ${textColor}" data-line-index="${index}">${unorm.nfc(line)}</p>`
+                `<p class="mb-1 ${textColor}" data-line-index="${index}">${parseHyperlinks(unorm.nfc(line))}</p>`
               ).join('')}
             </div>
           `).join('')}
@@ -99,14 +113,13 @@ function renderStanzas(stanzas: string[][], textColor: string): string {
     return `
       <div class="mb-8 pb-4 border-b border-gray-300" data-stanza-index="${index}">
         ${stanza.map((line, lineIndex) => 
-          `<p class="mb-1 ${textColor}" data-line-index="${lineIndex}">${unorm.nfc(line)}</p>`
+          `<p class="mb-1 ${textColor}" data-line-index="${lineIndex}">${parseHyperlinks(unorm.nfc(line))}</p>`
         ).join('')}
       </div>
     `;
   }).join('');
 }
 
-import { slugify } from '../utils/search.ts';
 
 export function processSongsFile(fileContent: string): { songs: SongData[], subcategories: Record<string, string[]>,  zikrItems: ZikrItem[]} {
   const lines = fileContent.split('\n');
@@ -114,96 +127,167 @@ export function processSongsFile(fileContent: string): { songs: SongData[], subc
   let songSections: string[] = [];
   let zikrItems: ZikrItem[] = [];
 
-  let isParsingNotes = true;
-  let isParsingZikr = false;
-  let isParsingSubcategories = false;
+// Process ZikrPractice section regardless of its position
+const zikrStart = lines.findIndex(line => line.trim() === 'ZIKRPRACTICE:');
+const zikrEnd = lines.findIndex(line => line.trim() === 'ENDOFZIKRPRACTICE');
+
+if (zikrStart !== -1 && zikrEnd !== -1) {
+  for (let i = zikrStart + 1; i < zikrEnd; i++) {
+    const line = lines[i].trim();
+    if (line.includes('drive.google.com')) {
+      const link = line;
+      const title = lines[i + 1]?.trim();
+      const lyricsStanzas: string[][] = [];
+      let currentStanza: string[] = [];
+      
+      i += 2; // Move to first lyrics line
+      
+      while (i < zikrEnd && !lines[i].includes('drive.google.com')) {
+        const lyricLine = lines[i].trim();
+        if (lyricLine === '') {
+          if (currentStanza.length > 0) {
+            lyricsStanzas.push([...currentStanza]);
+            currentStanza = [];
+          }
+        } else {
+          currentStanza.push(lyricLine);
+        }
+        i++;
+      }
+
+      if (currentStanza.length > 0) {
+        lyricsStanzas.push([...currentStanza]);
+      }
+      
+      if (title && link) {
+        zikrItems.push({
+          zikrTitle: title,
+          zikrLink: link,
+          zikrLyrics: lyricsStanzas.length > 0 ? lyricsStanzas : undefined
+        });
+      }
+      i--; // Step back one line
+    }
+  }
+}
+
+ // Process SUBCATEGORIES section
+ const subcategoriesStart = lines.findIndex(line => line.trim() === 'SUBCATEGORIES:');
+ if (subcategoriesStart !== -1) {
+   let currentCategory = '';
+   for (let i = subcategoriesStart + 1; i < lines.length; i++) {
+     const line = lines[i].trim();
+     if (line === '') continue; // Skip empty lines
+     if (line.endsWith(':')) {
+       currentCategory = line.slice(0, -1).trim(); // Remove the colon
+       subcategories[currentCategory] = [];
+     } else if (currentCategory) {
+       subcategories[currentCategory].push(line);
+     }
+   }
+ }
+
+
+
+
+
+// Process songs starting from first Y:
+let isInSongSection = false;
+
+
+  // let isParsingNotes = true;
+  // let isParsingZikr = false;
+  // let isParsingSubcategories = false;
   let currentSection = '';
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
     
-    if (line === 'ZIKRPRACTICE:') {
-      isParsingZikr = true;
-      continue;
-    }
+    // if (line === 'ZIKRPRACTICE:') {
+    //   isParsingZikr = true;
+    //   continue;
+    // }
 
-    if (line === 'ENDOFZIKRPRACTICE') {
-      isParsingZikr = false;
-      continue;
-    }
+    // if (line === 'ENDOFZIKRPRACTICE') {
+    //   isParsingZikr = false;
+    //   continue;
+    // }
 
-    if (isParsingZikr && line) {
+    // if (isParsingZikr && line) {
       // Skip empty lines between zikr entries
-      if (line.includes('drive.google.com')) {
-        const link = line;
-        let i = lines.indexOf(line) + 1;
-        const title = lines[i]?.trim();
-        const lyricsStanzas: string[][] = [];
-        let currentStanza: string[] = [];
+    //   if (line.includes('drive.google.com')) {
+    //     const link = line;
+    //     let i = lines.indexOf(line) + 1;
+    //     const title = lines[i]?.trim();
+    //     const lyricsStanzas: string[][] = [];
+    //     let currentStanza: string[] = [];
         
-        i++; // Move to the first potential lyrics line
+    //     i++; // Move to the first potential lyrics line
 
-    // Keep reading until we hit another link or end of zikr section
-    while (i < lines.length && !lines[i].includes('drive.google.com') && lines[i].trim() !== 'ENDOFZIKRPRACTICE') {
-          const lyricLine = lines[i].trim();
+    // // Keep reading until we hit another link or end of zikr section
+    // while (i < lines.length && !lines[i].includes('drive.google.com') && lines[i].trim() !== 'ENDOFZIKRPRACTICE') {
+    //       const lyricLine = lines[i].trim();
           
-          if (lyricLine === '') {
-            if (currentStanza.length > 0) {
-              lyricsStanzas.push([...currentStanza]);
-              currentStanza = [];
-            }
-          } else {
-            currentStanza.push(lyricLine);
-          }
-        i++;
-        }
+    //       if (lyricLine === '') {
+    //         if (currentStanza.length > 0) {
+    //           lyricsStanzas.push([...currentStanza]);
+    //           currentStanza = [];
+    //         }
+    //       } else {
+    //         currentStanza.push(lyricLine);
+    //       }
+    //     i++;
+    //     }
         
-        // Add final stanza if exists
-        if (currentStanza.length > 0) {
-          lyricsStanzas.push([...currentStanza]);
-        }
+    //     // Add final stanza if exists
+    //     if (currentStanza.length > 0) {
+    //       lyricsStanzas.push([...currentStanza]);
+    //     }
         
-        if (title && link) {
-          zikrItems.push({
-            zikrTitle: title,
-            zikrLink: link,
-            zikrLyrics: lyricsStanzas.length > 0 ? lyricsStanzas : undefined
-          });
-        }
-        i--; // Step back one line since we'll increment in the loop
-      }
-    }  
+    //     if (title && link) {
+    //       zikrItems.push({
+    //         zikrTitle: title,
+    //         zikrLink: link,
+    //         zikrLyrics: lyricsStanzas.length > 0 ? lyricsStanzas : undefined
+    //       });
+    //     }
+    //     i--; // Step back one line since we'll increment in the loop
+    //   }
+    // }  
 
-    if (isParsingNotes) {
-      if (line === 'SUBCATEGORIES:') {
-        isParsingNotes = false;
-        isParsingSubcategories = true;
-        continue;
-      }
-      // Ignore notes
-      continue;
-    }
+    // if (isParsingNotes) {
+    //   if (line === 'SUBCATEGORIES:') {
+    //     isParsingNotes = false;
+    //     isParsingSubcategories = true;
+    //     continue;
+    //   }
+    //   // Ignore notes
+    //   continue;
+    // }
     
-    if (isParsingSubcategories) {
-      if (line === 'Y:') {
-        isParsingSubcategories = false;
-        continue;
-      }
-      if (line.includes(':')) {
-        const [category, items] = line.split(':').map(s => s.trim());
-        subcategories[category] = items.split(',').map(item => item.trim());
-      }
-    } else {
+    // if (isParsingSubcategories) {
+    //   if (line === 'Y:') {
+    //     isParsingSubcategories = false;
+    //     continue;
+    //   }
+    //   if (line.includes(':')) {
+    //     const [category, items] = line.split(':').map(s => s.trim());
+    //     subcategories[category] = items.split(',').map(item => item.trim());
+    //   }
+    // } else {
       if (line === 'Y:') {
         if (currentSection.trim()) {
           songSections.push(currentSection.trim());
         }
         currentSection = '';
-      } else {
+        isInSongSection = true;
+      } else if (isInSongSection) {
+
+      // } else {
         currentSection += line + '\n';
       }
     }
-  }
+  // }
 
   if (currentSection.trim()) {
     songSections.push(currentSection.trim());

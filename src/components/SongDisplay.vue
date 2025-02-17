@@ -96,7 +96,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
-import { useRoute, RouterLink } from 'vue-router'
+import { useRouter, useRoute, RouterLink } from 'vue-router'
 import { useSongStore } from '../stores/songStore'
 import { useThemeStore } from '../stores/themeStore'
 import { generateSingleSongPage } from '../utils/singleSongPDF'
@@ -313,6 +313,7 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
 
 const updateFontSize = (event: Event) => {
   const newSize = parseInt((event.target as HTMLInputElement).value);
