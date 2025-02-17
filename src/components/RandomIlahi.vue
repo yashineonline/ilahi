@@ -14,7 +14,7 @@
       </button>
     </div>
     <div v-else class="random-ilahi text-center">
-      <h2 class="text-xl font-semibold mb-2">Ilahi of the Day</h2>
+      <h2 class="text-xl font-semibold mb-2">ilahi of the Day</h2>
       <button
         @click="navigateToIlahi"
         class="btn btn-link text-primary hover:text-primary-focus text-lg focus:ring-2 focus:ring-primary focus:ring-offset-2"
