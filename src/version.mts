@@ -11,4 +11,7 @@ export const buildDate: string = new Date().toLocaleDateString("en-US", {
 
 // export const buildDate: string = new Date().toISOString(); // Current build date
 
-export default { version, buildDate };
+export default {
+  version,
+  buildDate: new Date().toLocaleDateString() // This will capture the build date
+};

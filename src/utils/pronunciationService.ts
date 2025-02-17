@@ -28,6 +28,7 @@ const languagePhonetics: Record<string, Record<string, string>> = {
     // 'î': 'î',
     'u': 'ou',
     'e-': 'é-',
+    'j': 'dj',
 
   },
   german: {

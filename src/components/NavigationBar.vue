@@ -5,7 +5,9 @@
         <li class="flex justify-center items-center gap-2">
           <router-link to="/songs" class="btn btn-ghost btn-sm text-xl mb-2">View İlahi List</router-link>
           <div class="flex items-center gap-2"> <!-- Group the icons -->
-          <button v-if="isSongListView" @click="refreshSongs" class="btn btn-ghost btn-circle" aria-label="Update ilahi list">
+          <button 
+          
+          @click="refreshSongs" class="btn btn-ghost btn-circle" aria-label="Update ilahi list">
           <font-awesome-icon :icon="['fas', 'rotate']" spin style="color: #17a6ee;" aria-hidden="true" />
         </button>
         <Installation v-if="!isSongListView"/>

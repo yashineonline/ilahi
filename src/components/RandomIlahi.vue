@@ -46,19 +46,19 @@ const error = ref(false);
     if (!songs || songs.length === 0) {
       throw new Error('No songs available');
     }
-      // const today = new Date().toDateString();
-      // const storedDate = localStorage.getItem('randomIlahiDate');
-      // const storedIlahi = localStorage.getItem('randomIlahi');
+      const today = new Date().toDateString();
+      const storedDate = localStorage.getItem('randomIlahiDate');
+      const storedIlahi = localStorage.getItem('randomIlahi');
   
-      // if (storedDate === today && storedIlahi) {
-        // randomIlahi.value = JSON.parse(storedIlahi);
-      // } else {
+      if (storedDate === today && storedIlahi) {
+        randomIlahi.value = JSON.parse(storedIlahi);
+      } else {
         const randomIndex = Math.floor(Math.random() * songs.length);
         randomIlahi.value = songs[randomIndex];
-        // localStorage.setItem('randomIlahiDate', today);
+        localStorage.setItem('randomIlahiDate', today);
         localStorage.setItem('randomIlahi', JSON.stringify(randomIlahi.value));
       }
-    // } 
+    } 
     catch (e) {
     console.error('Error getting random ilahi:', e);
     error.value = true;
