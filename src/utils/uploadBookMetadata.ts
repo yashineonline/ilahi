@@ -1,6 +1,6 @@
 import { collection, addDoc } from 'firebase/firestore';
 import { ref, getDownloadURL, listAll } from 'firebase/storage';
-import { auth, db, storage } from '../firebase';
+import { auth, db, storage } from '../firebase.ts';
 import { signInAnonymously } from 'firebase/auth';
 
 export async function uploadBookMetadata() {

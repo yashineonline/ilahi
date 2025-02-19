@@ -1,19 +1,8 @@
-/**
- * Changes:
- * 1. ZikrPractice section is now processed regardless of its position in the file.
- * 2. Song parsing starts at the first `Y:` and ignores `SUBCATEGORIES:` for determining song starts.
- * 3. Added hyperlink parsing system for cross-linking content.
- * 4. Deleted redundant or conflicting code for ZikrPractice and song parsing.
- */
-
 import { SongData, ZikrItem } from './types.ts';
 import * as unorm from 'unorm';
 import { slugify } from '../utils/search.ts';
-
-// Helper function to parse hyperlinks in text
-function parseHyperlinks(text: string): string {
-  return text.replace(/\$([\w-]+)/g, '<a href="#$1" class="hyperlink" data-slug="$1">$1</a>');
-}
+import DOMPurify from 'dompurify';
+import { parseHyperlinks } from './hyperlinkParser.ts';  // Import from the correct file
 
 export function processStanzas(stanzas: string[][]): string[][] {
   return stanzas;
@@ -121,11 +110,16 @@ function renderStanzas(stanzas: string[][], textColor: string): string {
 }
 
 
+
+
 export function processSongsFile(fileContent: string): { songs: SongData[], subcategories: Record<string, string[]>,  zikrItems: ZikrItem[]} {
   const lines = fileContent.split('\n');
   const subcategories: Record<string, string[]> = {};
   let songSections: string[] = [];
   let zikrItems: ZikrItem[] = [];
+// Process songs starting from first Y:
+let isInSongSection = false;
+let currentSection = '';
 
 // Process ZikrPractice section regardless of its position
 const zikrStart = lines.findIndex(line => line.trim() === 'ZIKRPRACTICE:');
@@ -171,6 +165,7 @@ if (zikrStart !== -1 && zikrEnd !== -1) {
   }
 }
 
+
  // Process SUBCATEGORIES section
  const subcategoriesStart = lines.findIndex(line => line.trim() === 'SUBCATEGORIES:');
  if (subcategoriesStart !== -1) {
@@ -191,14 +186,12 @@ if (zikrStart !== -1 && zikrEnd !== -1) {
 
 
 
-// Process songs starting from first Y:
-let isInSongSection = false;
 
 
   // let isParsingNotes = true;
   // let isParsingZikr = false;
   // let isParsingSubcategories = false;
-  let currentSection = '';
+  
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
@@ -275,6 +268,18 @@ let isInSongSection = false;
     //     subcategories[category] = items.split(',').map(item => item.trim());
     //   }
     // } else {
+
+  
+  // Stop processing songs when we hit ZIKRPRACTICE
+  if (line === 'ZIKRPRACTICE:') {
+    if (currentSection.trim()) {
+      songSections.push(currentSection.trim());
+    }
+    break;
+  }
+
+
+
       if (line === 'Y:') {
         if (currentSection.trim()) {
           songSections.push(currentSection.trim());
@@ -282,13 +287,10 @@ let isInSongSection = false;
         currentSection = '';
         isInSongSection = true;
       } else if (isInSongSection) {
-
-      // } else {
         currentSection += line + '\n';
       }
     }
-  // }
-
+  
   if (currentSection.trim()) {
     songSections.push(currentSection.trim());
   }

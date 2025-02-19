@@ -12,7 +12,8 @@ export default defineConfig({
       workbox: {
         clientsClaim: true,
           skipWaiting: true, // Immediately activates new service worker
-         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 3MB
+          cleanupOutdatedCaches: true, // Remove old caches
+          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 3MB
       },     
       includeAssets: [
         '16.png', '20.png', '29.png', '32.png', '40.png', '48.png', '50.png', 

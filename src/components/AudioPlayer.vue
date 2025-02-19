@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, onMounted, watch, computed, onBeforeUnmount } from 'vue';
 import YouTube from 'vue3-youtube';
 import { Howl } from 'howler';
 
@@ -143,19 +143,19 @@ function wrapYoutubePlayer(player: any) {
   };
 }
 
-watch(() => props.audioSrc, () => {
-  console.log('Audio source changed:', props.audioSrc);
-  if (props.playerType === 'youtube' && youtubePlayer.value) {
-    const { videoId, startTime: start, endTime: end } = getYoutubeVideoId(props.audioSrc);
-    console.log('YouTube video ID:', videoId);
-    youtubePlayer.value.loadVideoById({ videoId, startSeconds: start });
-    startTime.value = start;
-    endTime.value = end;
-  } else {
-    isLoaded.value = false;
-    // Don't initialize Howl here, wait for user interaction
-  }
-});
+// watch(() => props.audioSrc, () => {
+//   console.log('Audio source changed:', props.audioSrc);
+//   if (props.playerType === 'youtube' && youtubePlayer.value) {
+//     const { videoId, startTime: start, endTime: end } = getYoutubeVideoId(props.audioSrc);
+//     console.log('YouTube video ID:', videoId);
+//     youtubePlayer.value.loadVideoById({ videoId, startSeconds: start });
+//     startTime.value = start;
+//     endTime.value = end;
+//   } else {
+//     isLoaded.value = false;
+//     // Don't initialize Howl here, wait for user interaction
+//   }
+// });
 
 function onYoutubeReady(event: any) {
   console.log('YouTube player ready');
@@ -329,7 +329,7 @@ const playSegment = () => {
   }
 };
 
-watch(() => props.audioSrc, playSegment);
+// watch(() => props.audioSrc, playSegment);
 
 onMounted(playSegment);
 
@@ -375,6 +375,49 @@ const getSoundCloudEmbedUrl = (url: string) => {
   const trackUrl = encodeURIComponent(url);
   return `https://w.soundcloud.com/player/?url=${trackUrl}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true`;
 };
+
+const currentTime = ref(0);
+const duration = ref(0);
+const progressInterval = ref<NodeJS.Timeout | null>(null);
+const intersectionObserver = ref<IntersectionObserver | null>(null);
+
+onBeforeUnmount(() => {
+  // Clean up Howler.js
+  if (howl.value) {
+    howl.value.off('play');
+    howl.value.off('pause');
+    howl.value.off('end');
+    howl.value.off('load');
+    howl.value.stop();
+    howl.value.unload();
+  }
+
+  // Clean up YouTube player
+  if (youtubePlayer.value) {
+    youtubePlayer.value.destroy();
+  }
+
+  // Clean up Google Drive iframe
+  const iframe = document.getElementById('google-drive-iframe');
+  if (iframe) {
+    iframe.remove();
+  }
+
+  // Clean up timers
+  if (progressInterval.value) {
+    clearInterval(progressInterval.value);
+  }
+
+  // Clean up observers
+  if (intersectionObserver.value) {
+    intersectionObserver.value.disconnect();
+  }
+
+  // Reset reactive state
+  currentTime.value = 0;
+  duration.value = 0;
+  isPlaying.value = false;
+});
 
 </script>
 

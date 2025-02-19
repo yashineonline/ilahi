@@ -29,8 +29,14 @@ import ThemeToggle from './components/ThemeToggle.vue'
 import { ref, provide, onMounted } from 'vue'
  import { useNavigationStore } from './stores/navigationStore'
  import { useSongStore } from './stores/songStore';
+ import { setupHyperlinkNavigation } from '@/utils/hyperlinkParser';
 
  const songStore = useSongStore();
+
+
+setupHyperlinkNavigation();
+    // ... other setup code
+
 
 // Automatically fetch songs when the app is mounted
 onMounted(async () => {

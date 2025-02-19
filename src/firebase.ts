@@ -4,7 +4,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth"; // Add this import
 
-export { uploadBookMetadata } from './utils/uploadBookMetadata';
+export { uploadBookMetadata } from './utils/uploadBookMetadata.ts';
 
 const firebaseConfig = {
   apiKey: "AIzaSyDOM_RAFKDV6x35Rd55V3ihLh7PdZF9i-A",

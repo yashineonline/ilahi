@@ -12,62 +12,6 @@ A means alternative tune for the song. There can be more than one.
 ----------------------------------------------------------------------------------
 ENDOFNOTES
 
-ZIKRPRACTICE:
-
-https://drive.google.com/file/d/10Oj9v-YrFLY9PFUf0kDkGPjFZJX4RD6M/view?usp=drive_link
-Start of Zikr (Destur)
-
-Mefhare Mevcudat Muhammad Mustafara salawat
-
-Allahumma salli ala Sayyidina Muhammadin wa ala aali Sayyidina Muhammad
-
-Huu
-(Shaykh reciting Destur, Permission, of the silsila, spiritual lineage)
-
-Al Fatiha
-
-Allahumma salli ala Sayyidina Muhammadin wa ala aali Sayyidina Muhammad
-
-Bismillahir Rahmanir Rahim
-Alhamdulillahi Rabbil ‘alamin
-Ar Rahmanir Rahim
-Maliki Yawmid Din
-İyaka na’budu wa iyaka nasta’in
-İhdinas sirat al mustaqim
-Siratallazina an ‘amta ‘alayhim, 
-ghayril maghdubi ‘alayhim walad daalin 
-Amin
-
-https://drive.google.com/file/d/1UsT0T7YPqv--nGWD-WpUaGfbYX6JcnGN/view?usp=sharing
-Bismillahir Rahmanir Rahim
-Bismillahir Rahmanir Rahim
-
-https://drive.google.com/file/d/1MC8MU1vJtSoPjoNrMKn1naP675YjalVs/view?usp=drive_link
-Astaghfirullah
-Astaghfirullah, tubtu ilallah, wa nahaytu qalbi an ma siwallah 
-
-Astaghfirullah
-
-https://drive.google.com/file/d/1kjdikjFcnx6Ymdf1-oeJ27tQpsGJADn9/view?usp=drive_link
-Salawat
-Allahumma salli ala Sayyidina Muhammadin wa ala aalihi wa sahbihi wa sallim
-
-https://drive.google.com/file/d/1GIDNDpvTu8SA__xNUr3HbB9nPdGnqVP0/view?usp=drive_link
-la ilaha illallah
-la ilaha illallah
-
-https://drive.google.com/file/d/1kuTZifhQeSUs1VHHXxQyQfKwVO77Y5KF/view?usp=drive_link
-La ila ha il lal lah (with ilahis)
-La ila ha il lal lah
-
-https://drive.google.com/file/d/1seyuDBicPFhnkZs05R6YO0kK70m-6i3l/view?usp=drive_link
-Hu (with ilahis)
-Hu
-
-https://drive.google.com/file/d/1AdNBSQuNfip6AXYNVFtMrGKI1xwV0oRn/view?usp=drive_link
-Full Zikr Sample
-
-ENDOFZIKRPRACTICE
 
 
 SUBCATEGORIES:
@@ -77,6 +21,7 @@ Awliya: Mevlana, Haci Bektas, Evliya, Awliya
 Sahaba: Abu Bakr, Umar, Usman, Ali, Sahaba
 Anbiya: Nuh, Hud, Salih, İbrahim, Musa, İsa, Muhammad, Anbiya, Enbiya, Prophets
 Dervish Orders: Rifai, Ansari, Qadiri, Bektashi, Nakshbandi, Mevlevi
+
 
 Y:
 
@@ -289,6 +234,10 @@ Ali göründü gözüme
 
 History:
 Mehmed Ali Hilmi Dede Baba
+
+testing hyperlink phase 1 works!
+$seni-ben-severi-m
+
 
 Y:
 
@@ -962,14 +911,14 @@ in the Bor district of Niğde, Türkiye.
 He was the son of Hacı İbrahim Efendi, 
 a Naqshbandi shaykh who came from Maraş.
 Many of his ilahis are regularly sung in the zikr. 
-e.g. Durmaz lisanım der Allah Allah. 
+e.g. $durmaz-li-sanim-der-allah-allah
 In one of the videos of zikr (link on this page) 
 with Raik Baba (a Rifai Shaykh), 
-"Durmaz lisanım" is sung right after "Asiki yezdan". 
+"Durmaz lisanım" is sung right after "Aşıkı Yezdan". 
 In the Aynı Ali Baba Tekke, 
 sometimes lines from both of these ilahis are mixed together:
 Söyle Kuddusi, bu ismi nası
-Hakk aşinası dır Allah Allah
+Hak aşinası dır Allah Allah
 (sung in tune of Durmaz lisanım)
 
 Love has no boundaries. 
@@ -3180,7 +3129,7 @@ was strengthened through the wedding of Shaykh Muhyiddin Ansari.
 In the Qadiri Rifai Dergahs, ilahis and kasides 
 of these Ushaki shaykhs (Nusret and Hazmi) are sung,
 demonstrating this eternal bond of love between the tariqas.
-
+e.g. $seraser-kai-natin
 
 Y:
 
@@ -6953,7 +6902,7 @@ announcing the beginning of Zikr.
 While in some dergahs, 
 this is recited sitting,
 in AQRT dergahs, 
-we stand up in a circle
+we usually stand up in a circle
 facing the center.
 
 The recitation of salawat,
@@ -7126,6 +7075,7 @@ was strengthened through the wedding of Shaykh Muhyiddin Ansari.
 In the Qadiri Rifai Dergahs, ilahis and kasides 
 of Ushaki shaykhs (Nusret and Hazmi and others) are sung,
 thus demonstrating this eternal bond of love between the tariqas.
+e.g. $erler-demi-ne-destur-alalim
 
 Y:
 
@@ -9147,6 +9097,65 @@ The Sun Will Rise in the West: The Holy Trail, by Es-Seyyid Es-Shaykh Taner Ansa
 For meaning in Turkish,
 Please visit Diyanet website:
 https://kurul.diyanet.gov.tr/Cevap-Ara/2/allahin-99-ismi-hakkinda-bilgi-verir-misiniz
+
+ZIKRPRACTICE:
+
+https://drive.google.com/file/d/10Oj9v-YrFLY9PFUf0kDkGPjFZJX4RD6M/view?usp=drive_link
+Start of Zikr (Destur)
+
+Mefhare Mevcudat Muhammad Mustafara salawat
+
+Allahumma salli ala Sayyidina Muhammadin wa ala aali Sayyidina Muhammad
+
+Huu
+(Shaykh reciting Destur, Permission, of the silsila, spiritual lineage)
+
+Al Fatiha
+
+Allahumma salli ala Sayyidina Muhammadin wa ala aali Sayyidina Muhammad
+
+Bismillahir Rahmanir Rahim
+Alhamdulillahi Rabbil ‘alamin
+Ar Rahmanir Rahim
+Maliki Yawmid Din
+İyaka na’budu wa iyaka nasta’in
+İhdinas sirat al mustaqim
+Siratallazina an ‘amta ‘alayhim, 
+ghayril maghdubi ‘alayhim walad daalin 
+Amin
+
+https://drive.google.com/file/d/1UsT0T7YPqv--nGWD-WpUaGfbYX6JcnGN/view?usp=sharing
+Bismillahir Rahmanir Rahim
+Bismillahir Rahmanir Rahim
+
+https://drive.google.com/file/d/1MC8MU1vJtSoPjoNrMKn1naP675YjalVs/view?usp=drive_link
+Astaghfirullah
+Astaghfirullah, tubtu ilallah, wa nahaytu qalbi an ma siwallah 
+
+Astaghfirullah
+
+https://drive.google.com/file/d/1kjdikjFcnx6Ymdf1-oeJ27tQpsGJADn9/view?usp=drive_link
+Salawat
+Allahumma salli ala Sayyidina Muhammadin wa ala aalihi wa sahbihi wa sallim
+
+https://drive.google.com/file/d/1GIDNDpvTu8SA__xNUr3HbB9nPdGnqVP0/view?usp=drive_link
+la ilaha illallah
+la ilaha illallah
+
+https://drive.google.com/file/d/1kuTZifhQeSUs1VHHXxQyQfKwVO77Y5KF/view?usp=drive_link
+La ila ha il lal lah (with ilahis)
+La ila ha il lal lah
+
+https://drive.google.com/file/d/1seyuDBicPFhnkZs05R6YO0kK70m-6i3l/view?usp=drive_link
+Hu (with ilahis)
+Hu
+$seni-ben-severi-m
+
+https://drive.google.com/file/d/1AdNBSQuNfip6AXYNVFtMrGKI1xwV0oRn/view?usp=drive_link
+Full Zikr Sample
+
+ENDOFZIKRPRACTICE
+
 
 
 

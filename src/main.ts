@@ -8,9 +8,7 @@ import Installation from './components/Installation.vue'
 import { FontAwesomeIcon } from './plugins/font-awesome'
 import { registerSW } from 'virtual:pwa-register';
 // import { useNotificationStore } from './stores/notificationStore'; // Import your notification store
-
-registerSW({ immediate: true }) // Ensures updates are applied immediately
-
+// import { initializeGlobalHyperlinks } from '@/utils/hyperlinkParser.ts';
 
 
 const app = createApp(App)
@@ -20,8 +18,25 @@ app.component('Installation', Installation)
 app.component('font-awesome-icon', FontAwesomeIcon)
 
 
+
+
 app.use(pinia)
 app.use(router)
+
+// Initialize global hyperlink handling
+// initializeGlobalHyperlinks();
+
+registerSW({ immediate: true }) // Ensures updates are applied immediately
+
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      registrations.forEach(registration => {
+        registration.update(); // Force update
+      });
+    });
+  }
+
 
 app.mount('#app')
 

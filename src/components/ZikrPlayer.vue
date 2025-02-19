@@ -61,13 +61,14 @@
                   :key="stanzaIndex" 
                   class="mb-6 last:mb-0"
                 >
-                  <p 
+                  <div
                     v-for="(line, lineIndex) in stanzaLines"
                     :key="lineIndex"
                     class="text-lg leading-relaxed"
+                    v-html="parseHyperlinks(line)"  
                   >
-                    {{ line }}
-                  </p>
+                    
+              </div>
                 </div>
               </div>
             </div>
@@ -82,6 +83,7 @@
 import { ref, onMounted } from "vue";
 import { useSongStore } from "../stores/songStore";
 import AudioPlayer from "./AudioPlayer.vue";
+import { parseHyperlinks } from '@/utils/hyperlinkParser.ts';  // Import from 
 
 const songStore = useSongStore();
 const loading = ref(true);
@@ -96,17 +98,17 @@ const onPlayerReady = (playerData: any) => {
   console.log("Player ready:", playerData);
 };
 
-const fetchData = async () => {
-  loading.value = true;
+onMounted(async () => {
   try {
-    await songStore.fetchSongs();
-  } catch (err) {
-    console.error("Error:", err);
+    loading.value = true;
+    if (songStore.zikrItems.length === 0) {  // Add this check
+      songStore.fetchSongs(true)
+    }
+    } catch (err) {
     error.value = "Failed to load zikr samples. Please try again later.";
   } finally {
     loading.value = false;
   }
-};
+});
 
-onMounted(fetchData);
 </script>

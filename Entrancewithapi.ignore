@@ -87,3 +87,12 @@
     margin: 0 auto;
   }
   </style>
+
+
+
+    <!-- <meta http-equiv="Content-Security-Policy"  -->
+    content="default-src 'self' https://*.firebaseapp.com https://*.googleapis.com https://www.googletagmanager.com https://www.google-analytics.com;
+             frame-src 'self' https://*.firebaseapp.com https://www.youtube.com https://drive.google.com;
+             script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://apis.google.com;
+             connect-src 'self' https://www.google-analytics.com https://*.firebaseapp.com https://*.googleapis.com;
+             img-src 'self' data: https://*.googleapis.com https://*.gstatic.com;">    <!-- Add this script for URL rewriting -->

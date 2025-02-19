@@ -112,6 +112,10 @@ import { faFilePdf, faQrcode, faMusic, faPause, faLanguage } from '@fortawesome/
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import type { PlayerType } from './AudioPlayer.vue' // Assuming you've exported this type from AudioPlayer.vue
 import PronunciationGuide from './PronunciationGuide.vue'
+// import { parseHyperlinks } from '@/utils/hyperlinkParser.ts';
+// import { useHyperlinkNavigation } from '@/composables/useHyperlinkNavigation';
+
+
 
 
 library.add(faFilePdf, faQrcode, faMusic, faPause, faLanguage)
@@ -133,6 +137,7 @@ const player = ref(null)
 const isPlaying = ref(false)
 const showQRCodeFlag = ref(false)
 const showNoTranslationModal = ref(false)
+// const { navigateToContent } = useHyperlinkNavigation();
 
 const currentSong = computed(() => {
   const slugParam = route.params.slug as string;
@@ -296,7 +301,7 @@ onMounted(async () => {
   loading.value = true
   try {
     if (songStore.songs.length === 0) {
-      await songStore.fetchSongs()
+      songStore.fetchSongs(true)
     }
     if (currentSong.value) {
       loadQRCode()
@@ -313,6 +318,31 @@ onMounted(async () => {
     loading.value = false
   }
 })
+
+// onMounted(() => {
+//   document.addEventListener('click', (e) => {
+//     const target = e.target as HTMLElement;
+//     if (target.classList.contains('hyperlink')) {
+//       e.preventDefault();
+//       const slug = target.getAttribute('data-slug');
+//       if (slug) {
+//         navigateToContent(slug);
+//       }
+//     }
+//   });
+// });
+
+// const renderedLyrics = computed(() => {
+//   return currentSong.value.lyrics.map(stanza => 
+//     stanza.map(line => parseHyperlinks(line)).join('<br>')
+//   ).join('<br><br>');
+// });
+
+// const renderedLyrics = computed(() => {
+//   return currentSong.value.lyrics.map(stanza =>
+//     stanza.map(line => parseHyperlinks(line)).join('<br>')
+//   ).join('<br><br>');
+// });
 
 
 const updateFontSize = (event: Event) => {

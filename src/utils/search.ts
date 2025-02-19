@@ -1,4 +1,4 @@
-import { SongData } from './types'; // Add this import
+import { SongData } from './types.ts'; // Add this import
 
 function normalizeText(text: string): string {
   const map: { [key: string]: string } = {
