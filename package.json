@@ -1,11 +1,12 @@
 {
   "name": "ilahi-app",
-  "version": "5.3.6",
+  "version": "5.3.7",
   "private": true,
   "scripts": {
     "increment-version": "node incrementVersion.mjs",
     "get-date": "for /f \"tokens=2-4 delims=/ \" %a in ('date /t') do @echo %c %b %a",
-    "build": "cross-env BUILD_DATE=\"2023 Oct 31\" vue-tsc --noEmit && npm run increment-version && vite build && cp docs/index.html docs/404.html",
+    "test-date": "cross-env BUILD_DATE=\"2023 Oct 31\" node -e \"console.log(process.env.BUILD_DATE)\"",
+    "build": "set BUILD_DATE=2023 Oct 31&& vue-tsc --noEmit && npm run increment-version && vite build && cp docs/index.html docs/404.html",
     "dev": "vite",
     "preview": "vite preview",
     "start-server": "node server.mjs",
