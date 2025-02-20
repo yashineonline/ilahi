@@ -5,8 +5,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   define: {
-    'import.meta.env.BUILD_DATE': JSON.stringify(process.env.BUILD_DATE),
-  },
+    '__BUILD_DATE__': JSON.stringify("Oct 31, 2023"),
+    },
   base: '/ilahi/',
   plugins: [
     vue(),

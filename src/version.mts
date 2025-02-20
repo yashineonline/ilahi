@@ -4,14 +4,9 @@ export const version: string = packageJson.version;
 
 // Format: "YYYY Mon DD" (e.g., "2025 Feb 04")
 
-  export const buildDate: string = import.meta.env.VITE_BUILD_DATE || new Date().toLocaleDateString("en-US", {
+export const buildDate: string = __BUILD_DATE__;
 
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-  });
-
-  console.log('Build Date from env:', import.meta.env.BUILD_DATE);
+  console.log('Build Date from env:', buildDate);
 // export const buildDate: string = new Date().toISOString(); // Current build date
 
 export default {
