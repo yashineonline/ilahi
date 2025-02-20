@@ -4,7 +4,7 @@ export const version: string = packageJson.version;
 
 // Format: "YYYY Mon DD" (e.g., "2025 Feb 04")
 
-  export const buildDate: string = import.meta.env.BUILD_DATE || new Date().toLocaleDateString("en-US", {
+  export const buildDate: string = import.meta.env.VITE_BUILD_DATE || new Date().toLocaleDateString("en-US", {
 
     year: "numeric",
     month: "short",
