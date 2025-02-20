@@ -5,7 +5,11 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   define: {
-    '__BUILD_DATE__': JSON.stringify("Oct 31, 2023"),
+    '__BUILD_DATE__': JSON.stringify(new Date().toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+    })),
     },
   base: '/ilahi/',
   plugins: [
