@@ -364,7 +364,7 @@ if (zikrStart !== -1 && zikrEnd !== -1) {
         mainLinks.push(trimmedLine.substring(2).trim());
       } else if (trimmedLine.startsWith('A:')) {
         alternateTunes.push(trimmedLine.substring(2).trim());
-      } else if (trimmedLine.startsWith('C:')) {
+      } else if (trimmedLine.startsWith('Category:')) {
         const [categoriesStr, tagsStr] = trimmedLine.substring(2).split('|').map(s => s.trim());
         categories = categoriesStr.split(',').map(cat => cat.trim());
         tags = tagsStr ? tagsStr.split(',').map(tag => tag.trim()) : [];
