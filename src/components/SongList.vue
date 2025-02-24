@@ -106,8 +106,9 @@
         </div>
       </div>
     </div>
-    <div v-else class="text-center text-xl text-gray-600">No songs found</div>
+    <div v-else class="text-center text-xl text-gray-600">Sorry, no ilahi found. Please refresh the app.</div>
 
+        <!-- Pagination -->
     <div class="mt-6 flex justify-center">
       <button
         @click="prevPage"
@@ -195,6 +196,7 @@ const mainCategories = computed(() => {
     .map(category => category === 'inter' ? 'Intermediate' : category);
 });
 
+// Computed properties
 const sortedFilteredSongs = computed(() => {
   const { processedCategories, processedShortcuts } = processShortcuts(subcategories.value);
   let songsToDisplay = filteredSongs.value;
@@ -257,6 +259,7 @@ const updateQueryParams = () => {
   router.push({ query });
 };
 
+// Watchers
 watch([filteredSongs, currentLetter, selectedCategories], () => {
   currentPage.value = 1;
   updateQueryParams();

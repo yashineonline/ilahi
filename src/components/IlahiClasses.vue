@@ -9,8 +9,11 @@
         <div class="modal-overlay absolute inset-0 opacity-50"></div>
         <div class="modal-box relative" p-6 rounded-lg shadow-xl max-w-md mx-auto z-50 @click.stop>
           <button @click="closePopup" class="btn btn-sm btn-circle absolute right-2 top-2">✕</button>
-          <h2 class="text-2xl font-bold mb-4">Join ilahi Classes</h2>
-          <p class="mb-4">Connect with us via WhatsApp to join weekly ilahi classes on Zoom.</p>
+          <h2 class="text-2xl font-bold mb-4">Join the ilahi Community</h2>
+          <p class="mb-4">Connect with us via WhatsApp to join ilahi classes on Zoom 
+            and to hear first hand about the updates in the app. 
+            Practice singing within a community 
+          and get feedback on your singing regularly!</p>
           <button @click="openWhatsApp" class="btn btn-primary btn-block">
             Open WhatsApp
           </button>
