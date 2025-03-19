@@ -5,7 +5,7 @@
         v-model="searchQuery" 
         type="text" 
         placeholder="Search ilahis..." 
-        class="w-full px-3 py-2 border rounded-md text-gray-800 bg-white dark:text-white dark:bg-gray-700"
+        class="w-full px-3 py-2 border rounded-md text-gray-800 dark:text-white dark:bg-gray-700"
       />
     </form>
   </div>

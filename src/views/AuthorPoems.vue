@@ -6,7 +6,7 @@
         &larr; Back to Authors
       </router-link>
   
-      <div v-for="poem in authorPoems" :key="poem.slug" class="bg-white shadow-lg rounded-lg p-6 mb-8">
+      <div v-for="poem in authorPoems" :key="poem.slug" class="shadow-lg rounded-lg p-6 mb-8">
         <h3 class="text-2xl font-semibold mb-4">{{ poem.title }}</h3>
         <div v-for="(paragraph, index) in poem.content" :key="index" class="mb-4">
           <p v-if="paragraph" class="whitespace-pre-wrap">{{ paragraph }}</p>

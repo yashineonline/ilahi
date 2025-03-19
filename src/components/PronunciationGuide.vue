@@ -149,7 +149,7 @@ const closeLanguagePopup = () => {
 
 <style scoped lang="postcss">
 .pronunciation-container {
-  @apply mt-4 bg-white rounded-lg shadow-sm p-6;
+  @apply mt-4 rounded-lg shadow-sm p-6;
 }
 
 

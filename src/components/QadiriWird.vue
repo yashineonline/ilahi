@@ -39,7 +39,7 @@
           </div>
           <div class="flex flex-wrap items-center gap-2">
             <label for="transitionSelect" class="mr-2">Transition:</label>
-            <select id="transitionSelect" v-model="selectedTransition" class="select select-primary select-sm bg-white">
+            <select id="transitionSelect" v-model="selectedTransition" class="select select-primary select-sm">
               <option v-for="option in transitionOptions" :key="option.value" :value="option.value">
                 {{ option.label }}
               </option>
@@ -98,7 +98,7 @@
             type="number" 
             min="1" 
             :max="wird.length" 
-            class="w-16 text-center mr-2 bg-white"
+            class="w-16 text-center mr-2 "
             @change="handleIndexChange"
           />
           <span>/ {{ wird.length }}</span>

@@ -7,7 +7,7 @@
     <!-- <span class="text-sm font-medium">Install App</span> -->
   </div>
   <div v-if="showInstructions" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @click="closeInstructions">
-    <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full m-4 relative" @click.stop>
+    <div class="p-6 rounded-lg shadow-xl max-w-sm w-full m-4 relative" @click.stop>
       <button @click="closeInstructions" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
         <font-awesome-icon :icon="['fas', 'times']" />
       </button>
