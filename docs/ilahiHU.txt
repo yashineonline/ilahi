@@ -15,12 +15,13 @@ ENDOFNOTES
 
 
 SUBCATEGORIES:
-Pen Name: Aşık Yunus, Yunus Emre, Niyaz, Fakirullah, Nesimi, Üftade, Şemseddin Sivası, Ruhi, Muhyi, Hatayi, Hudayi, Aşık Hüdai, Kul Yusuf
+Pen Name: Aşık Yunus, Yunus Emre, Niyazi Misri, Aşık Niyazi, Fakirullah, Nesimi, Üftade, Şemseddin Sivası, Ruhi, Muhyi, Hatayi, Hudayi, Aşık Hüdai, Kul Yusuf
 Pirs: Geylani, Rifai, Ansari, Ensari, Hashimi, Muhammed, Muhyiddin
-Awliya: Mevlana, Haci Bektas, Evliya, Awliya
-Sahaba: Abu Bakr, Umar, Usman, Ali, Sahaba
+Awliya: Mevlana, Hacı Bektas, Evliya, Awliya
+Sahaba: Abu Bakr, Umar, Osman, Ali, Sahaba
 Anbiya: Nuh, Hud, Salih, İbrahim, Musa, İsa, Muhammad, Anbiya, Enbiya, Prophets
 Dervish Orders: Rifai, Ansari, Qadiri, Bektashi, Nakshbandi, Mevlevi
+
 
 
 Y:
@@ -751,7 +752,7 @@ Sana Meyil Verendedir
 
 Y:
 
-C:
+Category:
 
 L: https://www.youtube.com/watch?v=lfQNqovw9ZI
 
@@ -837,7 +838,7 @@ On the night Muhammed was born.
 
 Y:
 
-C: Kuddusi, Qadiri | 
+Category: Kuddusi, Qadiri | 
 
 L: https://youtu.be/SezLeLGIEhw
 
@@ -1145,7 +1146,7 @@ HU
 
 Y: 
 
-C: Geylani, Qadiri | Ghaws, Gavs
+Category: Geylani, Qadiri | Ghaws, Gavs
 
 Bir acız hayranım / Ya Hazreti Geylani (V1)
 
@@ -1917,7 +1918,7 @@ Y:
 
 L: https://youtu.be/aq1TUBjKjjI?si=_siudPop9Hxep5Hu
 
-C: Rifai 
+Category: Rifai 
 
 Kefer Rifai şerefa
 
@@ -2981,7 +2982,7 @@ The best guide to the love of faith
 
 Y:
 
-C: Kuddusi |
+Category: Kuddusi |
 
 L: https://youtu.be/wnodjKW2RjU?si=VSfeK6JYbiIK-keJ
 
@@ -3046,7 +3047,7 @@ This translation is from Internet. To be updated soon!
 
 Y:
 
-C:
+Category:
 
 L: https://youtu.be/krXzwqAM6OA?si=TisfxiXipjqWnVVK
 
@@ -3133,7 +3134,7 @@ e.g. $seraser-kai-natin
 
 Y:
 
-C: Nesimi | 
+Category: Nesimi | 
 
 L: https://youtu.be/EAvbF8E3c_A?si=xpQdJTasiZEUrPZG
 
@@ -3171,7 +3172,7 @@ Ateşi aşka ya hay ateşi aşka
 
 Y:
 
-C: Mawlid | mevlid, 
+Category: Mawlid | mevlid, 
 
 L: https://youtu.be/8sOkLlWwyLw?si=vXGR8W0etmgHsQgJ
 
@@ -3197,7 +3198,7 @@ Gül yüzünü göre göre ölelim ya Resulallah
 
 Y:
 
-C: 
+Category: 
 
 L: https://youtu.be/Po2KuE-EZBs?si=zb-6WqQajEzy2Na8
 
@@ -3278,7 +3279,7 @@ Hu my master, Hu Hu Hu
 
 Y:
 
-C: 
+Category: 
 
 L: https://youtu.be/m_EuR5Y4bc4?si=9FHu4WxTRWqtaMJQ
 
@@ -3345,7 +3346,7 @@ Tevhid becomes his joy.
 
 Y:
 
-C: | jallallah, zikr
+Category: | jallallah, zikr
 
 L: https://youtu.be/057Lbi4ZgaA?t=20
 
@@ -3378,7 +3379,7 @@ la ilaha illallah
 
 Y:
 
-C: Geylani, Qadiri | 
+Category: Geylani, Qadiri | 
 
 L: https://youtu.be/8BJtvUVudbU?si=IBRWc1fS46uThNms
 
@@ -3449,7 +3450,7 @@ Sultan Abdulkadir’in
 
 Y:
 
-C: Mawlud | salawat, mevlid, burda, mawlaya 
+Category: Mawlud | salawat, mevlid, burda, mawlaya 
 
 
 
@@ -3478,7 +3479,7 @@ Mevlaya salli ala Muhammedin ve ala
 
 Y:
 
-C: Mersiye, Kaside | 
+Category: Mersiye, Kaside | 
 
 L: https://drive.google.com/file/d/1S9ivP1YEqjWWBE1z_Gy1J_iu2I11plK5/view?usp=sharing
 
@@ -3509,7 +3510,7 @@ Arza-i mahşerde makbulir - recasın ya Hüseyn.
 
 Y:
 
-C: mersiye, Kaside| huseyni, muharram, muharrem
+Category: mersiye, Kaside| huseyni, muharram, muharrem
 
 L: https://youtu.be/EjpYlBJ6fIw?si=BppWRebf8_kSP77e
 
@@ -3544,7 +3545,7 @@ ve kasideleri ile ünlü üstadımız Sebilci Ağabeyimizin ruhu şad olsun.
 
 Y:
 
-C: Rifai | rufai, billah 
+Category: Rifai | rufai, billah 
 
 L: https://drive.google.com/file/d/1S9ivP1YEqjWWBE1z_Gy1J_iu2I11plK5/view?usp=sharing
 
@@ -3588,7 +3589,7 @@ In the recording, the ilahi is from 1h15min onwards. In the future, it will star
 
 Y:
 
-C: Şemseddin Sivasi |
+Category: Şemseddin Sivasi |
 
 L: https://youtu.be/XNW7JBrm1KY
 
@@ -3606,7 +3607,7 @@ Hakk'a makbûl olmak ister halka menfûr olmadan
 
 Y:
 
-C: Sofra | 
+Category: Sofra | 
 
 L: https://drive.google.com/file/d/1fLrnO8JLS0YiykwZTU9e5xMzuY86MUM9/view?usp=sharing
 
@@ -3696,7 +3697,7 @@ Dergâha sürüp yüzü şükür elhamdülillâh
 
 Y:
 
-C: yunus, zikr
+Category: yunus, zikr
 
 L: https://youtu.be/8Lchfvfy_mo?t=73
 
@@ -3725,7 +3726,7 @@ Ol Muhammed’dir mutlak
 
 Y:
 
-C: yunus, zikr
+Category: yunus, zikr
 
 L: https://youtu.be/3cYZMrxlbw8?si=tgwMZ8y3DUwbfCOj
 
@@ -3764,7 +3765,7 @@ Bir gönüle girmektir
 
 Y:
 
-C: yunus, mevlid, zikr
+Category: yunus, mevlid, zikr
 
 L: https://youtu.be/hWo_nQwQLJA?si=qwhr7-HlDElt9joR
 
@@ -3793,7 +3794,7 @@ Her kim yemez mahrumudur honını Muhammed'in
 
 Y: 
 
-C:yunus emre, inter,
+Category:yunus emre, inter,
 
 L: https://youtu.be/rvsiii5gDMo?si=_Djbdi5sIp1AGU6z
 
@@ -3841,7 +3842,7 @@ To whom shall I plead, O Hu?
 
 Y: 
 
-C: basic, Order:3, Full Zikr,evliya,awliya,Geylani,Qadiri,sbt
+Category: basic, Order:3, Full Zikr,evliya,awliya,Geylani,Qadiri,sbt
 
 L: https://youtu.be/U6lASmSKMkE?si=7LJoyYuEngZr15D5
 
@@ -4000,7 +4001,7 @@ Ahmed Muhammed Mustafa
 
 Y: 
 
-C:yunus emre, inter,
+Category:yunus emre, inter,
 
 L: https://youtu.be/aypDRt-pvp0?t=1895&end=2092
 
@@ -4068,7 +4069,7 @@ Oh Allah, let’s say O Thou.
 
 Y:
 
-C:yunus emre, inter,
+Category:yunus emre, inter,
 
 L: https://drive.google.com/file/d/1TvFv12qDG5OOoCH_cBhZARQnG2vn93rr/view?usp=sharing
 
@@ -4146,7 +4147,7 @@ Ya ben öleyim mi söylemeyince
 
 Y:
 
-C: Sebilci | 
+Category: Sebilci | 
 
 L: https://youtu.be/dGhnjA4J6bY?si=ZkLe57FlcUVaM8c1
 
@@ -4183,7 +4184,7 @@ Merhum Hüseyin Sebilci Ağabeyimizin (Sırrıhu)
 
 Y:
 
-C:yunus emre, inter,
+Category:yunus emre, inter,
 
 L: https://drive.google.com/file/d/1yfR8faui1qVpSvIBydEeAtVHbIkM30Yy/view?usp=sharing
 
@@ -4236,7 +4237,7 @@ The one who dies is an animal, Dervishes don’t die
 
 Y:
 
-C: Ali,inter,
+Category: Ali,inter,
 
 L: https://drive.google.com/file/d/1aBg-uQS3oEg9I_PQR46_CBJICDE0mwTe/view?usp=sharing
 
@@ -4447,7 +4448,7 @@ is kept in the Lion (Ali)
 
 Y:
 
-C: basic, Order:10, Full Zikr, asik hudai,
+Category: basic, Order:10, Full Zikr, asik hudai,
 
 L: https://youtu.be/Dq-miQImzo8?si=vy2FCz9jEUej1N5g
 
@@ -4484,6 +4485,10 @@ Muhammeden gıdamız var
 Ölüm ölür biz ölmeyiz
 
 (Shaykh Taner: Muhammeden gıdamız var)
+
+basic zikr follow up ilahi:
+
+$haci-bektas
 
 T:
 The whole universe makes Sema
@@ -4535,7 +4540,7 @@ Mu-ham-me-den gı-da-mız var
 
 Y:
 
-C: basic, Order:8, Full Zikr,niyaz,
+Category: basic, Order:8, Full Zikr,niyaz,
 
 L: https://youtu.be/vqfdGvRa7BA?si=CEPWHkuv5PfecCyU
 
@@ -4570,7 +4575,7 @@ Geç ak ile karadan
 Halkı çikar aradan               
 Niyazi dön buradan             
 Durma sana gel oldu
-  
+
 T:
 My heart became a nightingale again
 Fire blossomed and became a rose
@@ -4626,7 +4631,7 @@ Dur-ma sa-na gel ol-du
 
 Y:
 
-C: basic, Order:9, Full Zikr,Fakirullah,
+Category: basic, Order:9, Full Zikr,Fakirullah,
 
 L: https://youtu.be/aBay8dAoVKw
 
@@ -4653,6 +4658,10 @@ Haki pür kaşane kıldın akıbet
 
 Ey Fakirullah bu hakki bende mi?
 Vasılı canana kıldın akıbet  
+
+basic zikr follow up ilahi:
+
+$seni-ben-severi-m
 
 Pronunciation:
 
@@ -4695,7 +4704,7 @@ You ruined my chance of getting to my lover, O my fate
 
 Y:
 
-C:Ruhi,inter,
+Category:Ruhi,inter,
 
 L: https://youtu.be/I12stA1sQQQ?si=WHTLQswQgL80Jpxz
 
@@ -4746,7 +4755,7 @@ Connect your understanding to Allah and read the book right away
 
 Y:
 
-C: inter, Aşık Yunus, anbiya | enbiya,prophets
+Category: inter, Aşık Yunus, anbiya | enbiya,prophets
 
 L: https://drive.google.com/file/d/1xlYiplWUQIm2T-zOTHAYelTYTahwFBdj/view?usp=sharing
 
@@ -4805,9 +4814,13 @@ I call on You, exalted Master
 
 Y:
 
-C:inter, Şemseddin Sivasi
+Category:inter, Şemseddin Sivasi
 
 L: https://drive.google.com/file/d/1lA0cmy-p-D3nHDE6vP0E9QWulgMPRPkc/view?usp=sharing
+
+A: https://youtu.be/CucdByHUw_Y?si=YUmeU0aQsyWBPlV8
+
+A: https://youtu.be/CBCLgfIHjjQ?si=BRY-M6OAIVv_aRo_
 
 DERDİN NE BE HEY AŞIK  
 
@@ -4833,8 +4846,8 @@ Seyyele neden oldun
 
 T:
 What is your trouble O lover of God
-Why have you become distraught?
-You can not stay in one place
+Why have you become so distraught
+That you cannot stay in one place
 Why have you become a wanderer?  
 
 O heart! You loved a rosebud
@@ -4848,13 +4861,40 @@ O breast of the deceased
 Why are you so full of wounds?
 
 Did you see the Beloved face?
-Did you ever hear of His qualities
-O my tears,
-Why have you become a flood
+Did you ever hear of His qualities?
+O tears of my eyes,
+Why have you become a flood?
+
+History:
+
+Refer to the history part of 
+the ilahi 
+$su-beni-m-di-vane-gonlum
+for an explanation 
+from Shaykha Muzeyyen
+about the relationship 
+between these two ilahis. 
+
+The rest of the explanation continues here:
+
+O aşık
+Why did you become crazy?
+You have no stability
+
+Did you fall onto the thorn of grief:
+Because he lost his shaykh
+(in the other ilahi:)
+$su-beni-m-di-vane-gonlum
+the first person is talking about
+my shaykh is far away.
+Where am i going to go? 
+I am wounded. 
+This is the perfect answer to that.
+
 
 Y:
 
-C: inter, niyaz
+Category: inter, niyaz
 
 L: https://www.youtube.com/watch?v=ZB0bobH92Hs
 
@@ -4863,40 +4903,57 @@ DERMAN ARARDIM DERDİME
 Derman arardım derdime        
 Derdim bana derman imiş
 Burhan sorardım aslıma            
+Aslım bana burhan imiş (Hayy Hayy)
+Burhan sorardım aslıma            
 Aslım bana burhan imiş
-         
+
+
 Sağu solu gözler idim             
 Dost yüzünü görsem deyu      
+Ben taşrada arar iken            
+Ol can içinde can imiş (Hayy Hayy)          
 Ben taşrada arar iken            
 Ol can içinde can imiş           
 
 Öyle sanırdım ayriyem          
 Dost gayridir ben gayriyem   
 Benden görüp işideni                
+Bildim ki Ol canan imiş (Hayy Hayy)    
+Benden görüp işideni                
 Bildim ki Ol canan imiş    
 
 Savm u salat u hac ile          
 Sanma biter zahid işin           
+İnsan-ı kamil olmağa           
+Lazım olan irfan imiş (Hayy Hayy)    
 İnsan-ı kamil olmağa           
 Lazım olan irfan imiş    
 
 Mürşid gerektir bildire         
 Hakkı sana hakk-el-yakin     
 Mürşidi olmayanların          
+Bildikleri güman imiş (Hayy Hayy)     
+Mürşidi olmayanların          
 Bildikleri güman imiş     
 
 Her mürşide dil verme         
 Kim yolunu sarpa uğratır    
+Mürşidi kamil olanın            
+Gayet yolu asan imiş (Hayy Hayy)       
 Mürşidi kamil olanın            
 Gayet yolu asan imiş        
 
 Kanden gelir yolun senin     
 Ya kande varır menzilin     
 Nerden gelip gittiğini      
+Anlamayan hayvan imiş (Hayy Hayy)
+Nerden gelip gittiğini      
 Anlamayan hayvan imiş
 
 İşit Niyazi'nin sözün               
 Bir nesne örtmez hak yüzün  
+Hak'tan ayan bir nesne yok   
+Gözsüzlere pünhan imiş (Hayy Hayy)       
 Hak'tan ayan bir nesne yok   
 Gözsüzlere pünhan imiş       
 
@@ -5006,7 +5063,7 @@ aleyhi salatullah
 
 Y:
 
-C:inter,awliya,Rifai, |evliya,
+Category:inter,awliya,Rifai, |evliya,
 
 L: https://drive.google.com/file/d/1UKvWy1u2eBFFfwiVSLnLrrRd6nNupI8T/view?usp=sharing
 
@@ -5115,7 +5172,7 @@ El-meded ey şah-ı zî-şanım Muhammed Mustafa
 
 Y:
 
-C:yunus emre,
+Category:yunus emre,
 
 L: https://youtu.be/mYLmn2PzifM?si=d1Z4JIuKDMuI-6TC
 
@@ -5154,7 +5211,7 @@ A: https://youtu.be/Wdbl9upcXcU
 
 A: https://youtu.be/QblfkqOxZTw
 
-C:inter,Ensari,awliya,Geylani,Qadiri,sbm,|evliya,
+Category:inter,Ensari,awliya,Geylani,Qadiri,sbm,|evliya,
 
 GEYLANDAN YÜRÜDÜ
 
@@ -5233,7 +5290,7 @@ Sultan of righteous dervishes, master Abdul Kadir
 
 Y:
 
-C: basic, Order:5, Full Zikr,
+Category: basic, Order:5, Full Zikr,
 
 L: https://youtu.be/pUU_Q1klx2U?si=GJtnAJ8P-BF2hcZ8
 
@@ -5352,7 +5409,7 @@ I cannot explain you, o heart.
 
 Y:
 
-C: basic, Order:11, Full Zikr,Bektashi,haci bektas,
+Category: basic, Order:11, Full Zikr,Bektashi,haci bektas,
 
 L: https://youtu.be/AxeuubuoVzE?si=nk9DAAPU4fSYzgR1
 
@@ -5379,7 +5436,7 @@ Yahyi bulut olup göğe ağarsın
 Yahyi yağmur olup yere yağarsın  
 		
 Ay mısın, gün müsün? Gökte doğarsın?	 		
-lgit ilgit esen, Yel Hacı Bektaş	
+Ilgıt ılgıt esen, Yel Hacı Bektaş	
 
 Daima Kul Himmet eder niyazi	
 Pir Sultan Yolundan ayırma bizi	
@@ -5387,6 +5444,45 @@ Pir Sultan Yolundan ayırma bizi
 Şol Mahşer gününde isteriz size	
 Muhammed önünde can Hacı Bektaş
 Muhammed önünde can Hacı Bektaş
+
+Alternative version:
+
+Gece gündüz hayaline yanarım 
+Bir gece rüyama gir Hacı Bektaş 
+Günahkârım günahımdan bizarım 
+Özüm dara çektim sor Hacı Bektaş. 
+  
+Yandı bu garip kul nedir çaresi 
+Yine tazelendi yürek yaresi 
+Onulmaz dertlere derman olası 
+Bu senin bendindir sar Hacı Bektaş. 
+  
+Derdimin dermanı yaramın ucu 
+Dört güruh mevcuttur güruh-i naci 
+Belinde kemeri başında tacı 
+Yüzünde balkıyor nur Hacı Bektaş. 
+  
+Sadıkların sıdkı aşığın renci 
+Pirlerin hem piri hemide genci 
+Hem derya hem sedef hem dürr hem inci 
+Hem umman hem ırmağ göl Hacı Bektaş. 
+ 
+Gâhi bulut olup göğe ağarsın 
+Gâhi yağmur olup yere yağarsın 
+Ay mısın gün müsün kandan doğarsın 
+Ilgıt ılgıt eser yel Hacı Bektaş. 
+  
+Arının yaptığı bala benzersin 
+Şu gurbet illerde gönlün eğlersin 
+Bend edip de ikrarına bağlarsın 
+Sailin sattığı kul Hacı Bektaş. 
+  
+Derdimend Hatâyi eyler niyazı 
+Ulu pir katardan ayırmaz bizi 
+Bu mahşer günüdür isteriz sizi 
+Muhammed önünde car Hacı Bektaş.
+
+Şah İsmail Hatâyi (1487 - 1524)
 
 T:
 Night and day whom I turn to
@@ -5433,7 +5529,7 @@ Yah-yi bu-lut o-lup gö-e a-ar-sın
 Yah-yi ya-mur o-lup ye-re ya-ar-sın  
 
 Ay mı-sın, gün mü-sün? Gök-te do-ar-sın?  
-İl-git il-git e-sen, Yel Ha-cı Bek-taş  
+Il-gıt ıl-gıt e-sen, Yel Ha-cı Bek-taş  
 
 Da-i-ma Kul Him-met e-der ni-ya-zı  
 Pir Sul-tan Yo-lun-dan ayır-ma bi-zi  
@@ -5446,7 +5542,7 @@ Mu-ham-med ö-nün-de jan Ha-cı Bek-taş
 
 Y:
 
-C:inter, Uftade,
+Category:inter, Uftade,
 
 L: https://drive.google.com/file/d/1eyn-eTRIFYvMrIBjOdgryNE9auVfGK42/view?usp=sharing
 
@@ -5489,33 +5585,65 @@ T:
 Would the lovers of Allah run               
 away from remembrance of Allah?
 Would the Arif spread 
-his jewels in vain?
+their jewels in vain?
 
 Come, whoever wants marifet
 there is no lie in my words
 The one who is the servant of the commanding nafs
-can he differentiate the right from the wrong?
+can they differentiate the right from the wrong?
 
 O friends, these words are true; the ones who
-see, they don’t say what they see.
+see (know), they do not say what they see.
 The ones who reach balance (dignity/miracles)      
 would they reveal the secret?
 
-You are a hollow willow,
+You are like a young sapling willow, tree
 You always stay like that
 You are just a little chick
 Would the bird fly without wings?
 
 Burning in smoke, Üftade 
 sings like a nightingale
-The ones who put down the lovers, 
+The ones who put down the lovers of Allah, 
 would they die with belief?
 The ones who put down the dervishes, 
 would they die with belief?
 
+Explanation from Shaykha Muzeyyen
+Uitenhage, Dec 31, 2024
+Part 1
+He is talking to a young dervish. 
+So, the answer is no, no. 
+
+Part 2
+Again, the answer is no. 
+
+Part 4
+Not hollow like empty,
+but you are like a young sapling willow, tree
+And you always stay like that in the wind, 
+you twist this way, that way
+But you are rooted in the same spot
+like the commanding nafs
+You are stuck right there.
+You are just a little chick. 
+This is where you take hands.
+And haqiqa, marifa, 
+you develop your wings and fly
+
+History:
+Hz Üftade is in Bursa. 
+His khalifa, Hz Hudayi,
+whose ilahis can also be found
+on this app
+is in Istanbul. 
+
+More info soon about both of them!
+Insha Allah
+
 Y:
 
-C:inter, yunus emre,
+Category:inter, yunus emre,
 
 L: https://drive.google.com/file/d/1eXM6ct1WB7FDMZhnJb3SxchZy8d9pMy3/view?usp=sharing
 
@@ -5575,7 +5703,7 @@ In the sands of Yemen, Veysel Karani
 
 Y:
 
-C:inter, yunus emre
+Category:inter, yunus emre
 
 L: https://drive.google.com/file/d/1SH-ZCrqsG4cEKoM7Q5E9JfpOoSPZCt3w/view?usp=sharing
 
@@ -5789,9 +5917,11 @@ Me fa‘ î lün / Me fa‘ î lün / Me fa‘ î lün / Me fa‘ î lün
 
 Y:
 
-C: basic, Order:13, Full Zikr, Mevlid, muhammed,muhyiddin,ensari,ansari,mevlana,nakshbandi,mevlevi,haci bektas,hashimi,Muhyi,
+Category: basic, Order:13, Full Zikr, Mevlid, muhammed,muhyiddin,ensari,ansari,mevlana,nakshbandi,mevlevi,haci bektas,hashimi,Muhyi,
 
 L: https://youtu.be/v85HlRRlhu4
+
+L: https://drive.google.com/file/d/13d9Srury-yt_I_VajTpbvZ2tuoS51TCz/view?usp=sharing
 
 HİZMETİNİ EDEMEDİM                        
 
@@ -5854,6 +5984,10 @@ Hizmetinde mukiym eyle
 Yandır Şeyhim kül olayım illallah Hu 
 Aşk oduna ben yanayım illallah Hu  
 
+basic zikr follow up ilahi:
+
+$salat-u-selam
+
 Pronunciation:
 
 Hiz-me-ti-ni e-de-me-dim  
@@ -5912,6 +6046,13 @@ Hiz-me-tin-de mu-kiym ey-le
 Yan-dır Şey-him kül o-la-yım il-lal-lah Hu  
 Aşk o-du-na ben ya-na-yım il-lal-lah Hu  
 
+Note:
+Shaykha Muzeyyen would like us to say
+Ya Hashimi when singing the long version, 
+instead of what it says in the old recording.
+Thank you
+
+
 T:
 I could not do your service
 I could not get your blessing
@@ -5957,7 +6098,7 @@ May peace and blessing be on you, O Rasulullah
 May peace and blessing be on you Beloved of Allah 
 Shaykh Taner is a Shaykh of Allah illallah Hu
 May peace and blessing be on you Beloved of Allah 
-Shaykha Muzeyyen is a Shaykha of Allah illallah Hu
+Shaykha Müzeyyen is a Shaykha of Allah illallah Hu
 May peace and blessing be on you Beloved of Allah 
 Nishaat Siddiqi is a Shaykh of Allah illallah Hu
 
@@ -5967,11 +6108,16 @@ Keep him strong in your service
 Oh my Shaykh, let me be ashes, illallah Hu
 Let me burn in the fire of Love illallah Hu
 
+
 History:
 This ilahi is written by Shaykh Muhyiddin Ansari.
 You can read more about him on the aqrtsufi website.
 He was a qutb of his time, 
 and so was his father, Shaykh Muhammed Ansari.
+He was an officer in the military.
+He was a remote seer for Ataturk.
+He had a degree in French and music. 
+
 In this ilahi, we acknowledge 
 the founders of the main Tariqas: 
 Qadiri, Rifai, Mevlevi, Bektashi, Naqshbandi.
@@ -5988,12 +6134,16 @@ If the name of the Maydan is not known to you,
 you can say Sahibel Maydan (skip the "ya" to fit the tune):
 Sahibel Maydan Şeyhen lillah illallah Hu 
 
+Explanation about the ilahi:
 
+Extra information:
+The word "yüz" can mean hundred, swim, face.
+In this ilahi, yü-züm means my face. 
 
 
 Y:
 
-C: basic, Order:6, Full Zikr,evliya,awliya,Rifai, Muhyi, Geylani, Qadiri,
+Category: basic, Order:6, Full Zikr,evliya,awliya,Rifai, Muhyi, Geylani, Qadiri,
 
 L: https://youtu.be/ovJUEHO6LwI?si=hMl7rYAPiZxbkiH2
 
@@ -6169,7 +6319,7 @@ Help me My Pir, O Shaykh of Allah
 
 Y:
 
-C:inter, Ali,Bektashi,
+Category:inter, Ali,Bektashi,
 
 L: https://drive.google.com/file/d/1TkFv4qirIJQ4FCBtv-AIrI3qDqImh0O9/view?usp=sharing
   
@@ -6314,7 +6464,7 @@ Kuddûsî her dem Hû dimek ister
 
 Y:
 
-C: basic, Order:7, Full Zikr,Muhammad, Mevlid,Bektashi,
+Category: basic, Order:7, Full Zikr,Muhammad, Mevlid,Bektashi,
 
 L: https://youtu.be/-tWLIFwKdb8?si=QtCduzOGYy9yTXUV
 
@@ -6417,7 +6567,7 @@ He is incomplete
 
 Y:
 
-C: Qadiri, awliya,Geylani|evliya
+Category: Qadiri, awliya,Geylani|evliya
 
 MİLKİ CİHAN SULTANI ABDUL KADİR GEYLANİ 
 
@@ -6450,7 +6600,7 @@ Hazret-i Şah-ı Nakşbend Abdul Kadir Geylani
 
 Y:
 
-C:inter,awliya,Geylani,Qadiri,|evliya,
+Category:inter,awliya,Geylani,Qadiri,|evliya,
 
 L: https://youtu.be/dXXWkoubQ_I?si=x3fFieTGxfQ5-y84
 
@@ -6557,7 +6707,7 @@ https://www.nurayoktay.com/KitapDetay/Ankarali-Asik-Niyazi-Demirorsun-Askindaki-
 
 Y:
 
-C:inter, yunus emre,anbiya, |prophets,enbiya,
+Category:inter, yunus emre,anbiya, |prophets,enbiya,
 
 L: https://drive.google.com/file/d/16t_paokxEWWGjU739ZVy899ZKTzFxMXk/view?usp=sharing
 
@@ -6637,7 +6787,7 @@ What would I do with fame and honor?
 
 Y:
 
-C:inter, awliya,Rifai |evliya,
+Category:inter, awliya,Rifai |evliya,
 
 L: https://drive.google.com/file/d/1JSOLJ4O_OJGlQgEJobthH45YZBr35y0V/view?usp=sharing
 
@@ -6674,7 +6824,7 @@ The universally recognized Shaykh of the community (qawm)
 
 Y:
 
-C: awliya,Rifai,|evliya
+Category: awliya,Rifai,|evliya
 
 L: https://youtu.be/5-R-VbK8a6o?si=iutdJe4TkcfCjEVH
 
@@ -6691,6 +6841,27 @@ Eden ad şanını ez ka Rifai Seyyid Ahmed’dir
 Rıza babın gözet Pirin hakikat kıl hemen seyrin 
 Senin işte dest-i gir’in Rifai Seyyid Ahmed’dir 
 Âlim Allah, Azim Allah Ebül Alemeyn şey en lillah 
+
+Y:
+
+Category: basic, Order: 15, salawat, Muhammad, Zikr, Full, Mawlid, inter, | salat, salati, salatu, selati, kamaliya, kamaaliya, Mevlid, Mawlud, Milad, Milaad
+
+SALAT ü SELAM
+
+Esselatu Vesselamu Aleyke YA RESULALLAH
+Esselatu Vesselamu Aleyke YA HABİBALLAH
+Esselatu Vesselamu Aleyke YA seyyidel evveline vel AHİRİN
+Ve selamün alel murselin 
+velhamdülillahi rabbil alemin
+
+Pronunciation:
+As-salaatu was-salaamu 'alayka yaa Rasoolallaah
+As-salaatu was-salaamu 'alayka yaa Habeeballaah
+As-salaatu was-salaamu 'alayka yaa Sayyid al-awwaleena wal-aakhireen
+Was-salaamun 'alal-mursaleen
+Wal-hamdu lillaahi Rabbil-'aalameen
+
+
 
 Y: 
 
@@ -6800,7 +6971,7 @@ Ya Wadud Ya Salaam Ya Jami Ya Nafi
 
 Y: 
 
-C: basic, Order: 1, salawat, Muhammad, Zikr, Full, Mawlid, inter, | salat, salati, salatu, selati, kamaliya, kamaaliya, Mevlid, Mawlud, Milad, Milaad
+Category: basic, Order: 1, salawat, Muhammad, Zikr, Full, Mawlid, inter, | salat, salati, salatu, selati, kamaliya, kamaaliya, Mevlid, Mawlud, Milad, Milaad
 
 L: https://youtu.be/aypDRt-pvp0?t=71&end=259
 
@@ -6816,23 +6987,24 @@ A: https://youtu.be/LP3neKdyZ7g?si=FxPbOCaFsA85dyXS
 SELATI KEMALİYE
 
 Allahumma salli wa sallim wa barik ala 
-Sayyidina Muhammadin wa ala aalihi edede 
+Sayyidina Muhammadin wa ala aalihi adede 
 ilha milla hil karim wa ifdalihi 
+(3 times or 1 time)
  
 Allahumma salli wa sallim wa barik ala 
-Murshidina Muhammadin wa ala aalihi edede 
+Murshidina Muhammadin wa ala aalihi adede 
 kema lilla hi wa kema yeli ku bi kemalihi
 
 Allahumma salli wa sallim wa barik ala 
-Shemsidduha Muhammadin wa ala aalihi edede 
+Shemsidduha Muhammadin wa ala aalihi adede 
 kema lilla hi wa kema yeli ku bi kemalihi
  
 Allahumma salli wa sallim wa barik ala 
-Bedrudduja Muhammadin wa ala aalihi edede 
+Bedrudduja Muhammadin wa ala aalihi adede 
 kema lilla hi wa kema yeli ku bi kemalihi
  
 Allahumma salli wa sallim wa barik ala 
-Nurul Huda Muhammadin wa ala aalihi edede 
+Nurul Huda Muhammadin wa ala aalihi adede 
 kema lilla hi wa kema yeli ku bi kemalihi
 
 Slightly different version
@@ -6923,7 +7095,7 @@ and blessings on our Enlightener
 Muhammad and upon his family.
 
 Our God, send Your most perfect honor, peace
-and blessings on the rising sun on dawn
+and blessings on the rising sun at dawn
 Muhammad and upon his family.
 
 Our God, send Your most perfect honor
@@ -6968,7 +7140,11 @@ Muhammad and upon his family.
 
 Y:
 
-C: basic, Order:12, yunus emre,
+
+
+Y:
+
+Category: basic, Order:12, yunus emre,
 
 L: https://youtu.be/YkREmirC8C4?si=bu5zKXE7buSdxStE
 
@@ -6996,6 +7172,10 @@ Bu ne mezhep imiş dinden içeru
 
 Yunusun gözleri hundur açılmaz    
 Kapunda kul var Sultandan içeru 
+
+basic zikr follow up ilahi:
+
+$hi-zmeti-ni-edemedi-m
 
 Pronunciation:
 
@@ -7038,7 +7218,7 @@ There is a servant in front of your door but he is deeper in the sultan
 
 Y:
 
-C: hazmi, kaside, Mawlid |
+Category: hazmi, kaside, Mawlid |
 
 L: https://youtu.be/SD43imv9D8w?t=147
 
@@ -7079,7 +7259,7 @@ e.g. $erler-demi-ne-destur-alalim
 
 Y:
 
-C: yunus emre
+Category: yunus emre
 
 L: https://youtu.be/GhF6YSMf99I?si=DbyjGqxvB_JwNWB6
 
@@ -7160,7 +7340,7 @@ Of this poisoned cup?
 
 Y:
 
-C: basic, Order:2, Full Zikr,Muhammad, Mevlid,
+Category: basic, Order:2, Full Zikr,Muhammad, Mevlid,
 
 L: https://youtu.be/kJHWbwpphn8?si=zx2mtoqdxDD0d7Ga
 
@@ -7212,6 +7392,10 @@ Peygamberi ahir zamanımız var Allah Allah
 Peygamberi ahir zamanımız var Allah Allah
 Nur kundak içinde yatar Muhammed 
 Canımın cananısın ya Muhammed
+
+basic zikr follow up ilahi:
+
+$abdul-kadi-rul-geylani
 
 Pronunciation:
 
@@ -7323,7 +7507,7 @@ You are the heart of my heart, O Muhammad
 
 Y:
 
-C: Mawlid, Rifai, Qadiri | revas, rawas, mevlid
+Category: Mawlid, Rifai, Qadiri | revas, rawas, mevlid
 
 L: https://youtu.be/JoEiN4qZDVE?si=XnwonpHcKyKGXRS8
 
@@ -7343,7 +7527,7 @@ Entum ulul-ihsani vel hulukil hasan
 Haşakumu an tağfelu an hali man
 Huve ğafilun fi hubbikum an halihi
 
-Arabic:
+Arabic
 
 Sirna 'ala shatati al-nawa bi-jimalikum 
 Wa-lana qulubun tahta zilli ni'alikum 
@@ -7371,7 +7555,7 @@ of the one who got out of the way, annihilated in your love
 
 Y:
 
-C: basic, Order:4, Muhammad, Mawlid |Mevlid,
+Category: basic, Order:4, Muhammad, Mawlid |Mevlid,
 
 L: https://drive.google.com/file/d/1sFQ--OPWswYsV5D6tQBX0Nnmn9ulbk2r/view?usp=sharing
 
@@ -7391,6 +7575,10 @@ Allah, Allah, Allah, Allah Allah
 
 Mudun em li - eclikumu aled-dil ayni an
 Allah, Allah, Allah, Allah Allah
+
+basic zikr follow up ilahi:
+
+$guzel-asik-cevri-mi-zi
 
 Pronunciation:
 Sır-nı A-la şe-ta-tin - ne-va bi-ce-ma-li-kum  
@@ -7549,11 +7737,17 @@ Hak La ilahe illallah Allah La ilahe illallah.
 
 Y:
 
-C:inter, Kul Yusuf,
+Category:inter, Kul Yusuf,
 
 L: https://drive.google.com/file/d/1Nc355h3TrLr2NR5-5xPUxDqi8Xem62e8/view?usp=sharing
 
+L: https://youtu.be/hpF2O_9Dsw8?si=0Ednu8hmoikfZTVb
+
+A: https://youtu.be/q5mPwJ9jvnQ?si=u0KZHf5pH3fEinNx
+
 ŞU BENİM DİVANE GÖNLÜM
+
+Suggested Zikr: Allah (Jahri)
 
 Şu benim divane gönlüm        
 Yine hubdan huba düştü        
@@ -7571,12 +7765,12 @@ Kimi Şeyhi ile mihman
 Benim Şeyhim cüda düştü
       
 Ah ben nidem Şeyhim nidem 
-Ah ben nidem Gavsum nidem?
+Ah ben nidem Pirim nidem?
 Yaralıyam kime gidem           
 Ya halim kime arz idem         
 
 Felek bir gün cana kıyar        
-Bizi kapdan kaba koyar         
+Bizi kapdan kaba koyar
 Kimi atlas libas giyer              
 Şükür bize aba düştü  
             
@@ -7585,7 +7779,7 @@ Ah ben nidem Pirim nidem?
 Yaralıyam kime gidem           
 Ya halim kime arz idem         
 
-Kul Yusuf’um der bu demler 
+Kul Yusuf’um dur bu demler 
 Didemden akıyor nemler        
 Benim çektiğim sitemler         
 Bana Şeyhten caba düştü       
@@ -7595,21 +7789,82 @@ Ah ben nidem Gavsum nidem?
 Yaralıyam kime gidem           
 Ya halim kime arz idem     
 
+Recommended follow up ilahi:
+
+$derdi-n-ne-be-hey-asik
+
+Alternative wordings:
+
+From Shaykh Taner:
+(in Part 1)
+Şu cemalin şulesinden         
+Dalgalanıp göle düştü             
+
+From Shaykh Muhyiddin:
+(in Part 1)
+Yine Pirden Pire düştü
+
+Ya ben nidem Gavsum nidem?
+
+(in Part 2)
+Kimisi Şeyhi ile mihman
+Benim Şeyhim cüda düştü
+Benim Pirim cüda düştü
+
+(in Part 4)
+Didemden akıttın nemler
+
+Pirden bize caba düştü
+Şeyhten bize caba düştü
+
+Alternate version / Extra words
+
+Şu benim divane gönlüm        
+Yine hubdan huba düştü        
+Mah cemalin şulesinden         
+Çalkalanıp göle düştü             
+
+Kiminin Meskeni Külhan
+Kimi Derviş Kimi Sultan
+Kimi Öz Yarine Mihman
+Bana Yardan Cüda Düştü
+
+İntizarım hak kelama, 
+Kamilden gelen selama, 
+Rüzgar doldu aleme, 
+Bize bad-ı saba düştü.
+
+Kimisi Yar İle Gezer
+Kimi Canından Bezer
+Kimi Atlas Libas Giyer
+Şükür Bana Aba Düştü
+
+Kul yusuf'um der bu kemler 
+Gözümden akıttın demler 
+Benim çektiğim bu sitemler 
+Yardan bana caba düştü.
+
+Kul Yusuf'um Der Bu Demler
+Gözümden Akıttın Nemler
+Benim Çektiğim Bu Sitemler
+Bana Yardan Reva Düştü.
+
 T:
 That crazy heart of mine
-You fall from love to love
-From the moon phase  
+Again fell from love to love
+From the beauty of the moon 
 Waves shook and it fell into the lake 
 
 Oh my Shaykh what shall I do? 
 Oh my Pir what shall I do? 
-Where can I go? 
-Who should I present my poor condition to?
+I have a wound. 
+Who should I go for my wound?
+Who should I tell my difficult situation to?
 
 Some live in palaces 
-Some are dervish some are Sultaan 
+Some are dervish some are Sultan 
 Some are in accord with their Shaykh 
-But my Shaykh stayed distant
+But my Shaykh is far away
  
 Oh my Shaykh what shall I do 
 Oh my Helper what shall I do? 
@@ -7619,26 +7874,77 @@ Who should I present my poor condition to?
 One day heavens will take the life away
 And put us from state to state
 Some wear silk clothes
-Thank Allah, our share is shepherd coat
+Thank Allah, our share is shepherd (wool) coat
 
 Oh my Shaykh what shall I do? 
 Oh my Pir what shall I do? 
-Where can I go? 
-Who should I present my poor condition to?
+I am wounded. 
+Who should I go to?
+Who should I tell this situation to?
 
 These are the moments of Kul Yusuf
 The dew is falling off the flower
+My heart is crying tears
+The difficulties in life
 The hard times I love to put up with
-is left as grant from my Shaykh
+is left to me as a gift from my Shaykh
 
 Oh my Shaykh what shall I do? 
 Oh my Ghaws what shall I do?
 Where can I go? 
 Who should I present my poor condition to?
 
+Further explanation:
+Basically the heart and the moon is together. 
+
+He sees his Shaykh as distant, 
+and he is saying, 
+where am i going to go now?
+
+History:
+This is not really history, 
+but rather an explanation 
+from Shaykha Muzeyyen
+(Uitenhage, Dec 31, 2024)
+
+Shaykh Taner sings 
+$derdi-n-ne-be-hey-asik
+right after this ilahi 
+(Şu benim divane gönlüm). 
+
+So what he did here is 
+he sang one ilahi from a dervish
+who complains about his shaykh being far away
+and he is wounded, he is hurting and 
+who is he going to tell his situation to,
+and he is looking around, 
+this guy is a dervish,
+that guy is a sultan, 
+that one is getting to live with my shaykh,
+but my shaykh is far away. 
+There is the complaint part.
+And the second part:
+
+Derdin ne be hey aşık
+
+So he is singing the answer with another ilahi
+to this ilahi.
+This time, as a shaykh, he is saying
+what is your problem o aşık? 
+Why are you in the sorrow state?
+Basically you cannot stand still 
+in any one place long enough 
+to stabilize.
+For the continuation, 
+go the history part of the other ilahi:
+
+$derdi-n-ne-be-hey-asik
+
+
+
 Y:
 
-C:inter, awliya,Rifai | evliya,
+Category:inter, awliya,Rifai | evliya,
 
 L: https://drive.google.com/file/d/1-JbVdVyW5X-TSwsOX6t4nDUImMXYf3LF/view?usp=sharing
 
@@ -7717,7 +8023,7 @@ Ornament of the heavens, Ahmed er-Rifai
 
 Y:
 
-C:inter, Mawlid, Muhammad, | Mevlid,
+Category:inter, Mawlid, Muhammad, | Mevlid,
 
 L: https://youtu.be/8Lchfvfy_mo?si=hZi9frFlONSKdyy0
 
@@ -7750,7 +8056,7 @@ O my beloved, O Messenger
 
 Y:
 
-C:Muhammad, Mawlid, |Mevlid,
+Category:Muhammad, Mawlid, |Mevlid,
 
 L: https://youtu.be/z5HiXM9JGJQ?si=2q0Rv8hjKCLIRYaT
 
@@ -7876,7 +8182,7 @@ Cennet hurisi annemiz
 Onun soyu tertemiz
 Resul kızı Fatıma
 
-Arabic: 
+Arabic
 
 Ya Fatıma Ya Fatıma 
 leki ruhi Ya Fatıma
@@ -7942,7 +8248,7 @@ The daughter of the Messenger, Fatima.
 
 Y:
 
-C: inter, Bektashi,Hatayi,
+Category: inter, Bektashi,Hatayi,
 
 L: https://youtu.be/uaLfORA7Zz8?si=GvqHCKpgwds4HXEK
 
@@ -8000,7 +8306,7 @@ during one of the Saturday Sohbets.
 
 Y:
 
-C: basic, Order:1, Full Zikr,Muhammad, Mevlid,Abu Bakr,Umar,Usman,Sahaba,nesimi
+Category: basic, Order:1, Full Zikr,Muhammad, Mevlid,Abu Bakr,Umar,Usman,Sahaba,nesimi
 
 L: https://drive.google.com/file/d/104VnEGMUHAj3KNQ8c4X-3qVc0aejvlnj/view?usp=sharing
 
@@ -8030,6 +8336,10 @@ Kapında bir gedadır ya Muhammed
 
 Singing Note:
 You can say Ömer or Omar.
+
+basic zikr follow up ilahi:
+
+$seyreyleyi-p-yandim
 
 Pronunciation:
 
@@ -9145,11 +9455,47 @@ la ilaha illallah
 https://drive.google.com/file/d/1kuTZifhQeSUs1VHHXxQyQfKwVO77Y5KF/view?usp=drive_link
 La ila ha il lal lah (with ilahis)
 La ila ha il lal lah
+$yuzun-nuru-hudadir
+$seyreyleyi-p-yandim
+$abdul-kadi-rul-geylani
 
 https://drive.google.com/file/d/1seyuDBicPFhnkZs05R6YO0kK70m-6i3l/view?usp=drive_link
 Hu (with ilahis)
 Hu
+$cani-di-lden-fani-kildin-aki-bet
+$
 $seni-ben-severi-m
+$hi-zmeti-ni-edemedi-m
+
+Salat ü Selam:
+As-salaatu was-salaamu 'alayka yaa Rasoolallaah
+As-salaatu was-salaamu 'alayka yaa Habeeballaah
+As-salaatu was-salaamu 'alayka yaa Sayyid al-awwaleena wal-aakhireen
+Was-salaamun 'alal-mursaleen
+Wal-hamdu lillaahi Rabbil-'aalameen
+
+Turkish
+Esselatu Vesselamu Aleyke YA RESÛLALLAH
+Esselatu Vesselamu Aleyke YA HABİBALLAH
+Esselatu Vesselamu Aleyke YA seyyidel evveline vel AHİRİN
+Ve selamün alel murselin 
+velhamdülillahi rabbil alemin
+
+Al Fatiha
+
+Allahumma salli ala Sayyidina Muhammadin wa ala aali Sayyidina Muhammad
+
+Bismillahir Rahmanir Rahim
+Alhamdulillahi Rabbil ‘alamin
+Ar Rahmanir Rahim
+Maliki Yawmid Din
+İyaka na’budu wa iyaka nasta’in
+İhdinas sirat al mustaqim
+Siratallazina an ‘amta ‘alayhim, 
+ghayril maghdubi ‘alayhim walad daalin 
+Amin
+
+
 
 https://drive.google.com/file/d/1AdNBSQuNfip6AXYNVFtMrGKI1xwV0oRn/view?usp=drive_link
 Full Zikr Sample

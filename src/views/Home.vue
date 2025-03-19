@@ -8,7 +8,7 @@
     </div>
     
     <div class="p-4">
-      <h1 class="text-4xl font-bold text-green-800 mb-6">Welcome to İlahi Book App</h1>
+      <h1 class="text-4xl font-bold text-green-800 mb-6">Welcome to ilahi Book App</h1>
       
       <div class="card bg-base-200 shadow-xl m-4">
     <div class="card-body">

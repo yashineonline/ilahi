@@ -3,6 +3,8 @@ import * as unorm from 'unorm';
 import { slugify } from '../utils/search.ts';
 import DOMPurify from 'dompurify';
 import { parseHyperlinks } from './hyperlinkParser.ts';  // Import from the correct file
+import { parseCategoryLine } from './categoryUtils.ts';
+
 
 export function processStanzas(stanzas: string[][]): string[][] {
   return stanzas;
@@ -113,6 +115,7 @@ function renderStanzas(stanzas: string[][], textColor: string): string {
 
 
 export function processSongsFile(fileContent: string): { songs: SongData[], subcategories: Record<string, string[]>,  zikrItems: ZikrItem[]} {
+  console.log('Processing songs file...');
   const lines = fileContent.split('\n');
   const subcategories: Record<string, string[]> = {};
   let songSections: string[] = [];
@@ -353,9 +356,29 @@ if (zikrStart !== -1 && zikrEnd !== -1) {
     let mainLinks: string[] = [];
     let alternateTunes: string[] = [];
     let title = '';
-    let categories: string[] = [];
+    let songCategories: string[] = []; // Store categories for this song
+    // let categories: string[] = [];
     let tags: string[] = [];
+    let songOrder: number | undefined;
+    // let order: number | undefined;  // Add this declaration
     let titleIndex = -1;
+
+// Process categories
+// const categoryLine = lines.find(line => line.trim().startsWith('C:'));
+// if (categoryLine) {
+//   const parsedCategory = parseCategoryLine(categoryLine);
+//   categories = parsedCategory.categories;
+//   tags = parsedCategory.tags;
+//  songOrder = parsedCategory.order;
+
+  // Make sure Order is properly extracted
+  // const orderCategory = categories.find(cat => cat.trim().startsWith('Order:'));
+  // if (orderCategory) {
+  //   songOrder = parseInt(orderCategory.split(':')[1], 10);
+  //   // Remove the Order category from the list as it's handled separately
+  //   categories = categories.filter(cat => !cat.trim().startsWith('Order:'));
+  // }
+// }
 
     // Find the links, categories, and title
     for (let i = 0; i < lines.length; i++) {
@@ -364,10 +387,38 @@ if (zikrStart !== -1 && zikrEnd !== -1) {
         mainLinks.push(trimmedLine.substring(2).trim());
       } else if (trimmedLine.startsWith('A:')) {
         alternateTunes.push(trimmedLine.substring(2).trim());
-      } else if (trimmedLine.startsWith('Category:')) {
-        const [categoriesStr, tagsStr] = trimmedLine.substring(2).split('|').map(s => s.trim());
-        categories = categoriesStr.split(',').map(cat => cat.trim());
-        tags = tagsStr ? tagsStr.split(',').map(tag => tag.trim()) : [];
+      } 
+// In the processSongsFile function:
+else if (trimmedLine.startsWith('Category:')) {
+  // Start collecting category content
+  let categoryContent = trimmedLine;
+  let j = i + 1;
+  console.log('categoryContent', categoryContent);
+  console.log('j', j);
+  // Continue collecting lines until we hit an empty line or the end of the section
+  while (j < lines.length && lines[j].trim() !== '') {
+    categoryContent += ' ' + lines[j].trim();
+    j++;
+    console.log('j', j);
+  }
+  
+  const { categories: parsedCategories, tags: parsedTags, order } = parseCategoryLine(categoryContent);
+  songCategories =  parsedCategories;
+  tags = parsedTags;
+  if (order !== undefined) {
+    songOrder = order;  // Make sure to declare songOrder at the top of the function
+  }
+// Skip the lines we've already processed
+i = j - 1;
+
+        // const [categoriesStr, tagsStr] = trimmedLine.substring(2).split('|').map(s => s.trim());
+         // Extract order metadata and remaining categories
+  // const categoryItems = categoriesStr.split(',').map(cat => cat.trim());
+  // const orderItem = categoryItems.find(cat => cat.startsWith('Order:'));
+  // order = orderItem ? parseInt(orderItem.split(':')[1], 10) : undefined;
+  // categories = categoryItems.filter(cat => !cat.startsWith('Order:'));
+        // categories = categoriesStr.split(',').map(cat => cat.trim());
+        // tags = tagsStr ? tagsStr.split(',').map(tag => tag.trim()) : [];
       } else if (trimmedLine !== '' && !title) {
         title = trimmedLine;
         titleIndex = i;
@@ -442,7 +493,8 @@ if (zikrStart !== -1 && zikrEnd !== -1) {
       pronunciation, // Add pronunciation to returned object
       mainLinks,
       alternateTunes,
-      categories, 
+      order: songOrder,
+      categories: songCategories, // Use songCategories for the song
       tags, 
       isUnderEdit: false,
       slug

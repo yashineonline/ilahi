@@ -3,14 +3,9 @@
     <div class="w-full px-4 flex flex-col items-center">
       <ul class="flex flex-col w-full mb-4 list-none p-0">
         <li class="flex justify-center items-center gap-2">
-          <router-link to="/songs" class="btn btn-ghost btn-sm text-xl mb-2">View İlahi List</router-link>
+          <router-link to="/songs" class="btn btn-ghost btn-sm text-xl mb-2">ilahi List</router-link>
           <div class="flex items-center gap-2"> <!-- Group the icons -->
-          <button 
-          
-          @click="refreshSongs" class="btn btn-ghost btn-circle" aria-label="Update ilahi list">
-          <font-awesome-icon :icon="['fas', 'rotate']" spin style="color: #17a6ee;" aria-hidden="true" />
-        </button>
-        <Installation v-if="!isSongListView"/>
+          <Installation v-if="!isSongListView"/>
       </div>
       </li>
         <div v-if="isHomePage" class="dropdown">
@@ -93,10 +88,6 @@ const handleIlahiClassesClick = () => {
   if (ilahiClasses.value) {
     ilahiClasses.value.openPopup()
   }
-}
-
-function refreshSongs() {
-  songStore.fetchSongs(true)
 }
 
 const handleIconClick = (type: 'whatsapp' | 'youtube') => {

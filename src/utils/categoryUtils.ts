@@ -32,18 +32,18 @@ export const normalizeCategory = (category: string) => {
 
 export const filterSongsByCategory = (songs: SongData[], categories: string[]): SongData[] => {
   if (categories.length === 0 || categories.includes('All')) return songs;
-  
-  return songs.filter((song) => 
+  const filteredSongs = songs.filter((song) => 
+  // return songs.filter((song) => 
     categories.some((category) => {
       const normalizedCategory = normalizeCategory(category);
       if (normalizedCategory === 'basic') {
-        const orderCategory = song.categories.find(cat => cat.startsWith('Order:'));
-        if (orderCategory) {
-          song.order = parseInt(orderCategory.split(':')[1], 10);
-        }
+                // Extract Order value if it exists in categories
+        // const orderCategory = song.categories.find(cat => cat.trim().startsWith('Order:'));
+        // if (orderCategory) {
+        //   song.order = parseInt(orderCategory.split(':')[1], 10);
+        // }
         return song.categories.some(songCategory => 
-            normalizeCategory(songCategory).includes('basic') ||
-          normalizeCategory(songCategory).includes('basic zikr')
+            normalizeCategory(songCategory).includes('basic')
         );
       }
       if (normalizedCategory === 'intermediate') {
@@ -60,21 +60,30 @@ export const filterSongsByCategory = (songs: SongData[], categories: string[]): 
         );
       }
       return song.categories.some((songCategory) => 
+        normalizeCategory(songCategory) === normalizedCategory ||
         normalizeCategory(songCategory).includes(normalizedCategory)
       );
     })
   );
+   // Sort by order if basic category is selected
+   if (categories.length === 1 && categories[0] === CATEGORIES.BASIC 
+    // && filteredSongs.some(song => song.order !== undefined)
+  ) {
+    return filteredSongs.sort((a, b) => (a.order || 999999) - (b.order || 999999));
+  }
+
+  return filteredSongs;
 };
 
-export const getAllCategories = (songs: SongData[]): string[] => {
-  const categories = new Set<string>(["All", CATEGORIES.BASIC, CATEGORIES.INTERMEDIATE]);
-  songs.forEach((song) => {
-    song.categories.forEach((category) => {
-      categories.add(category.trim());
-    });
-  });
-  return Array.from(categories);
-};
+// export const getAllCategories = (songs: SongData[]): string[] => {
+//   const categories = new Set<string>(["All", CATEGORIES.BASIC, CATEGORIES.INTERMEDIATE]);
+//   songs.forEach((song) => {
+//     song.categories.forEach((category) => {
+//       categories.add(category.trim());
+//     });
+//   });
+//   return Array.from(categories);
+// };
 
 export const getSortedSubcategories = (subcategories: Record<string, string[]>) => {
   const sorted = {};
@@ -116,3 +125,46 @@ export const getMainCategories = (allCategories: string[]) => {
     ...standaloneCategories.sort((a, b) => turkishToEnglish(a.toLowerCase()).localeCompare(turkishToEnglish(b.toLowerCase())))
   ];
 };
+
+interface ParsedCategory {
+  categories: string[];
+  tags: string[];
+  order?: number;
+}
+
+export function parseCategoryLine(line: string): ParsedCategory {
+  // Handle empty or undefined cases
+  if (!line || line.trim() === 'Category:') {
+    return { categories: [], tags: [] };
+  }
+
+  // Remove 'Category:' prefix and trim
+  const content = line.replace(/^Category:/, '').trim();
+  
+  // Split by vertical bar
+  const [categoriesStr = '', tagsStr = ''] = content.split('|').map(s => s.trim());
+  
+  // Process categories
+  let categories: string[] = [];
+  let order: number | undefined;
+  
+  if (categoriesStr) {
+    const categoryItems = categoriesStr.split(',').map(cat => cat.trim());
+    // Extract order if present
+    const orderItem = categoryItems.find(cat => cat.startsWith('Order:'));
+    if (orderItem) {
+      const orderValue = orderItem.split(':')[1];
+      order = parseInt(orderValue, 10);
+      categories = categoryItems
+        .filter(cat => cat !== '' && !cat.startsWith('Order:'));
+      // .map(cat => cat.trim());
+    } else {
+      categories = categoryItems.filter(cat => cat !== '');
+    }
+  }
+
+  // Process tags
+  const tags = tagsStr ? tagsStr.split(',').map(tag => tag.trim()).filter(tag => tag !== '') : [];
+
+  return { categories, tags, order };
+}

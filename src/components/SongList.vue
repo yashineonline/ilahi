@@ -161,7 +161,18 @@ const generateRandomIlahi = () => {
 
 const resetGlobalSearch = inject("resetGlobalSearch") as () => void;
 
-const sortedSubcategories = computed(() => getSortedSubcategories(subcategories.value));
+const sortedSubcategories = computed(() => {
+  const result: Record<string, string[]> = {};
+  
+  for (const category in subcategories.value) {
+    // Sort subcategories alphabetically
+    result[category] = [...subcategories.value[category]].sort((a, b) => a.localeCompare(b));
+  }
+  
+  return result;
+});
+
+  // getSortedSubcategories(subcategories.value));
 
 const subcategories = computed(() => getSubcategories());
 
@@ -190,10 +201,33 @@ const allCategories = computed(() => {
 });
 
 const mainCategories = computed(() => {
-  const categories = getMainCategories(allCategories.value);
+  // const mainCategoryHeadings = Object.keys(subcategories.value);
+  // const standardCategories = ['All', CATEGORIES.BASIC, CATEGORIES.INTERMEDIATE];
+  // console.log("Main category headings:", mainCategoryHeadings);
+  // console.log("Standard categories:", standardCategories);
+  const categories = allCategories.value;
+  console.log("All categories from store:", categories);
+
   return categories
-    .filter(category => Object.keys(subcategories.value).includes(category) || category === 'All' || category === CATEGORIES.BASIC|| category === 'inter')
-    .map(category => category === 'inter' ? 'Intermediate' : category);
+  .filter(category => {
+    // Skip empty categories
+    const trimmedCategory = category.trim();
+    return trimmedCategory && !trimmedCategory.endsWith(':') && trimmedCategory.length < 30;
+
+    // if (!trimmedCategory) return false;
+
+     // Include this category if it's a main category or in subcategories
+
+    //  return Object.keys(subcategories.value).includes(category) || 
+    //        category === 'All' || 
+    //        category === CATEGORIES.BASIC || 
+    //        category === 'Intermediate';
+  
+  
+           // return categories
+    // .filter(category => Object.keys(subcategories.value).includes(category) || category === 'All' || category === CATEGORIES.BASIC|| category === 'inter')
+    // .map(category => category === 'inter' ? 'Intermediate' : category);
+});
 });
 
 // Computed properties
@@ -218,7 +252,11 @@ const sortedFilteredSongs = computed(() => {
     );
   }
 
-  return songsToDisplay.sort((a, b) => a.title.localeCompare(b.title));
+  // return songsToDisplay.sort((a, b) => a.title.localeCompare(b.title));
+   // Normal alphabetical sorting for other cases
+   return songsToDisplay.sort((a, b) => 
+    turkishToEnglish(a.title.toLowerCase()).localeCompare(turkishToEnglish(b.title.toLowerCase()))
+  );
 });
 
 const totalPages = computed(() =>

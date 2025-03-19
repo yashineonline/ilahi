@@ -50,10 +50,16 @@ const installInstructions = {
   android: {
     title: "Install on Android",
     steps: [
-      "Open the link using Chrome",
+      "Open the link",
+      "If using Google Chrome,",
       "Tap on the 3 dots at the top right corner",
       "Scroll down and tap on \"Add to Home screen\"",
-      "Choose \"Install\""
+      "Choose \"Install\"",
+      " ",
+      "If using Samsung Internet Browswer,",
+      "Tap on More (horizontal 3-bar icon) for the menu.", 
+      "Tap on + (Add page to)",
+      "Choose Home screen",
     ]
   },
   default: {

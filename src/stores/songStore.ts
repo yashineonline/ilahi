@@ -4,7 +4,7 @@ import { ref, computed } from 'vue'
 import { processSongsFile } from '../utils/songProcessor.ts'
 import { SongData, ZikrItem } from '../utils/types.ts'
 import { searchSongs } from '../utils/search.ts'
-import { setSubcategories, getAllCategories } from '../utils/categoryUtils.ts'
+import {  setSubcategories, CATEGORIES } from '../utils/categoryUtils.ts'
 
 export const useSongStore = defineStore('song', () => {
   const songs = ref<SongData[]>([]);
@@ -38,23 +38,31 @@ export const useSongStore = defineStore('song', () => {
     return searchSongs(songs.value, searchQuery.value);
   });
 
+  // Add a new flag to localStorage to track the version of the fix
+const CATEGORY_FIX_VERSION = '1.0'; // Increment this if you need to apply the fix again
+
+
   const fetchSongs = async (forceRefresh = false) => {
     try {
-      const cachedSongs = localStorage.getItem('cachedSongs')
-      const cachedSubcategories = localStorage.getItem('cachedSubcategories')
-      const cachedCategories = localStorage.getItem('cachedCategories')
+    // Use new cache keys with a timestamp to force a refresh
+    const NEW_CACHE_PREFIX = 'v8_'; // Change this prefix to force a refresh
+    
+    const cachedSongs = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedSongs')
+    const cachedSubcategories = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedSubcategories')
+    const cachedCategories = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedCategories')
+
 
       if (!forceRefresh && cachedSongs && cachedSubcategories && cachedCategories) {
         songs.value = JSON.parse(cachedSongs);
         setSubcategories(JSON.parse(cachedSubcategories));
         categories.value = JSON.parse(cachedCategories);
-        console.log('Loaded categories from cache:', categories.value);
+         console.log('Loaded categories from cache:', categories.value);
         return categories.value;
       }
 
       const owner = 'yashineonline';
       const repo = 'ilahiRepository';
-      const path = 'ilahiHU.txt';
+      const path = 'ilahiHU6.txt';
       const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
       
       const response = await fetch(url, {
@@ -74,12 +82,27 @@ export const useSongStore = defineStore('song', () => {
 
       youtubeLinks.value = getAllYoutubeLinks.value;
 
+      // const processedCategories = ['All', CATEGORIES.BASIC, CATEGORIES.INTERMEDIATE];
+
+      
+// const processedCategories = getAllCategories(processedSongs).filter(category => {
+//   const trimmedCategory = category.trim();
+//   if (!trimmedCategory) return false;
+//   console.log('trimmedCategory', trimmedCategory);
+   
+//   return true;
+// });
+
+
       setSubcategories(subcategories)
-      categories.value = getAllCategories(processedSongs)
-      localStorage.setItem('cachedSongs', JSON.stringify(songs.value))
-      localStorage.setItem('cachedSubcategories', JSON.stringify(subcategories))
-      localStorage.setItem('cachedCategories', JSON.stringify(categories.value))
-      console.log('Updated categories:', categories.value) 
+      // categories.value = processedCategories // getAllCategories(processedSongs)
+     // Store with the new cache keys
+    localStorage.setItem(NEW_CACHE_PREFIX + 'cachedSongs', JSON.stringify(songs.value))
+    localStorage.setItem(NEW_CACHE_PREFIX + 'cachedSubcategories', JSON.stringify(subcategories))
+    localStorage.setItem(NEW_CACHE_PREFIX + 'cachedCategories', JSON.stringify(categories.value))
+
+    console.log('Updated categories with new cache keys:', categories.value) 
+    
       return categories.value // Return the categories
     } catch (error) {
       console.error('Error fetching songs:', error)

@@ -110,6 +110,16 @@ export const QUOTES = [
   
   "The biggest asset that burns all incompleteness is love.",
 
+  "LOVE MAKES ONENESS",
+
+  "In Love, We unite",
+
+  "When nafs [ego] meets nafs, there is a fight, when hearts meet hearts, there is love.", 
+
+
+
+
+
 ];
 
 

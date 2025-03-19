@@ -110,10 +110,28 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
 import { useSongStore } from '../stores/songStore';
-import { useCategoryState, getSubcategories, getSortedSubcategories, getMainCategories, categoryShortcuts, CATEGORIES } from '../utils/categoryUtils';
+import { getSubcategories, getSortedSubcategories, getMainCategories, categoryShortcuts, CATEGORIES } from '../utils/categoryUtils';
 
-// Use the category state hook
-const { selectedCategories, toggleCategory, removeCategory } = useCategoryState();
+// Replace the useCategoryState hook with direct implementation
+const selectedCategories = ref<string[]>([]);
+
+// Function to toggle a category on/off
+const toggleCategory = (category: string) => {
+  const index = selectedCategories.value.indexOf(category);
+  if (index === -1) {
+    selectedCategories.value.push(category);
+  } else {
+    selectedCategories.value.splice(index, 1);
+  }
+};
+
+// Function to remove a category
+const removeCategory = (category: string) => {
+  const index = selectedCategories.value.indexOf(category);
+  if (index !== -1) {
+    selectedCategories.value.splice(index, 1);
+  }
+};
 
 // const selectedCategories = ref([]);
 const currentLetter = ref('');

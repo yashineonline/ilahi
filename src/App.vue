@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col">
     <header class="bg-green-600 text-white p-4" v-if="navigationStore.isNavigationVisible">
-      <h1 class="text-2xl font-bold">İlahi Book App</h1>
+      <h1 class="text-2xl font-bold">ilahi Book App</h1>
     </header>
     <NavigationBar v-if="navigationStore.isNavigationVisible" />
     <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
@@ -10,9 +10,13 @@
       <RouterView />
     </main>
     <footer class="bg-green-600 text-white p-4 mt-8" v-if="navigationStore.isNavigationVisible">
+      <button 
+          @click="refreshSongs" class="btn btn-ghost btn-circle" aria-label="Update ilahi list">
+          <font-awesome-icon :icon="['fas', 'rotate']" spin style="color: #17a6ee;" aria-hidden="true" />
+        </button>
       <VersionDisplay /> <!-- Import and use the Notification component here -->
       <p class="text-center">&copy; 2024-2025 Copyright by AQRT. </p>
-       <p class="text-center">İlahi Book App. All rights reserved.</p>
+       <p class="text-center">ilahi Book App. All rights reserved.</p>
     </footer>
     <ThemeToggle class="fixed top-16 right-4" />
 
@@ -41,6 +45,7 @@ setupHyperlinkNavigation();
 // Automatically fetch songs when the app is mounted
 onMounted(async () => {
   await songStore.fetchSongs();
+  refreshSongs();
 });
 
 const navigationStore = useNavigationStore()
@@ -54,6 +59,9 @@ const resetGlobalSearch = () => {
 
 provide('resetGlobalSearch', resetGlobalSearch)
 
+function refreshSongs() {
+  songStore.fetchSongs(true)
+}
 
 
 
