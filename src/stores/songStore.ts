@@ -62,7 +62,7 @@ const CATEGORY_FIX_VERSION = '1.0'; // Increment this if you need to apply the f
 
       const owner = 'yashineonline';
       const repo = 'ilahiRepository';
-      const path = 'ilahiHU6.txt';
+      const path = 'ilahi.txt';
       const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
       
       const response = await fetch(url, {
