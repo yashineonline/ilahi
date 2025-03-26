@@ -42,7 +42,7 @@
           <label for="basicCategory" class="text-lg font-semibold text-primary">Basic ilahis For Zikr</label>
         </div>
         <div class="dropdown">
-          <label tabindex="0" class="btn m-1" @click="isDropdownOpen = !isDropdownOpen">More Categories</label>
+          <label tabindex="0" class="btn btn-secondary m-1" @click="isDropdownOpen = !isDropdownOpen">More Categories</label>
           <ul v-if="isDropdownOpen" tabindex="0" class="dropdown-content z-[1] menu p-2 shadow rounded-box w-52 max-h-60 overflow-y-auto custom-dropdown">
             <li v-for="category in mainCategories" :key="category" class="text-left">
               <template v-if="Object.keys(subcategories).includes(category)">
@@ -176,28 +176,36 @@ const sortedSubcategories = computed(() => {
 
 const subcategories = computed(() => getSubcategories());
 
-const allCategories = computed(() => {
-  const { processedCategories, processedShortcuts } = processShortcuts(subcategories.value);
-  const categories = new Set<string>(songStore.categories);
-  const normalizedSubcategories = new Set(
-    Object.values(processedCategories).flat().map(normalizeCategory)
-  );
+// const allCategories = computed(() => {
+//   const { processedCategories, processedShortcuts } = processShortcuts(subcategories.value);
+//   console.log("processedCategories:", processedCategories);
+//   console.log("subcategories:", subcategories);
+//   const categories = new Set<string>(songStore.categories);
+//     console.log("categories:", categories);
+//   const normalizedSubcategories = new Set(
+//     Object.values(processedCategories).flat().map(normalizeCategory)
+//   );
+//   console.log("normalizedSubcategories:", normalizedSubcategories);
+
 
   filteredSongs.value.forEach((song) => {
     song.categories.forEach((category) => {
       const normalizedCategory = normalizeCategory(category);
-      const matchedMainCategory = Object.keys(processedCategories).find((key) => 
-        normalizeCategory(key) === normalizedCategory || 
-        processedCategories[key].some((sub) => normalizeCategory(sub).startsWith(normalizedCategory))
-      );
-      if (matchedMainCategory) {
-        categories.add(matchedMainCategory);
-      } else if (category.trim() !== '' && !processedShortcuts[normalizedCategory] && !normalizedSubcategories.has(normalizedCategory)) {
-        categories.add(category.trim());
-      }
+        console.log("normalizedCategory:", normalizedCategory);
+       const matchedMainCategory = Object.keys(categories).find((key) => 
+         normalizeCategory(key) === normalizedCategory || 
+         categories[key].some((sub) => normalizeCategory(sub).startsWith(normalizedCategory))
+       );
+       console.log("matchedMainCategory:", matchedMainCategory);
+
+      //  if (matchedMainCategory) {
+        //  categories.add(matchedMainCategory);
+      // } else if (category.trim() !== '' && !processedShortcuts[normalizedCategory] && !normalizedSubcategories.has(normalizedCategory)) {
+      //   categories.add(category.trim());
+      // }
     });
-  });
-  return Array.from(categories);
+  // });
+  // return Array.from(categories);
 });
 
 const mainCategories = computed(() => {
@@ -205,14 +213,16 @@ const mainCategories = computed(() => {
   // const standardCategories = ['All', CATEGORIES.BASIC, CATEGORIES.INTERMEDIATE];
   // console.log("Main category headings:", mainCategoryHeadings);
   // console.log("Standard categories:", standardCategories);
-  const categories = allCategories.value;
+  // const categories = allCategories.value;
   console.log("All categories from store:", categories);
 
-  return categories
-  .filter(category => {
+    return categories.value;
+  });
+
+  // .filter(category => {
     // Skip empty categories
-    const trimmedCategory = category.trim();
-    return trimmedCategory && !trimmedCategory.endsWith(':') && trimmedCategory.length < 30;
+    // const trimmedCategory = category.trim();
+    // return trimmedCategory && !trimmedCategory.endsWith(':') && trimmedCategory.length < 30;
 
     // if (!trimmedCategory) return false;
 
@@ -227,8 +237,8 @@ const mainCategories = computed(() => {
            // return categories
     // .filter(category => Object.keys(subcategories.value).includes(category) || category === 'All' || category === CATEGORIES.BASIC|| category === 'inter')
     // .map(category => category === 'inter' ? 'Intermediate' : category);
-});
-});
+
+// });
 
 // Computed properties
 const sortedFilteredSongs = computed(() => {
@@ -319,7 +329,7 @@ onMounted(async () => {
   try {
     const loadedCategories = await songStore.fetchSongs();
     if (loadedCategories) {
-      // Update allCategories or perform any necessary actions with the loaded categories
+
     }
     if (route.query.search) {
       songStore.setSearchQuery(route.query.search as string);

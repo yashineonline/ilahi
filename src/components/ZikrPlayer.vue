@@ -44,7 +44,7 @@
               <div class="card-body">
                 <audio-player
                   :audio-src="zikr.zikrLink"
-                  player-type="googledrive"
+                  :player-type="getPlayerType(zikr.zikrLink)"
                   @player-ready="onPlayerReady"
                 />
               </div>
@@ -84,6 +84,7 @@ import { ref, onMounted } from "vue";
 import { useSongStore } from "../stores/songStore";
 import AudioPlayer from "./AudioPlayer.vue";
 import { parseHyperlinks } from '@/utils/hyperlinkParser.ts';  // Import from 
+import { getPlayerType } from '@/utils/playerUtils.ts'; // Update this import
 
 const songStore = useSongStore();
 const loading = ref(true);

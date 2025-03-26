@@ -11,9 +11,9 @@
         <div v-if="isHomePage" class="dropdown">
           
           <label tabindex="0" class="btn btn-ghost btn-sm text-xl mb-2">Menu</label>
-      <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow rounded-box w-52">
-        <li><router-link to="/wirds" class="btn btn-ghost btn-sm">Wird Slide</router-link></li>
+      <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow rounded-box w-52" :class="{'bg-gray-800/90 text-white': themeStore.theme === 'dark-theme', 'bg-white/90 text-gray-800': themeStore.theme === 'light-theme'}">
         <li><router-link to="/zikr-practice" class="btn btn-ghost btn-sm">Zikr Practice</router-link></li>
+        <li><router-link to="/wirds" class="btn btn-ghost btn-sm">Wird Slide</router-link></li>
         <li><router-link to="/book" class="btn btn-ghost btn-sm">Download ilahi Book</router-link></li>
         <li><router-link to="/about" class="btn btn-ghost btn-sm">About ilahi</router-link></li>
         <li> <button @click="handleIlahiClassesClick" class="btn btn-ghost btn-sm w-full text-left">Join ilahi Community</button></li>

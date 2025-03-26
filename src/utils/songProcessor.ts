@@ -131,7 +131,7 @@ const zikrEnd = lines.findIndex(line => line.trim() === 'ENDOFZIKRPRACTICE');
 if (zikrStart !== -1 && zikrEnd !== -1) {
   for (let i = zikrStart + 1; i < zikrEnd; i++) {
     const line = lines[i].trim();
-    if (line.includes('drive.google.com')) {
+    if (line.includes('drive.google.com') || line.includes('youtube.com') || line.includes('youtu.be')) {
       const link = line;
       const title = lines[i + 1]?.trim();
       const lyricsStanzas: string[][] = [];
@@ -139,7 +139,13 @@ if (zikrStart !== -1 && zikrEnd !== -1) {
       
       i += 2; // Move to first lyrics line
       
-      while (i < zikrEnd && !lines[i].includes('drive.google.com')) {
+      while (i < zikrEnd && 
+        !lines[i].includes('drive.google.com')
+        && 
+        !lines[i].includes('youtube.com') 
+        && 
+        !lines[i].includes('youtu.be')
+            ) {
         const lyricLine = lines[i].trim();
         if (lyricLine === '') {
           if (currentStanza.length > 0) {

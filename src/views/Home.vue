@@ -62,6 +62,7 @@
         <div class="shadow-lg rounded-lg p-6">
           <h2 class="text-2xl font-semibold mb-4">About Us</h2>
           <p>The ilahi Book App is maintained by the Ansari Qadiri Rifai Tariqa (AQRT), dedicated to preserving and sharing Sufi spiritual traditions.</p>
+          <p>Are you enjoying the ilahi Book App? Would you like to see more apps like this — perhaps a modern, interactive Quran app? You can support the development of such projects by donating on the AQRT website. Use 'app' as your donation reference.</p>
           
           <a href="https://aqrtsufi.org" target="_blank" rel="noopener noreferrer" class="btn btn-secondary mt-4">Learn more about AQRT</a>
         </div>
