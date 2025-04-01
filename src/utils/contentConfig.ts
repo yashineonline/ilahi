@@ -116,6 +116,26 @@ export const QUOTES = [
 
   "When nafs [ego] meets nafs, there is a fight, when hearts meet hearts, there is love.", 
 
+  "Allah wants positivity, you are created for love.",
+
+  "The purpose of this world is for us to be a habitat for love.",
+
+  "Allah created this entire universe, for love.",
+
+  "Peace brings love.",
+
+  "Sufis are after Allah’s essence through love.",
+
+  "Sufism is a process of attaining closeness to the Creator through love which is attained by purification of your ego.",
+
+  "Love brings people together.",
+
+  "Violence does not get people, love does. Love gets people together and keeps them.",
+
+
+
+
+
 
 
 

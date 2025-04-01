@@ -382,20 +382,41 @@ const progressInterval = ref<NodeJS.Timeout | null>(null);
 const intersectionObserver = ref<IntersectionObserver | null>(null);
 
 onBeforeUnmount(() => {
+   // Fix YouTube player cleanup
+   if (props.playerType === 'youtube' && youtubePlayer.value) {
+    try {
+      if (youtubePlayer.value.$el) {
+        // Try to pause the video first
+        const player = youtubePlayer.value.player;
+        if (player && typeof player.pauseVideo === 'function') {
+          player.pauseVideo();
+        }
+        // Don't call destroy as it's not available
+      }
+    } catch (error) {
+      console.error('Error cleaning up YouTube player:', error);
+    }
+  }
+
   // Clean up Howler.js
   if (howl.value) {
+    try{
     howl.value.off('play');
     howl.value.off('pause');
     howl.value.off('end');
     howl.value.off('load');
     howl.value.stop();
     howl.value.unload();
+  } catch (error) {
+      console.error('Error cleaning up Howl player:', error);
+    }
   }
 
+  youtubePlayer.value = null;
   // Clean up YouTube player
-  if (youtubePlayer.value) {
-    youtubePlayer.value.destroy();
-  }
+  // if (youtubePlayer.value) {
+  //   youtubePlayer.value.destroy();
+  // }
 
   // Clean up Google Drive iframe
   const iframe = document.getElementById('google-drive-iframe');

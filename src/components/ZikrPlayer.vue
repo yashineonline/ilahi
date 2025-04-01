@@ -2,7 +2,7 @@
   <div class="w-full max-w-4xl mx-auto p-4">
     <div class="text-center mb-8">
       <h1 class="text-4xl font-bold mb-2">AQRT Zikr Practice</h1>
-      <p class="text-base-content/70">Do zikr and follow along with the audio recordings of Shaykh Taner!</p>
+      <p class="text-base-content/70">Do zikr by following along with Shaykh Taner and Shaykha Muzeyyen Ansari!</p>
 
       <!-- Add instruction message when no zikrs are loaded -->
       <div v-if="songStore.zikrItems.length === 0 && !loading" class="alert alert-info shadow-lg mt-4">
@@ -30,32 +30,40 @@
       <div
         v-for="(zikr, index) in songStore.zikrItems"
         :key="index"
-        class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all cursor-pointer hover:-translate-y-1"
-        @click="togglePlayer(index)"
+        class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all cursor-pointer hover:-translate-y-1":class="{'bg-gray-800/90 text-white': themeStore.theme === 'dark-theme', 'bg-white/90 text-gray-800': themeStore.theme === 'light-theme'}"
       >
         <div class="card-body">
-          <h2 class="card-title text-2xl">{{ zikr.zikrTitle }}</h2>
-
+          <h2 
+          class="card-title text-2xl"
+          @click="togglePlayer(index)"
+          >{{ zikr.zikrTitle }}</h2>
+         
+          <transition name="fade">
           <div 
-            v-if="expandedIndex === index" 
-            class="mt-6 space-y-6"
+          v-show="expandedIndex === index" 
+          class="mt-6 space-y-6"
           >
             <div class="card bg-base-200">
               <div class="card-body">
+                <div v-if="expandedIndex === index">
+                  <suspense>
                 <audio-player
-                  :audio-src="zikr.zikrLink"
+                :key="`player-${index}`"
+                :audio-src="zikr.zikrLink"
                   :player-type="getPlayerType(zikr.zikrLink)"
                   @player-ready="onPlayerReady"
                 />
+              </suspense>
               </div>
             </div>
+          </div>
 
             <div 
               v-if="zikr.zikrLyrics" 
               class="card bg-base-200"
             >
               <div class="card-body prose max-w-none">
-                <h3 class="card-title text-xl mb-4">Words</h3>
+                <!-- <h3 class="card-title text-xl mb-4">Words</h3> -->
                 <div 
                   v-for="(stanzaLines, stanzaIndex) in zikr.zikrLyrics" 
                   :key="stanzaIndex" 
@@ -73,6 +81,7 @@
               </div>
             </div>
           </div>
+        </transition>
         </div>
       </div>
     </div>
@@ -80,19 +89,54 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, nextTick } from "vue";
 import { useSongStore } from "../stores/songStore";
 import AudioPlayer from "./AudioPlayer.vue";
 import { parseHyperlinks } from '@/utils/hyperlinkParser.ts';  // Import from 
 import { getPlayerType } from '@/utils/playerUtils.ts'; // Update this import
+import { useThemeStore } from '../stores/themeStore'
 
+const themeStore = useThemeStore()
 const songStore = useSongStore();
 const loading = ref(true);
 const error = ref("");
 const expandedIndex = ref(-1);
+const toggleInProgress = ref(false);
 
-const togglePlayer = (index: number) => {
-  expandedIndex.value = expandedIndex.value === index ? -1 : index;
+
+
+const togglePlayer = async (index: number) => {
+  // Prevent multiple toggles at once
+  if (toggleInProgress.value) return;
+  
+  toggleInProgress.value = true;
+  console.log(`Toggling card ${index}, current expanded: ${expandedIndex.value}`);
+  
+  try {
+    // If clicking the same card, close it
+    if (expandedIndex.value === index) {
+      expandedIndex.value = -1;
+    } else {
+      // First close any open player 
+      if (expandedIndex.value !== -1) {
+        expandedIndex.value = -1;
+        // Wait for unmount to complete
+        await nextTick();
+      }
+      
+      // Then open the new one
+      expandedIndex.value = index;
+    }
+    
+    console.log(`After toggle: expanded index is now ${expandedIndex.value}`);
+  } catch (err) {
+    console.error('Error toggling player:', err);
+  } finally {
+    // Allow toggles again after a short delay
+    setTimeout(() => {
+      toggleInProgress.value = false;
+    }, 100);
+  }
 };
 
 const onPlayerReady = (playerData: any) => {
@@ -102,10 +146,10 @@ const onPlayerReady = (playerData: any) => {
 onMounted(async () => {
   try {
     loading.value = true;
-    if (songStore.zikrItems.length === 0) {  // Add this check
-      songStore.fetchSongs(true)
+    if (songStore.zikrItems.length === 0) {
+      await songStore.fetchSongs(true);
     }
-    } catch (err) {
+  } catch (err) {
     error.value = "Failed to load zikr samples. Please try again later.";
   } finally {
     loading.value = false;
@@ -113,3 +157,13 @@ onMounted(async () => {
 });
 
 </script>
+
+<style>
+/* Add transitions for a smoother experience */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+</style>
