@@ -41,13 +41,13 @@
           <ul class="list-disc pl-5 text-left">
             <li>Browse a vast collection of ilahis</li>
             <li>Listen to audio recordings</li>
-            <li>Generate PDF version of each ilahi</li>
+            <li>Search ilahis By Categories</li>
+            <li>History about ilahis</li>
+            <li>Generate PDF of each ilahi</li>
             <li>Customize your own Book of ilahis</li>
             <li>Join an ilahi community and attend ilahi classes for free!</li>
             <li>Poems from Shaykh Taner and his followers</li> 
-              <li>History about specific ilahis</li>
-              <li>Search ilahis By Categories (Now updated!)</li>
-              <li>Dark mode fixed!</li>
+              <li>Dark mode</li>
           </ul>
           <h1> - </h1>
           <h2 class="text-2xl font-semibold mb-4">Upcoming Features</h2>
@@ -55,7 +55,6 @@
             <li>Lyrics with translations in other languages</li>
             <li>Create your own book design</li>
             <li>Record yourself and get feedback</li>
-            
           </ul>
 
         </div>

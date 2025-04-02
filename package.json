@@ -1,6 +1,6 @@
 {
   "name": "ilahi-app",
-  "version": "6.3",
+  "version": "7.0.0",
   "private": true,
   "scripts": {
     "increment-version": "node incrementVersion.mjs",
@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@types/firebase": "^2.4.32",
-    "@types/node": "^22.12.0",
+    "@types/node": "^22.13.16",
     "@types/qrcode": "^1.5.5",
     "@types/unorm": "^1.3.31",
     "@types/vuedraggable": "^2.24.0",
@@ -62,7 +62,7 @@
     "tailwindcss": "^3.4.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3",
-    "vite": "^5.4.1",
+    "vite": "^5.4.16",
     "vite-plugin-pwa": "^0.20.2",
     "vitepress": "^1.6.3",
     "vue-tsc": "^2.0.29"

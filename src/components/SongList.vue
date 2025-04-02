@@ -21,7 +21,12 @@
         v-for="letter in 'ABCÇDEFGĞHIİJKLMNOÖPQRSŞTUÜVYZ'"
         :key="letter"
         @click="filterByLetter(letter)"
-        :class="['btn btn-sm m-1', { 'btn-primary': currentLetter === letter }]"
+        :class="[
+          'btn btn-sm m-1', 
+          { 'btn-primary': currentLetter === letter  || 
+        (currentLetter && turkishToEnglish(currentLetter) === turkishToEnglish(letter)) 
+               }
+               ]"
       >
         {{ letter }}
       </button>
@@ -44,12 +49,12 @@
         <div class="dropdown">
           <label tabindex="0" class="btn btn-secondary m-1" @click="isDropdownOpen = !isDropdownOpen">More Categories</label>
           <ul v-if="isDropdownOpen" tabindex="0" class="dropdown-content z-[1] menu p-2 shadow rounded-box w-52 max-h-60 overflow-y-auto custom-dropdown">
-            <li v-for="category in mainCategories" :key="category" class="text-left">
-              <template v-if="Object.keys(subcategories).includes(category)">
+            <li v-for="category in mainCategories" :key="String(category)" class="text-left">
+              <template v-if="Object.keys(subcategories).includes(String(category))">
                 <details class="dropdown">
                   <summary class="text-base-content">{{ category }}</summary>
                   <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-                    <li v-for="subCategory in sortedSubcategories[category]" :key="subCategory" class="text-left">
+                    <li v-for="subCategory in sortedSubcategories[String(category)]" :key="String(subCategory)" class="text-left">
                       <label class="text-base-content">
                         <input
                           type="checkbox"
@@ -78,6 +83,25 @@
       </div>
     </div>
 
+<!-- Replace the debug info with this -->
+<div class="text-center text-base-content/80 mb-4">
+  <span v-if="currentLetter">
+    Showing {{ sortedFilteredSongs.length }} ilahi{{ sortedFilteredSongs.length !== 1 ? 's' : '' }} 
+    starting with "{{ currentLetter }}"
+  </span>
+  <span v-else-if="selectedCategories.length > 0">
+    Showing {{ sortedFilteredSongs.length }} ilahi{{ sortedFilteredSongs.length !== 1 ? 's' : '' }} 
+    in selected categories
+  </span>
+  <span v-else>
+    {{ filteredSongs.length }} ilahi{{ filteredSongs.length !== 1 ? 's' : '' }} available
+  </span>
+</div>
+
+  <div
+    v-if="sortedFilteredSongs.length > 0"
+    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+  ></div>
 
     <div
       v-if="paginatedSongs.length"
@@ -85,7 +109,8 @@
     >
       <div
         v-for="(song, index) in paginatedSongs"
-        :key="`${song.title}-${index}`"
+        :key="song.slug"
+
         class="shadow-md rounded-lg p-4"
       >
         <h3 class="text-xl font-semibold mb-2">
@@ -106,10 +131,13 @@
         </div>
       </div>
     </div>
-    <div v-else class="text-center text-xl text-gray-600">Sorry, no ilahi found. Please refresh the app.</div>
+    <div v-else class="text-center text-xl text-gray-600">Sorry, no ilahi found starting with letter "{{ currentLetter }}".
+</div>
 
         <!-- Pagination -->
-    <div class="mt-6 flex justify-center">
+           <!-- Only show pagination if we have songs -->
+  <div v-if="sortedFilteredSongs.length > 0" class="mt-6 flex justify-center">
+       <!-- <div class="mt-6 flex justify-center"> -->
       <button
         @click="prevPage"
         :disabled="currentPage === 1"
@@ -139,6 +167,8 @@ import { getCurrentInstance } from "vue";
 import { slugify } from '../utils/search';
 import { CATEGORIES, getSubcategories, filterSongsByCategory, normalizeCategory, turkishToEnglish, getSortedSubcategories, processShortcuts, getMainCategories } from '../utils/categoryUtils';
 import { SongData } from "@/utils/types";
+import type { LocationQueryValue } from 'vue-router'
+
 
 const route = useRoute();
 const router = useRouter();
@@ -161,12 +191,21 @@ const generateRandomIlahi = () => {
 
 const resetGlobalSearch = inject("resetGlobalSearch") as () => void;
 
-const sortedSubcategories = computed(() => {
+const sortedSubcategories = computed((): Record<string, string[]> => {
+
+// const sortedSubcategories = computed(() => {
   const result: Record<string, string[]> = {};
   
   for (const category in subcategories.value) {
+  // Ensure we're working with string arrays
+  const subCats = subcategories.value[category];
+    if (Array.isArray(subCats)) {
+      result[category] = [...subCats].sort((a, b) => a.localeCompare(b));
+    }
+  
+  
     // Sort subcategories alphabetically
-    result[category] = [...subcategories.value[category]].sort((a, b) => a.localeCompare(b));
+    // result[category] = [...subcategories.value[category]].sort((a, b) => a.localeCompare(b));
   }
   
   return result;
@@ -176,48 +215,69 @@ const sortedSubcategories = computed(() => {
 
 const subcategories = computed(() => getSubcategories());
 
-// const allCategories = computed(() => {
-//   const { processedCategories, processedShortcuts } = processShortcuts(subcategories.value);
-//   console.log("processedCategories:", processedCategories);
-//   console.log("subcategories:", subcategories);
-//   const categories = new Set<string>(songStore.categories);
-//     console.log("categories:", categories);
-//   const normalizedSubcategories = new Set(
-//     Object.values(processedCategories).flat().map(normalizeCategory)
-//   );
-//   console.log("normalizedSubcategories:", normalizedSubcategories);
+const allCategories = computed(() => {
+  const { processedCategories, processedShortcuts } = processShortcuts(subcategories.value);
+  console.log("processedCategories:", processedCategories);
+  console.log("subcategories:", subcategories);
+ // Change from Set to Record/object to avoid indexing issues
+ const categoriesMap: Record<string, boolean> = {};
+  
+  // const categories = new Set<string>(songStore.categories);
+
+  const normalizedSubcategories = new Set(
+    Object.values(processedCategories).flat().map(normalizeCategory)
+  );
+  console.log("normalizedSubcategories:", normalizedSubcategories);
 
 
   filteredSongs.value.forEach((song) => {
     song.categories.forEach((category) => {
       const normalizedCategory = normalizeCategory(category);
         console.log("normalizedCategory:", normalizedCategory);
-       const matchedMainCategory = Object.keys(categories).find((key) => 
-         normalizeCategory(key) === normalizedCategory || 
-         categories[key].some((sub) => normalizeCategory(sub).startsWith(normalizedCategory))
-       );
-       console.log("matchedMainCategory:", matchedMainCategory);
 
-      //  if (matchedMainCategory) {
-        //  categories.add(matchedMainCategory);
-      // } else if (category.trim() !== '' && !processedShortcuts[normalizedCategory] && !normalizedSubcategories.has(normalizedCategory)) {
-      //   categories.add(category.trim());
-      // }
+// Fix the categories access
+const matchedMainCategory = Object.keys(categories.value || {}).find((key) => {
+        const categoryArray = categories.value?.[key]
+        if (!categoryArray || !Array.isArray(categoryArray)) return false
+        
+        return normalizeCategory(key) === normalizedCategory || 
+               categoryArray.some((sub: string) => 
+                 normalizeCategory(sub).startsWith(normalizedCategory)
+               )
+      });
+      console.log("matchedMainCategory:", matchedMainCategory);
+
+      if (matchedMainCategory) {
+        categoriesMap[matchedMainCategory] = true;
+      } else if (category.trim() !== '' && 
+                //  !processedShortcuts[normalizedCategory] && 
+                 !normalizedSubcategories.has(normalizedCategory)) {
+        categoriesMap[category.trim()] = true;
+      }
+
     });
-  // });
+  });
   // return Array.from(categories);
+  return Object.keys(categoriesMap);
 });
 
-const mainCategories = computed(() => {
+
+// First, ensure mainCategories returns string[] instead of any other type
+const mainCategories = computed((): string[] => {
+  console.log("All categories from store:", categories);
+  // Ensure we're returning an array of strings
+  return Array.isArray(categories.value) ? categories.value : Object.keys(categories.value || {});
+});
+
+
   // const mainCategoryHeadings = Object.keys(subcategories.value);
   // const standardCategories = ['All', CATEGORIES.BASIC, CATEGORIES.INTERMEDIATE];
-  // console.log("Main category headings:", mainCategoryHeadings);
-  // console.log("Standard categories:", standardCategories);
+  
   // const categories = allCategories.value;
-  console.log("All categories from store:", categories);
+  
 
-    return categories.value;
-  });
+    // return categories.value;
+  // });
 
   // .filter(category => {
     // Skip empty categories
@@ -242,10 +302,23 @@ const mainCategories = computed(() => {
 
 // Computed properties
 const sortedFilteredSongs = computed(() => {
-  const { processedCategories, processedShortcuts } = processShortcuts(subcategories.value);
+  // const { processedCategories, processedShortcuts } = processShortcuts(subcategories.value);
   let songsToDisplay = filteredSongs.value;
 
-  if (selectedCategories.value.length > 0 && !selectedCategories.value.includes('All')) {
+
+
+  if (currentLetter.value) {
+    songsToDisplay = songsToDisplay.filter(
+      (song) =>      {
+        const firstLetter = song.title[0].toUpperCase();
+        const normalizedFirstLetter = turkishToEnglish(firstLetter);
+      const normalizedCurrentLetter = turkishToEnglish(currentLetter.value);
+            
+      return normalizedFirstLetter === normalizedCurrentLetter;
+    });
+  }
+          
+    if (selectedCategories.value.length > 0 && !selectedCategories.value.includes('All')) {
     songsToDisplay = filterSongsByCategory(songsToDisplay, selectedCategories.value);
     
     // If only Basic category is selected, sort by order number
@@ -254,15 +327,8 @@ const sortedFilteredSongs = computed(() => {
     }
   }
 
-  if (currentLetter.value && selectedCategories.value.length === 0) {
-    songsToDisplay = songsToDisplay.filter(
-      (song) =>
-        turkishToEnglish(song.title[0].toUpperCase()) ===
-        turkishToEnglish(currentLetter.value)
-    );
-  }
 
-  // return songsToDisplay.sort((a, b) => a.title.localeCompare(b.title));
+
    // Normal alphabetical sorting for other cases
    return songsToDisplay.sort((a, b) => 
     turkishToEnglish(a.title.toLowerCase()).localeCompare(turkishToEnglish(b.title.toLowerCase()))
@@ -295,49 +361,111 @@ const nextPage = () => {
 };
 
 const filterByLetter = (letter: string) => {
-  currentLetter.value = currentLetter.value === letter ? "" : letter;
+  // Force uppercase for consistency
+  const upperLetter = letter.toUpperCase();
+  currentLetter.value = currentLetter.value === upperLetter ? "" : upperLetter;
+// Update query parameters first
+const query: Record<string, string | string[]> = {};
+  if (currentLetter.value) query.letter = currentLetter.value;
+  if (selectedCategories.value.length > 0) query.categories = selectedCategories.value;
+  
+  // Reset page and update route
   currentPage.value = 1;
-  updateQueryParams();
+  router.push({ query });
+
 };
 
 const updateQueryParams = () => {
   const query: Record<string, string | string[]> = {};
   if (currentLetter.value) query.letter = currentLetter.value;
   if (selectedCategories.value.length > 0) query.categories = selectedCategories.value;
-  router.push({ query });
+  router.push({ query }).catch(() => {
+    // Handle potential navigation errors
+    console.log('Navigation prevented');
+  });
 };
 
+// First, let's add a debug computed property
+const debugSongCounts = computed(() => ({
+  filtered: sortedFilteredSongs.value.length,
+  paginated: paginatedSongs.value.length,
+  total: filteredSongs.value.length
+}));
+
+
+
 // Watchers
+// Add a watch for currentLetter specifically
+watch(currentLetter, (newLetter) => {
+  currentPage.value = 1;
+}, { immediate: true });
+
+
 watch([filteredSongs, currentLetter, selectedCategories], () => {
   currentPage.value = 1;
   updateQueryParams();
 });
 
+// watch(
+//   () => route.query.search,
+//   (newSearch) => {
+//     if (newSearch) {
+//       songStore.setSearchQuery(newSearch as string);
+//       currentPage.value = 1;
+//       currentLetter.value = "";
+//       selectedCategories.value = [];
+//     }
+//   }
+// );
+
+// Fix the route query handling
 watch(
-  () => route.query.search,
-  (newSearch) => {
-    if (newSearch) {
-      songStore.setSearchQuery(newSearch as string);
+  () => route.query,
+  (newQuery) => {
+    if (newQuery.search) {
+      songStore.setSearchQuery(String(newQuery.search));
       currentPage.value = 1;
       currentLetter.value = "";
       selectedCategories.value = [];
+    } else if (newQuery.letter) {
+      // Add this condition to handle letter parameter
+      currentLetter.value = String(newQuery.letter);
+      currentPage.value = 1;
+      songStore.setSearchQuery("");
+    } else if (newQuery.categories) {
+      // Handle the LocationQueryValue type safely
+      const categories = Array.isArray(newQuery.categories)
+        ? newQuery.categories.map(String)
+        : [String(newQuery.categories)];
+      selectedCategories.value = categories.filter(Boolean); // Remove any null values
+      currentPage.value = 1;
+      songStore.setSearchQuery("");
+    } else {
+      songStore.setSearchQuery("");
+      currentLetter.value = "";
+      selectedCategories.value = [];
+      currentPage.value = 1;
     }
-  }
+  },
+  { immediate: true }
 );
 
 onMounted(async () => {
   try {
-    const loadedCategories = await songStore.fetchSongs();
-    if (loadedCategories) {
+    await songStore.fetchSongs();
 
-    }
+    // const loadedCategories = await songStore.fetchSongs();
+    // if (loadedCategories) {
+
+    // }
     if (route.query.search) {
-      songStore.setSearchQuery(route.query.search as string);
+      songStore.setSearchQuery(String(route.query.search));
     }
     if (route.query.categories) {
-      selectedCategories.value = Array.isArray(route.query.categories)
-        ? route.query.categories
-        : [route.query.categories as string];
+      const categories = Array.isArray(route.query.categories)
+      ? route.query.categories.map(String)
+        : [String(route.query.categories)];
+      selectedCategories.value = categories.filter(Boolean);
     }
   } catch (error) {
     console.error('Error loading songs and categories:', error);
@@ -352,33 +480,6 @@ const resetSearch = () => {
   resetGlobalSearch();
 };
 
-watch(
-  () => route.query,
-  (newQuery) => {
-    if (newQuery.search) {
-      songStore.setSearchQuery(newQuery.search as string);
-      currentPage.value = 1;
-      currentLetter.value = "";
-      selectedCategories.value = [];
-    } else if (newQuery.letter) {
-      currentLetter.value = newQuery.letter as string;
-      currentPage.value = 1;
-      songStore.setSearchQuery("");
-    } else if (newQuery.categories) {
-      selectedCategories.value = Array.isArray(newQuery.categories)
-        ? newQuery.categories
-        : [newQuery.categories as string];
-      currentPage.value = 1;
-      songStore.setSearchQuery("");
-    } else {
-      songStore.setSearchQuery("");
-      currentLetter.value = "";
-      selectedCategories.value = [];
-      currentPage.value = 1;
-    }
-  },
-  { immediate: true }
-);
 
 const isDropdownOpen = ref(false);
 

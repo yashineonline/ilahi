@@ -399,13 +399,13 @@ else if (trimmedLine.startsWith('Category:')) {
   // Start collecting category content
   let categoryContent = trimmedLine;
   let j = i + 1;
-  console.log('categoryContent', categoryContent);
-  console.log('j', j);
+  // console.log('categoryContent', categoryContent);
+  // console.log('j', j);
   // Continue collecting lines until we hit an empty line or the end of the section
   while (j < lines.length && lines[j].trim() !== '') {
     categoryContent += ' ' + lines[j].trim();
     j++;
-    console.log('j', j);
+    // console.log('j', j);
   }
   
   const { categories: parsedCategories, tags: parsedTags, order } = parseCategoryLine(categoryContent);

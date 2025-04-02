@@ -2,13 +2,23 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { processSongsFile } from '../utils/songProcessor.ts'
-import { SongData, ZikrItem } from '../utils/types.ts'
+import { ZikrItem } from '../utils/types.ts'
 import { searchSongs } from '../utils/search.ts'
-import {  setSubcategories, CATEGORIES } from '../utils/categoryUtils.ts'
+import { setSubcategories, CATEGORIES, categoryShortcuts } from '../utils/categoryUtils.ts'
+import type { SongData } from '@/utils/types'
+
+export interface Categories {
+  [key: string]: string[]
+}
+
+
+
 
 export const useSongStore = defineStore('song', () => {
+  // const filteredSongs = ref<SongData[]>([])
+  const categories = ref<Categories>({})
   const songs = ref<SongData[]>([]);
-  const categories = ref<string[]>([]);
+  // const categories = ref<string[]>([]);
   const zikrItems = ref<ZikrItem[]>([]);
   const searchQuery = ref('');
   const selectedSongs = ref<SongData[]>([]);
@@ -16,21 +26,21 @@ export const useSongStore = defineStore('song', () => {
 
   const getAllYoutubeLinks = computed(() => {
     const links: string[] = [];
-    
+
     songs.value.forEach(song => {
       if (song.mainLinks) {
-        links.push(...song.mainLinks.filter(link => 
+        links.push(...song.mainLinks.filter(link =>
           link.includes('youtube.com') || link.includes('youtu.be')
         ));
       }
-      
+
       if (song.alternateTunes) {
-        links.push(...song.alternateTunes.filter(link => 
+        links.push(...song.alternateTunes.filter(link =>
           link.includes('youtube.com') || link.includes('youtu.be')
         ));
       }
     });
-    
+
     return links;
   });
 
@@ -39,24 +49,24 @@ export const useSongStore = defineStore('song', () => {
   });
 
   // Add a new flag to localStorage to track the version of the fix
-const CATEGORY_FIX_VERSION = '1.0'; // Increment this if you need to apply the fix again
+  const CATEGORY_FIX_VERSION = '1.0'; // Increment this if you need to apply the fix again
 
 
   const fetchSongs = async (forceRefresh = false) => {
     try {
-    // Use new cache keys with a timestamp to force a refresh
-    const NEW_CACHE_PREFIX = 'v8_'; // Change this prefix to force a refresh
-    
-    const cachedSongs = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedSongs')
-    const cachedSubcategories = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedSubcategories')
-    const cachedCategories = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedCategories')
+      // Use new cache keys with a timestamp to force a refresh
+      const NEW_CACHE_PREFIX = 'v10_'; // Change this prefix to force a refresh
+
+      const cachedSongs = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedSongs')
+      const cachedSubcategories = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedSubcategories')
+      const cachedCategories = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedCategories')
 
 
       if (!forceRefresh && cachedSongs && cachedSubcategories && cachedCategories) {
         songs.value = JSON.parse(cachedSongs);
         setSubcategories(JSON.parse(cachedSubcategories));
         categories.value = JSON.parse(cachedCategories);
-         console.log('Loaded categories from cache:', categories.value);
+        console.log('Loaded categories from cache:', categories.value);
         return categories.value;
       }
 
@@ -64,11 +74,11 @@ const CATEGORY_FIX_VERSION = '1.0'; // Increment this if you need to apply the f
       const repo = 'ilahiRepository';
       const path = 'ilahi.txt';
       const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
-      
+
       const response = await fetch(url, {
         headers: {
           'Accept': 'application/vnd.github.v3.raw',
-          
+
         }
       });
 
@@ -79,35 +89,51 @@ const CATEGORY_FIX_VERSION = '1.0'; // Increment this if you need to apply the f
       const { songs: processedSongs, subcategories, zikrItems: processedZikrItems } = processSongsFile(text)
       songs.value = processedSongs
       zikrItems.value = processedZikrItems
-
       youtubeLinks.value = getAllYoutubeLinks.value;
 
-      // const processedCategories = ['All', CATEGORIES.BASIC, CATEGORIES.INTERMEDIATE];
-
-      
-// const processedCategories = getAllCategories(processedSongs).filter(category => {
-//   const trimmedCategory = category.trim();
-//   if (!trimmedCategory) return false;
-//   console.log('trimmedCategory', trimmedCategory);
-   
-//   return true;
+      // Properly structure categories as an object with arrays
+      const categoriesObj: Categories = {
+        'All': [],
+        [CATEGORIES.BASIC]: [],
+        [CATEGORIES.INTERMEDIATE]: [],
+      };
+// Add subcategories structure from the data file
+// Object.entries(subcategories).forEach(([mainCategory, subCats]) => {
+//   categoriesObj[mainCategory] = subCats;
 // });
 
+processedSongs.forEach(song => {
+  song.categories.forEach(category => {
 
+// below was working to just get all the categories into the drop-down, 
+// above is supposed to get the sub working
+          const mainCategory = category.split('/')[0].trim();
+          if (!categoriesObj[mainCategory]) {
+            categoriesObj[mainCategory] = [];
+          }
+      //     if (category.includes('/')) {
+      //       const subCategory = category.split('/')[1].trim();
+      //       if (!categoriesObj[mainCategory].includes(subCategory)) {
+      //         categoriesObj[mainCategory].push(subCategory);
+      //       }
+      //     }
+        });
+      });
+
+      categories.value = categoriesObj;
       setSubcategories(subcategories)
-      // categories.value = processedCategories // getAllCategories(processedSongs)
-     // Store with the new cache keys
-    localStorage.setItem(NEW_CACHE_PREFIX + 'cachedSongs', JSON.stringify(songs.value))
-    localStorage.setItem(NEW_CACHE_PREFIX + 'cachedSubcategories', JSON.stringify(subcategories))
-    localStorage.setItem(NEW_CACHE_PREFIX + 'cachedCategories', JSON.stringify(categories.value))
 
-    console.log('Updated categories with new cache keys:', categories.value) 
-    
+      // Store with the new cache keys
+      localStorage.setItem(NEW_CACHE_PREFIX + 'cachedSongs', JSON.stringify(songs.value))
+      localStorage.setItem(NEW_CACHE_PREFIX + 'cachedSubcategories', JSON.stringify(subcategories))
+      localStorage.setItem(NEW_CACHE_PREFIX + 'cachedCategories', JSON.stringify(categories.value))
+
+      console.log('Updated categories with new cache keys:', categories.value)
+
       return categories.value // Return the categories
     } catch (error) {
       console.error('Error fetching songs:', error)
       songs.value = []
-      categories.value = []
       zikrItems.value = []
       youtubeLinks.value = [] // Clear YouTube links on error
       throw error // Rethrow the error
@@ -133,23 +159,24 @@ const CATEGORY_FIX_VERSION = '1.0'; // Increment this if you need to apply the f
   const songsWithHistory = computed(() => {
     return songs.value.filter(song => song.lyrics.some(stanza => stanza.some(line => line.includes('History:'))));
   });
-  
+
   function getSongsWithHistory() {
     return songsWithHistory.value;
   }
 
-  return { 
-    songs, 
+  return {
+    songs,
     categories,
     zikrItems,
-    filteredSongs, 
+    filteredSongs,
     youtubeLinks, // Expose YouTube links
     getAllYoutubeLinks, // Expose computed property
-    fetchSongs, 
-    setSearchQuery, 
-    selectedSongs, 
-    selectSong, 
-    deselectSong, 
+    fetchSongs,
+    setSearchQuery,
+    searchQuery,
+    selectedSongs,
+    selectSong,
+    deselectSong,
     clearSelectedSongs,
     songsWithHistory,
     getSongsWithHistory

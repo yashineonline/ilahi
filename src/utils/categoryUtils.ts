@@ -1,7 +1,7 @@
 import { SongData } from './types.ts';
 
 export const CATEGORIES = {
-  BASIC: 'Basic',
+  BASIC: 'Basic (Zikr order)',
   INTERMEDIATE: 'Intermediate',
 };
 
@@ -13,7 +13,9 @@ export const setSubcategories = (newSubcategories: Record<string, string[]>) => 
 
 export const getSubcategories = () => subcategories;
 
-export const categoryShortcuts = {
+type CategoryShortcut = [string, string]; // [mainCategory, subCategory]
+
+export const categoryShortcuts: Record<string, CategoryShortcut> = {
   "sbt": ["Sung By", "Shaykh Taner"],
   "sbm": ["Sung By", "Shaykh Muhyiddin"],
 };
@@ -86,16 +88,17 @@ export const filterSongsByCategory = (songs: SongData[], categories: string[]): 
 // };
 
 export const getSortedSubcategories = (subcategories: Record<string, string[]>) => {
-  const sorted = {};
+  const sorted: Record<string, string[]> = {};
   for (const [key, value] of Object.entries(subcategories)) {
-    sorted[key] = value.sort((a, b) => turkishToEnglish(a.toLowerCase()).localeCompare(turkishToEnglish(b.toLowerCase())));
+    sorted[key] = value.sort((a, b) => turkishToEnglish(a.toLowerCase()).localeCompare(turkishToEnglish(b.toLowerCase()))
+  );
   }
   return sorted;
 };
 
 export const processShortcuts = (subcategories: Record<string, string[]>) => {
-  const processedCategories = { ...subcategories };
-  const processedShortcuts = {};
+  const processedCategories: Record<string, string[]> = { ...subcategories };
+  const processedShortcuts: Record<string, string> = {};
 
   Object.entries(categoryShortcuts).forEach(([shortcut, [mainCategory, subCategory]]) => {
     if (!processedCategories[mainCategory]) {
