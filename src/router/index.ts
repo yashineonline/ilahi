@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import Home from '../views/Home.vue'
 import SongList from '../components/SongList.vue'
 import SongDisplay from '../components/SongDisplay.vue'
@@ -36,7 +36,7 @@ const routes = [
     path: '/songs',
     name: 'SongList',
     component: SongList,
-    beforeEnter: (to, from, next) => {
+    beforeEnter: (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
       const songStore = useSongStore()
       if (to.query.search) {
         songStore.setSearchQuery(to.query.search as string)

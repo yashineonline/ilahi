@@ -115,7 +115,7 @@ function renderStanzas(stanzas: string[][], textColor: string): string {
 
 
 export function processSongsFile(fileContent: string): { songs: SongData[], subcategories: Record<string, string[]>,  zikrItems: ZikrItem[]} {
-  console.log('Processing songs file...');
+  // console.log('Processing songs file...');
   const lines = fileContent.split('\n');
   const subcategories: Record<string, string[]> = {};
   let songSections: string[] = [];

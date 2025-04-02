@@ -6,7 +6,7 @@ self.onmessage = async (event: MessageEvent) => {
   try {
     const { pdfBytes, logs } = await generateFullBookPDF(songs, isCustom);
     self.postMessage({ pdfBytes, logs, success: true });
-  } catch (error) {
-    self.postMessage({ error: error.message, success: false });
+  } catch (error: unknown) {
+    self.postMessage({ error: error instanceof Error ? error.message : String(error), success: false });
   }
 };

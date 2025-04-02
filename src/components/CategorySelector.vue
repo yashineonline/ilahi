@@ -162,8 +162,16 @@ const songStore = useSongStore();
 // Computed properties
 const subcategories = computed(() => getSubcategories());
 const sortedSubcategories = computed(() => getSortedSubcategories(subcategories.value));
-const mainCategories = computed(() => getMainCategories(songStore.categories));
-
+// const mainCategories = computed(() => getMainCategories(songStore.categories));
+const mainCategories = computed(() => {
+  const categoryArray = Array.isArray(songStore.categories) 
+    ? songStore.categories 
+    : Object.values(songStore.categories).flat();  // Flatten the array if needed
+  
+  // Ensure we have an array of strings
+  const stringArray = categoryArray.map(cat => String(cat));
+  return getMainCategories(categoryArray);
+});
 
 // Expose selectedCategories to parent components
 defineExpose({ selectedCategories });
