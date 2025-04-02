@@ -34,48 +34,112 @@ export const normalizeCategory = (category: string) => {
 
 export const filterSongsByCategory = (songs: SongData[], categories: string[]): SongData[] => {
   if (categories.length === 0 || categories.includes('All')) return songs;
-  const filteredSongs = songs.filter((song) => 
-  // return songs.filter((song) => 
-    categories.some((category) => {
-      const normalizedCategory = normalizeCategory(category);
-      if (normalizedCategory === 'basic') {
-                // Extract Order value if it exists in categories
-        // const orderCategory = song.categories.find(cat => cat.trim().startsWith('Order:'));
-        // if (orderCategory) {
-        //   song.order = parseInt(orderCategory.split(':')[1], 10);
-        // }
-        return song.categories.some(songCategory => 
-            normalizeCategory(songCategory).includes('basic')
-        );
-      }
-      if (normalizedCategory === 'intermediate') {
-        return song.categories.some(songCategory => 
-            normalizeCategory(songCategory).includes('basic') ||
-          normalizeCategory(songCategory).includes('inter')
-        );
-      }
-      if (Object.keys(subcategories).includes(category)) {
-        return subcategories[category].some((subCategory) => 
-          song.categories.some((songCategory) => 
-            normalizeCategory(songCategory).includes(normalizeCategory(subCategory))
-          )
-        );
-      }
-      return song.categories.some((songCategory) => 
-        normalizeCategory(songCategory) === normalizedCategory ||
-        normalizeCategory(songCategory).includes(normalizedCategory)
-      );
-    })
-  );
-   // Sort by order if basic category is selected
-   if (categories.length === 1 && categories[0] === CATEGORIES.BASIC 
-    // && filteredSongs.some(song => song.order !== undefined)
-  ) {
-    return filteredSongs.sort((a, b) => (a.order || 999999) - (b.order || 999999));
+ 
+  // Special handling for Basic category
+  if (categories.length === 1 && categories[0] === CATEGORIES.BASIC) {
+    // Only return songs that have an order number, sorted by order
+    return songs
+      .filter(song => 
+        typeof song.order === 'number' && 
+        song.categories.some(cat => normalizeCategory(cat).includes('basic'))
+      )
+      .sort((a, b) => a.order! - b.order!);
   }
+ 
+ // Normal filtering for other categories
+ const filteredSongs = songs.filter((song) => 
+  categories.some((category) => {
+    const normalizedCategory = normalizeCategory(category);
+    if (normalizedCategory === 'intermediate') {
+      return song.categories.some(songCategory => 
+          normalizeCategory(songCategory).includes('basic') ||
+        normalizeCategory(songCategory).includes('inter')
+      );
+    }
+    if (Object.keys(subcategories).includes(category)) {
+      return subcategories[category].some((subCategory) => 
+        song.categories.some((songCategory) => 
+          normalizeCategory(songCategory).includes(normalizeCategory(subCategory))
+        )
+      );
+    }
+    return song.categories.some((songCategory) => 
+      normalizeCategory(songCategory) === normalizedCategory ||
+      normalizeCategory(songCategory).includes(normalizedCategory)
+    );
+  })
+);
 
-  return filteredSongs;
+ // Sort alphabetically for non-Basic categories
+ return filteredSongs.sort((a, b) => 
+  turkishToEnglish(a.title.toLowerCase()).localeCompare(turkishToEnglish(b.title.toLowerCase()))
+);
 };
+ 
+//   const filteredSongs = songs.filter((song) => 
+//   // return songs.filter((song) => 
+//     categories.some((category) => {
+//       const normalizedCategory = normalizeCategory(category);
+//       if (normalizedCategory === 'basic') {
+//                 // Extract Order value if it exists in categories
+//         // const orderCategory = song.categories.find(cat => cat.trim().startsWith('Order:'));
+//         // if (orderCategory) {
+//         //   song.order = parseInt(orderCategory.split(':')[1], 10);
+//         // }
+//         return song.categories.some(songCategory => 
+//             normalizeCategory(songCategory).includes('basic')
+//         );
+//       }
+//       if (normalizedCategory === 'intermediate') {
+//         return song.categories.some(songCategory => 
+//             normalizeCategory(songCategory).includes('basic') ||
+//           normalizeCategory(songCategory).includes('inter')
+//         );
+//       }
+//       if (Object.keys(subcategories).includes(category)) {
+//         return subcategories[category].some((subCategory) => 
+//           song.categories.some((songCategory) => 
+//             normalizeCategory(songCategory).includes(normalizeCategory(subCategory))
+//           )
+//         );
+//       }
+//       return song.categories.some((songCategory) => 
+//         normalizeCategory(songCategory) === normalizedCategory ||
+//         normalizeCategory(songCategory).includes(normalizedCategory)
+//       );
+//     })
+//   );
+//    // Sort by order if basic category is selected
+//    if (categories.length === 1 && categories[0] === CATEGORIES.BASIC 
+//     // && filteredSongs.some(song => song.order !== undefined)
+//   ) {
+// // Filter songs with order
+// const songsWithOrder = filteredSongs.filter(song => typeof song.order === 'number');
+// const songsWithoutOrder = filteredSongs.filter(song => typeof song.order !== 'number');
+
+// // Sort songs with order
+// const sortedSongsWithOrder = songsWithOrder.sort((a, b) => a.order! - b.order!);
+
+// // Sort songs without order alphabetically
+// const sortedSongsWithoutOrder = songsWithoutOrder.sort((a, b) => 
+//   turkishToEnglish(a.title.toLowerCase()).localeCompare(turkishToEnglish(b.title.toLowerCase()))
+// );
+
+// // Return ordered songs first, then alphabetically sorted unordered songs
+// return [...sortedSongsWithOrder, ...sortedSongsWithoutOrder];
+// }
+
+// // For all other categories, sort alphabetically
+// return filteredSongs.sort((a, b) => 
+// turkishToEnglish(a.title.toLowerCase()).localeCompare(turkishToEnglish(b.title.toLowerCase()))
+// );
+// };
+
+//     return filteredSongs.sort((a, b) => (a.order || 999999) - (b.order || 999999));
+//   }
+
+//   return filteredSongs;
+// };
 
 // export const getAllCategories = (songs: SongData[]): string[] => {
 //   const categories = new Set<string>(["All", CATEGORIES.BASIC, CATEGORIES.INTERMEDIATE]);

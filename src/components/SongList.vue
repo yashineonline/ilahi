@@ -41,7 +41,7 @@
             type="checkbox"
             id="basicCategory"
             v-model="selectedCategories"
-            value="Basic"
+            :value="CATEGORIES.BASIC"  
             class="checkbox checkbox-primary mr-2 custom-checkbox"
           />
           <label for="basicCategory" class="text-lg font-semibold text-primary">Basic ilahis For Zikr</label>
@@ -320,20 +320,28 @@ const sortedFilteredSongs = computed(() => {
           
     if (selectedCategories.value.length > 0 && !selectedCategories.value.includes('All')) {
     songsToDisplay = filterSongsByCategory(songsToDisplay, selectedCategories.value);
-    
-    // If only Basic category is selected, sort by order number
-    if (selectedCategories.value.length === 1 && selectedCategories.value[0] === CATEGORIES.BASIC) {
-      return songsToDisplay.sort((a, b) => (a.order || 999999) - (b.order || 999999));
     }
+
+    // Normal alphabetical sorting for non-Basic category
+  if (!(selectedCategories.value.length === 1 && selectedCategories.value[0] === CATEGORIES.BASIC)) {
+    return songsToDisplay.sort((a, b) => 
+      turkishToEnglish(a.title.toLowerCase()).localeCompare(turkishToEnglish(b.title.toLowerCase()))
+    );
   }
 
-
+  return songsToDisplay; // Already sorted by order in filterSongsByCategory if Basic category
+});
+    // If only Basic category is selected, sort by order number
+  //   if (selectedCategories.value.length === 1 && selectedCategories.value[0] === CATEGORIES.BASIC) {
+  //     return songsToDisplay.sort((a, b) => (a.order || 999999) - (b.order || 999999));
+  //   }
+  // }
 
    // Normal alphabetical sorting for other cases
-   return songsToDisplay.sort((a, b) => 
-    turkishToEnglish(a.title.toLowerCase()).localeCompare(turkishToEnglish(b.title.toLowerCase()))
-  );
-});
+//    return songsToDisplay.sort((a, b) => 
+//     turkishToEnglish(a.title.toLowerCase()).localeCompare(turkishToEnglish(b.title.toLowerCase()))
+//   );
+// });
 
 const totalPages = computed(() =>
   Math.ceil(sortedFilteredSongs.value.length / itemsPerPage)
