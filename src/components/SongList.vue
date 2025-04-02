@@ -16,21 +16,27 @@
       </router-link>
     </div>
     <!-- A-Z filter -->
-    <div class="flex flex-wrap justify-center my-4">
-      <button
-        v-for="letter in 'ABCÇDEFGĞHIİJKLMNOÖPQRSŞTUÜVYZ'"
-        :key="letter"
-        @click="filterByLetter(letter)"
-        :class="[
-          'btn btn-sm m-1', 
-          { 'btn-primary': currentLetter === letter  || 
+    <div class="flex flex-wrap justify-center my-4" 
+    role="group" 
+    aria-label="Filter ilahis by first letter">
+  <button
+    v-for="letter in 'ABCÇDEFGĞHIİJKLMNOÖPQRSŞTUÜVYZ'"
+    :key="letter"
+    @click="filterByLetter(letter)"
+    @keydown="handleKeyNavigation($event, letter)"
+    :class="[
+      'btn btn-sm m-1', 
+      { 'btn-primary': currentLetter === letter || 
         (currentLetter && turkishToEnglish(currentLetter) === turkishToEnglish(letter)) 
-               }
-               ]"
-      >
-        {{ letter }}
-      </button>
-    </div>
+      }
+    ]"
+    :aria-pressed="currentLetter === letter"
+    :aria-label="`Filter by letter ${letter}`"
+    tabindex="0"
+  >
+    {{ letter }}
+  </button>
+</div>
 
     <!-- Category filter -->
     <div class="flex justify-center my-4">
@@ -83,20 +89,21 @@
       </div>
     </div>
 
-<!-- Replace the debug info with this -->
-<div class="text-center text-base-content/80 mb-4">
-  <span v-if="currentLetter">
-    Showing {{ sortedFilteredSongs.length }} ilahi{{ sortedFilteredSongs.length !== 1 ? 's' : '' }} 
-    starting with "{{ currentLetter }}"
+<!-- Replace the current text display section -->
+<div class="text-center text-base-content/80 mb-4" role="status" aria-live="polite">
+  <span v-if="currentLetter" aria-atomic="true">
+    {{ sortedFilteredSongs.length }} ilahi{{ sortedFilteredSongs.length !== 1 ? 's' : '' }} 
+    found starting with letter "{{ currentLetter }}"
   </span>
-  <span v-else-if="selectedCategories.length > 0">
-    Showing {{ sortedFilteredSongs.length }} ilahi{{ sortedFilteredSongs.length !== 1 ? 's' : '' }} 
-    in selected categories
+  <span v-else-if="selectedCategories.length > 0" aria-atomic="true">
+    {{ sortedFilteredSongs.length }} ilahi{{ sortedFilteredSongs.length !== 1 ? 's' : '' }} 
+    found in selected categories
   </span>
-  <span v-else>
+  <span v-else aria-atomic="true">
     {{ filteredSongs.length }} ilahi{{ filteredSongs.length !== 1 ? 's' : '' }} available
   </span>
 </div>
+
 
   <div
     v-if="sortedFilteredSongs.length > 0"
@@ -131,8 +138,16 @@
         </div>
       </div>
     </div>
-    <div v-else class="text-center text-xl text-gray-600">Sorry, no ilahi found starting with letter "{{ currentLetter }}".
+    <div 
+  v-if="sortedFilteredSongs.length === 0 && currentLetter" 
+  class="text-center text-xl text-gray-600" 
+  role="alert" 
+  aria-live="assertive"
+>
+  Sorry, no ilahi found starting with letter "{{ currentLetter }}".
 </div>
+
+
 
         <!-- Pagination -->
            <!-- Only show pagination if we have songs -->
@@ -181,6 +196,15 @@ const currentLetter = ref("");
 const selectedCategories = ref<string[]>([]);
 
 const randomIlahi = ref<SongData | null>(null)
+
+
+// Add keyboard navigation for letter filters
+const handleKeyNavigation = (event: KeyboardEvent, letter: string) => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    filterByLetter(letter);
+  }
+};
 
 const generateRandomIlahi = () => {
   if (sortedFilteredSongs.value.length > 0) {
