@@ -9,7 +9,7 @@ export async function generateFullBookPDF(songs: SongData[], isCustom: boolean =
   const totalSteps = songs.length *2; // Adjust this number based on your total steps, instead of adding 10 or 15, i made it 2 steps for each song
   let currentStep = 0;
   const log = (message: string) => {
-    console.log(message);
+    // console.log(message);
     logs.push(message);
     currentStep++;
     if (onProgress) {
@@ -111,6 +111,6 @@ export async function generateFullBookPDF(songs: SongData[], isCustom: boolean =
   const pdfBytes = await pdfDoc.save();
   if (onProgress) {
     onProgress(100); // Set to 100% when PDF is fully generated
-  return { pdfBytes, logs };
   }
+  return { pdfBytes, logs };
 }

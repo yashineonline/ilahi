@@ -70,10 +70,10 @@ const playbackRate = ref(1);
 const getAudioSrc = computed(() => {
   if (props.playerType === 'googledrive') {
     const directUrl = getGoogleDriveDirectUrl(props.audioSrc);
-    console.log('Google Drive direct URL:', directUrl);
+    // console.log('Google Drive direct URL:', directUrl);
     return directUrl;
   }
-  console.log('Audio source:', props.audioSrc);
+  // console.log('Audio source:', props.audioSrc);
   return props.audioSrc;
 });
 
@@ -81,7 +81,7 @@ function initHowl() {
   if (howl.value) {
     howl.value.unload();
   }
-  console.log('Initializing Howl with source:', getAudioSrc.value);
+  // console.log('Initializing Howl with source:', getAudioSrc.value);
   howl.value = new Howl({
     src: [getAudioSrc.value],
     html5: true,
@@ -94,7 +94,7 @@ function initHowl() {
       withCredentials: false
     },
     onload: () => {
-      console.log('Howl loaded successfully');
+      // console.log('Howl loaded successfully');
       isLoaded.value = true;
       emit('player-ready', wrapHowlInstance(howl.value!));
     },
@@ -111,7 +111,7 @@ function initHowl() {
 function tryFallbackAudio() {
   const audio = new Audio(getAudioSrc.value);
   audio.oncanplaythrough = () => {
-    console.log('Audio loaded successfully using fallback method');
+    // console.log('Audio loaded successfully using fallback method');
     isLoaded.value = true;
     emit('player-ready', wrapAudioElement(audio));
   };
@@ -158,7 +158,7 @@ function wrapYoutubePlayer(player: any) {
 // });
 
 function onYoutubeReady(event: any) {
-  console.log('YouTube player ready');
+  // console.log('YouTube player ready');
   const player = event.target;
 // Immediately stop any playback
 player.stopVideo();
@@ -221,7 +221,7 @@ function wrapHowlInstance(howl: Howl) {
 }
 
 function getYoutubeVideoId(url: string): { videoId: string, startTime: number, endTime: number } {
-  console.log('Processing URL:', url);
+  // console.log('Processing URL:', url);
   const videoIdMatch = url.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/watch\?.+&v=))([^\/&\?]{11})/);
   const videoId = videoIdMatch ? videoIdMatch[1] : '';
   
@@ -231,9 +231,9 @@ function getYoutubeVideoId(url: string): { videoId: string, startTime: number, e
   const endTimeMatch = url.match(/[?&]end=(\d+)/);
   const endTime = endTimeMatch ? parseInt(endTimeMatch[1], 10) : 0;
 
-  console.log('Extracted video ID:', videoId);
-  console.log('Extracted start time:', startTime);
-  console.log('Extracted end time:', endTime);
+  // console.log('Extracted video ID:', videoId);
+  // console.log('Extracted start time:', startTime);
+  // console.log('Extracted end time:', endTime);
 
   return { videoId, startTime, endTime };
 }
@@ -243,11 +243,11 @@ function isGoogleDriveLink(url: string): boolean {
 }
 
 function getGoogleDriveDirectUrl(url: string): string {
-  console.log('Processing Google Drive URL:', url);
+  // console.log('Processing Google Drive URL:', url);
   const fileId = url.match(/[-\w]{25,}/);
   if (fileId) {
     const directUrl = `https://docs.google.com/uc?export=download&id=${fileId[0]}`;
-    console.log('Generated direct URL:', directUrl);
+    // console.log('Generated direct URL:', directUrl);
     return directUrl;
   }
   console.error('Failed to extract file ID from Google Drive URL');
@@ -391,7 +391,7 @@ onBeforeUnmount(() => {
         if (player && typeof player.pauseVideo === 'function') {
           player.pauseVideo();
         }
-        // Don't call destroy as it's not available
+
       }
     } catch (error) {
       console.error('Error cleaning up YouTube player:', error);

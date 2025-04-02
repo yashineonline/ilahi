@@ -74,7 +74,10 @@ const showPronunciation = ref(false)
 const pronunciation = ref<string[][]>([]) // Update type to string[][]
 const hasPronunciation = ref(false)
 const showLanguagePopup = ref(false);
-const selectedLanguage = ref(getSelectedLanguage());
+// const selectedLanguage = ref(getSelectedLanguage());
+
+const selectedLanguage = ref<string | undefined>(getSelectedLanguage() || undefined);
+
 
 // Computed property to determine if the feedback line should be shown
 const showFeedbackLine = computed(() => {
@@ -85,50 +88,50 @@ const showFeedbackLine = computed(() => {
 const processPronunciationData = () => {
   const song = songStore.songs.find((s: SongData) => s.slug === props.songId);
   if (song?.pronunciation && song.pronunciation.length > 0) {
-    console.log('Pronunciation data found for song:', song.title);
+    // console.log('Pronunciation data found for song:', song.title);
     hasPronunciation.value = true;
 
     // Log the raw pronunciation data
-    console.log('Raw pronunciation data:', song.pronunciation);
+    // console.log('Raw pronunciation data:', song.pronunciation);
 
     // Apply phonetic replacements
-    console.log('Selected language for replacements:', selectedLanguage.value);
+    // console.log('Selected language for replacements:', selectedLanguage.value);
     pronunciation.value = song.pronunciation.map(stanza =>
       stanza.map(line => applyPhoneticReplacements(line, selectedLanguage.value))
     );
 
     // Log the processed pronunciation data
-    console.log('Processed pronunciation data:', pronunciation.value);
+    // console.log('Processed pronunciation data:', pronunciation.value);
   } else {
-    console.log('No pronunciation data found for song:', song?.title);
+    // console.log('No pronunciation data found for song:', song?.title);
   }
 };
 
 // Watch for changes in the selected language
 watch(selectedLanguage, () => {
-  console.log('Language changed to:', selectedLanguage.value);
+  // console.log('Language changed to:', selectedLanguage.value);
   processPronunciationData();
 });
 
 onMounted(() => {
-  console.log('PronunciationGuide mounted');
+  // console.log('PronunciationGuide mounted');
   processPronunciationData();
 });
 
 const handlePronunciationButtonClick = () => {
-  console.log('Pronunciation button clicked');
+  // console.log('Pronunciation button clicked');
   if (!selectedLanguage.value) {
-    console.log('No language selected, showing popup');
+    // console.log('No language selected, showing popup');
     showLanguagePopup.value = true;
   } else {
-    console.log('Language already selected, toggling pronunciation guide');
+    // console.log('Language already selected, toggling pronunciation guide');
     togglePronunciation();
   }
 };
 
 
 const openLanguagePopup = () => {
-  console.log('Opening language popup');
+  // console.log('Opening language popup');
   showLanguagePopup.value = true;
 };
 
@@ -139,10 +142,10 @@ const togglePronunciation = async () => {
 };
 
 const closeLanguagePopup = () => {
-  console.log('Closing language popup');
+  // console.log('Closing language popup');
   showLanguagePopup.value = false;
   // After selecting a language, show the pronunciation guide
-  selectedLanguage.value = getSelectedLanguage(); // Update the selected language
+  selectedLanguage.value = getSelectedLanguage() || undefined; // Convert null to undefined
   togglePronunciation();
 };
 </script>

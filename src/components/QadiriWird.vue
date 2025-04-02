@@ -202,7 +202,7 @@ const fetchWird = async () => {
     const path = 'qadiriWird.txt';
     const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
     
-    console.log('Fetching Qadiri Wird from GitHub:', url);
+    // console.log('Fetching Qadiri Wird from GitHub:', url);
     const response = await fetch(url, {
       headers: {
         'Accept': 'application/vnd.github.v3.raw'
@@ -214,23 +214,23 @@ const fetchWird = async () => {
     }
 
     const text = await response.text();
-    console.log('Fetched text:', text.substring(0, 100) + '...'); // Log first 100 characters
+    // console.log('Fetched text:', text.substring(0, 100) + '...'); // Log first 100 characters
     wird.value = splitWird(text);
-    console.log('Split wird:', wird.value);
+    // console.log('Split wird:', wird.value);
   } catch (err) {
     console.error('Error fetching Qadiri Wird from GitHub:', err);
     
     // If GitHub fetch fails, try to fetch from local file
     try {
-      console.log('Fetching Qadiri Wird from local file');
+      // console.log('Fetching Qadiri Wird from local file');
       const response = await fetch('/qadiriWird.txt');
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const text = await response.text();
-      console.log('Fetched text from local file:', text.substring(0, 100) + '...'); // Log first 100 characters
+      // console.log('Fetched text from local file:', text.substring(0, 100) + '...'); // Log first 100 characters
       wird.value = splitWird(text);
-      console.log('Split wird from local file:', wird.value);
+      // console.log('Split wird from local file:', wird.value);
     } catch (localErr) {
       console.error('Error fetching local Qadiri Wird:', localErr);
       error.value = 'Failed to load Qadiri Wird. Please try again later.';
@@ -324,13 +324,13 @@ const checkMobileLayout = () => {
 
 // Update the onMounted hook
 onMounted(async () => {
-  console.log('QadiriWird component mounted');
+  // console.log('QadiriWird component mounted');
   try {
     await fetchWird();
-    console.log('Fetched Wird:', wird.value);
-    console.log('Number of parts:', wird.value.length);
-    console.log('First part:', wird.value[0]);
-    console.log('Last part:', wird.value[wird.value.length - 1]);
+    // console.log('Fetched Wird:', wird.value);
+    // console.log('Number of parts:', wird.value.length);
+    // console.log('First part:', wird.value[0]);
+    // console.log('Last part:', wird.value[wird.value.length - 1]);
   } catch (error) {
     console.error('Error fetching Wird:', error);
   }

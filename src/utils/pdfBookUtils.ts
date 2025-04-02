@@ -202,8 +202,8 @@ export async function createExplanationPage(pdfDoc: PDFLib, font: PDFFont): Prom
   const { width, height } = page.getSize();
   let yPosition = height - 50;
 
-  console.log('Creating explanation page');
-  console.log(`Initial yPosition: ${yPosition}`);
+  // console.log('Creating explanation page');
+  // console.log(`Initial yPosition: ${yPosition}`);
 
   // Draw the title
   page.drawText(EXPLANATION_TEXT.title, {
@@ -214,13 +214,13 @@ export async function createExplanationPage(pdfDoc: PDFLib, font: PDFFont): Prom
     color: rgb(0, 0, 0),
   });
   yPosition -= 40;
-  console.log(`After title, yPosition: ${yPosition}`);
+  // console.log(`After title, yPosition: ${yPosition}`);
 
   // Iterate through sections
   for (const section of EXPLANATION_TEXT.sections) {
-    console.log(`Processing section: ${section.title}`);
+    // console.log(`Processing section: ${section.title}`);
     if (yPosition < 100) {
-      console.log('Creating new page for section');
+      // console.log('Creating new page for section');
       page = pdfDoc.addPage();
       pages.push(page);
       yPosition = height - 50;
@@ -235,11 +235,11 @@ export async function createExplanationPage(pdfDoc: PDFLib, font: PDFFont): Prom
       color: rgb(0, 0, 0),
     });
     yPosition -= 30;
-    console.log(`After section title, yPosition: ${yPosition}`);
+    // console.log(`After section title, yPosition: ${yPosition}`);
 
     // Draw section content
     for (const content of section.content) {
-      console.log(`Processing content type: ${content.type}`);
+      // console.log(`Processing content type: ${content.type}`);
       const newPages = drawMultilineText(pdfDoc, page, content.text, {
         x: 50,
         y: yPosition,
@@ -253,13 +253,13 @@ export async function createExplanationPage(pdfDoc: PDFLib, font: PDFFont): Prom
       pages.push(...newPages);
       page = pages[pages.length - 1];
       yPosition = page.getSize().height - 50;
-      console.log(`After content, yPosition: ${yPosition}`);
+      // console.log(`After content, yPosition: ${yPosition}`);
     }
 
     // Add author if present
     if (section.author) {
       if (yPosition < 50) {
-        console.log('Creating new page for author');
+        // console.log('Creating new page for author');
         page = pdfDoc.addPage();
         pages.push(page);
         yPosition = height - 50;
@@ -272,14 +272,14 @@ export async function createExplanationPage(pdfDoc: PDFLib, font: PDFFont): Prom
         color: rgb(0, 0, 0),
       });
       yPosition -= 40;
-      console.log(`After author, yPosition: ${yPosition}`);
+      // console.log(`After author, yPosition: ${yPosition}`);
     }
 
     yPosition -= 20; // Add some space between sections
-    console.log(`After section spacing, yPosition: ${yPosition}`);
+    // console.log(`After section spacing, yPosition: ${yPosition}`);
   }
 
-  console.log(`Total explanation pages created: ${pages.length}`);
+  // console.log(`Total explanation pages created: ${pages.length}`);
   return pages;
 }
 
@@ -289,8 +289,8 @@ export async function createPoemPage(pdfDoc: PDFLib, font: PDFFont): Promise<PDF
   pages.push(page);
   const { width, height } = page.getSize();
   
-  console.log('Creating poem page');
-  console.log(`Initial height: ${height}`);
+  // console.log('Creating poem page');
+  // console.log(`Initial height: ${height}`);
 
   const newPages = drawMultilineText(pdfDoc, page, QUOTES.join('\n\n'), {
     x: 50,
@@ -304,7 +304,7 @@ export async function createPoemPage(pdfDoc: PDFLib, font: PDFFont): Promise<PDF
 
   pages.push(...newPages);
 
-  console.log(`Total poem pages created: ${pages.length}`);
+  // console.log(`Total poem pages created: ${pages.length}`);
   return pages;
 }
 

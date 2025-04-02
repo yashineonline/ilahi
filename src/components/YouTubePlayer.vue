@@ -151,10 +151,10 @@ const playNext = () => {
 const loadCurrentVideo = () => {
   if (youtubePlayer.value) {
     const currentUrl = currentVideoUrl.value;
-    console.log('Current URL:', currentUrl); // Debug log
+    // console.log('Current URL:', currentUrl); // Debug log
     
     const { videoId } = getYoutubeVideoId(currentUrl);
-    console.log('Extracted Video ID:', videoId); // Debug log
+    // console.log('Extracted Video ID:', videoId); // Debug log
     
     if (!videoId) {
       console.error('Invalid video ID for URL:', currentUrl);
@@ -194,7 +194,7 @@ const getYoutubeVideoId = (url: string) => {
 };
 
 const onPlayerReady = (event: any) => {
-  console.log("YouTube player is ready");
+  // console.log("YouTube player is ready");
   const player = event.target;
   
   // Add event listener for video end

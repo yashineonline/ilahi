@@ -78,13 +78,17 @@ const popupContent = ref({
   action: () => {}
 })
 
-const ilahiClasses = ref(null) // Create a ref for IlahiClasses
+const ilahiClasses = ref<InstanceType<typeof IlahiClasses> | null>(null)
+
+// const ilahiClasses = ref(null) // Create a ref for IlahiClasses
 
 // Add computed property to check if we're on the Home page
 const isHomePage = computed(() => route.path === '/')
 
+ 
+
 const handleIlahiClassesClick = () => {
-  console.log('Click handled', ilahiClasses.value) // Debug log
+  // console.log('Click handled', ilahiClasses.value) // Debug log
   if (ilahiClasses.value) {
     ilahiClasses.value.openPopup()
   }

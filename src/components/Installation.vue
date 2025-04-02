@@ -32,6 +32,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 
+
+
+
 const deferredPrompt = ref<any>(null);
 const showInstructions = ref(false);
 const isIOS = ref(false);
@@ -73,9 +76,9 @@ const promptInstall = () => {
     deferredPrompt.value.prompt();
     deferredPrompt.value.userChoice.then((choiceResult: { outcome: string }) => {
       if (choiceResult.outcome === 'accepted') {
-        console.log('User accepted the install prompt');
+        // console.log('User accepted the install prompt');
       } else {
-        console.log('User dismissed the install prompt');
+        // console.log('User dismissed the install prompt');
       }
       deferredPrompt.value = null;
     });

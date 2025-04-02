@@ -6,7 +6,7 @@ import { useSongStore } from '@/stores/songStore.ts';
 
 
 export const parseHyperlinks = (text: string): string => {
-  console.log('Input text:', text); // Add this
+  // console.log('Input text:', text); // Add this
   const cleanText = DOMPurify.sanitize(text);
   const songStore = useSongStore();
   const result = cleanText.replace(/\$([\w-]+)/g, (_, slug) => {
@@ -17,7 +17,7 @@ export const parseHyperlinks = (text: string): string => {
 
     // return `<a href="${url}" class="hyperlink" data-url="${url}" aria-label="Navigate to ${slug}" tabindex="0">${slug}</a>`;
   });
-  console.log('Output HTML:', result); // Add this
+  // console.log('Output HTML:', result); // Add this
   return result;
 };
 

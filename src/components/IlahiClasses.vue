@@ -34,8 +34,8 @@
   //   showPopup.value = true
   // }
 
-  const openPopup = () => {
-    console.log('Opening popup') // Debug log
+   const openPopup = () => {
+    // console.log('Opening popup') // Debug log
   showPopup.value = true
 }
   

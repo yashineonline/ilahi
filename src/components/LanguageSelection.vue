@@ -30,13 +30,13 @@
   const languages = ['English', 'French', 'German', 'Spanish'];
   
   const selectLanguage = (language: string) => {
-    console.log('Language selected:', language);
+    // console.log('Language selected:', language);
     setSelectedLanguage(language.toLowerCase());
     closePopup();
   };
   
   const closePopup = () => {
-    console.log('Closing language popup');
+    // console.log('Closing language popup');
     showPopup.value = false;
     emit('close');
   };

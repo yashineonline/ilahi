@@ -70,27 +70,30 @@ const languagePhonetics: Record<string, Record<string, string>> = {
 // Get the user's selected language from localStorage
 export function getSelectedLanguage(): string | null {
   const language = localStorage.getItem('selectedLanguage');
-  console.log('Retrieved selected language:', language);
+  // console.log('Retrieved selected language:', language);
   return language;
 }
 
 // Set the user's selected language in localStorage
 export function setSelectedLanguage(language: string): void {
-  console.log('Setting selected language:', language);
+  // console.log('Setting selected language:', language);
   localStorage.setItem('selectedLanguage', language);
 }
 
 // Reset the user's language choice
 export function resetLanguageChoice(): void {
-  console.log('Resetting language choice');
+  // console.log('Resetting language choice');
   localStorage.removeItem('selectedLanguage');
 }
 
 // Apply language-specific phonetic replacements
 export function applyPhoneticReplacements(text: string, language?: string): string {
-  const selectedLanguage = language || getSelectedLanguage();
-  console.log('Applying phonetic replacements for language:', selectedLanguage);
-  const phoneticMap = languagePhonetics[selectedLanguage] || languagePhonetics.english;
+  const selectedLanguage = language || getSelectedLanguage() || 'english'; // Add default fallback
+  const phoneticMap = languagePhonetics[selectedLanguage as keyof typeof languagePhonetics] || languagePhonetics.english;
+  
+  // const selectedLanguage = language || getSelectedLanguage();
+  // console.log('Applying phonetic replacements for language:', selectedLanguage);
+  // const phoneticMap = languagePhonetics[selectedLanguage] || languagePhonetics.english;
 
    // Step 1: Replace letter combinations (e.g., 'e-' → 'eh')
    let replacedText = text;
@@ -120,28 +123,32 @@ export function applyPhoneticReplacements(text: string, language?: string): stri
 // Generate pronunciation guide with language-specific replacements
 export async function generatePronunciation(lyrics: string[][]): Promise<string> {
   try {
-    console.log('Generating pronunciation guide');
-    console.log('Lyrics:', lyrics); // Log the entire lyrics array
+    // console.log('Generating pronunciation guide');
+    // console.log('Lyrics:', lyrics); // Log the entire lyrics array
     // Find the pronunciation section
     const pronunciationIndex = lyrics.findIndex(stanza =>
       stanza.some(line => line.startsWith('Pronunciation:'))
     );
 
     if (pronunciationIndex === -1) {
-      console.log('No pronunciation section found. Lyrics:', lyrics);
+      // console.log('No pronunciation section found. Lyrics:', lyrics);
       return ''; // No pronunciation section found
     }
 
-    console.log('Pronunciation section found at index:', pronunciationIndex);
+    // console.log('Pronunciation section found at index:', pronunciationIndex);
     // Extract the pronunciation stanzas
     const pronunciationStanzas = lyrics.slice(pronunciationIndex + 1);
 
-    // Apply language-specific replacements
-    const selectedLanguage = getSelectedLanguage();
-    console.log('Applying phonetic replacements for language:', selectedLanguage);
+    const selectedLanguage = getSelectedLanguage() || undefined; // Convert null to undefined
     const replacedStanzas = pronunciationStanzas.map(stanza =>
       stanza.map(line => applyPhoneticReplacements(line, selectedLanguage))
     );
+
+    // const selectedLanguage = getSelectedLanguage();
+    // console.log('Applying phonetic replacements for language:', selectedLanguage);
+    // const replacedStanzas = pronunciationStanzas.map(stanza =>
+      // stanza.map(line => applyPhoneticReplacements(line, selectedLanguage))
+    // );
 
     // Format the pronunciation guide
     let pronunciationGuide = '<div class="pronunciation-guide">';
@@ -157,7 +164,7 @@ export async function generatePronunciation(lyrics: string[][]): Promise<string>
       pronunciationGuide += '</div>';
     });
     pronunciationGuide += '</div>';
-    console.log('Pronunciation guide generated successfully');
+    // console.log('Pronunciation guide generated successfully');
     return pronunciationGuide;
   } catch (error) {
     console.error('Error generating pronunciation:', error);

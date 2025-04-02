@@ -115,10 +115,17 @@ import PronunciationGuide from './PronunciationGuide.vue'
 // import { parseHyperlinks } from '@/utils/hyperlinkParser.ts';
 // import { useHyperlinkNavigation } from '@/composables/useHyperlinkNavigation';
 
-
+// Add a type for the player
+type Player = {
+  playVideo: () => void;
+  pauseVideo: () => void;
+} | null;
 
 
 library.add(faFilePdf, faQrcode, faMusic, faPause, faLanguage)
+
+// Update the player ref with the correct type
+const player = ref<Player>(null);
 
 const playerType = ref<PlayerType | null>(null)
 const route = useRoute()
@@ -133,7 +140,7 @@ const showMusicPlayer = computed(() => {
   return hasAudioLinks.value && !hideMusicPlayer.value
 })
 const hideMusicPlayer = ref(true)
-const player = ref(null)
+// const player = ref(null)
 const isPlaying = ref(false)
 const showQRCodeFlag = ref(false)
 const showNoTranslationModal = ref(false)
@@ -220,7 +227,7 @@ const onPlayerReady = (playerData: { player: any, type: PlayerType }) => {
   player.value = playerData.player;
   playerType.value = playerData.type;
   // You might want to handle multiple players differently
-  console.log('Player ready:', playerData);
+  // console.log('Player ready:', playerData);
 }
 
 const playPause = () => {
@@ -307,9 +314,9 @@ onMounted(async () => {
       loadQRCode()
     }
     if (hasAudioLinks.value) {
-      console.log('Detected audio links for this song')
+      // console.log('Detected audio links for this song')
     } else {
-      console.log('No audio links detected for this song')
+      // console.log('No audio links detected for this song')
     }
   } catch (error) {
     console.error('Error loading song:', error)

@@ -110,7 +110,7 @@ const togglePlayer = async (index: number) => {
   if (toggleInProgress.value) return;
   
   toggleInProgress.value = true;
-  console.log(`Toggling card ${index}, current expanded: ${expandedIndex.value}`);
+  // console.log(`Toggling card ${index}, current expanded: ${expandedIndex.value}`);
   
   try {
     // If clicking the same card, close it
@@ -128,7 +128,7 @@ const togglePlayer = async (index: number) => {
       expandedIndex.value = index;
     }
     
-    console.log(`After toggle: expanded index is now ${expandedIndex.value}`);
+    // console.log(`After toggle: expanded index is now ${expandedIndex.value}`);
   } catch (err) {
     console.error('Error toggling player:', err);
   } finally {
@@ -140,7 +140,7 @@ const togglePlayer = async (index: number) => {
 };
 
 const onPlayerReady = (playerData: any) => {
-  console.log("Player ready:", playerData);
+  // console.log("Player ready:", playerData);
 };
 
 onMounted(async () => {

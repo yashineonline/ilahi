@@ -204,7 +204,7 @@ const toggleSongSelection = (song: SongData) => {
   } else {
     selectedSongs.value = selectedSongs.value.filter(s => s.title !== song.title);
   }
-  console.log('Selected songs:', selectedSongs.value);
+  // console.log('Selected songs:', selectedSongs.value);
 };
 
 const resetSelection = () => {

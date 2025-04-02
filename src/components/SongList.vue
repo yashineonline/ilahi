@@ -217,8 +217,8 @@ const subcategories = computed(() => getSubcategories());
 
 const allCategories = computed(() => {
   const { processedCategories, processedShortcuts } = processShortcuts(subcategories.value);
-  console.log("processedCategories:", processedCategories);
-  console.log("subcategories:", subcategories);
+  // console.log("processedCategories:", processedCategories);
+  // console.log("subcategories:", subcategories);
  // Change from Set to Record/object to avoid indexing issues
  const categoriesMap: Record<string, boolean> = {};
   
@@ -227,13 +227,13 @@ const allCategories = computed(() => {
   const normalizedSubcategories = new Set(
     Object.values(processedCategories).flat().map(normalizeCategory)
   );
-  console.log("normalizedSubcategories:", normalizedSubcategories);
+  // console.log("normalizedSubcategories:", normalizedSubcategories);
 
 
   filteredSongs.value.forEach((song) => {
     song.categories.forEach((category) => {
       const normalizedCategory = normalizeCategory(category);
-        console.log("normalizedCategory:", normalizedCategory);
+        // console.log("normalizedCategory:", normalizedCategory);
 
 // Fix the categories access
 const matchedMainCategory = Object.keys(categories.value || {}).find((key) => {
@@ -245,7 +245,7 @@ const matchedMainCategory = Object.keys(categories.value || {}).find((key) => {
                  normalizeCategory(sub).startsWith(normalizedCategory)
                )
       });
-      console.log("matchedMainCategory:", matchedMainCategory);
+      // console.log("matchedMainCategory:", matchedMainCategory);
 
       if (matchedMainCategory) {
         categoriesMap[matchedMainCategory] = true;
@@ -264,7 +264,7 @@ const matchedMainCategory = Object.keys(categories.value || {}).find((key) => {
 
 // First, ensure mainCategories returns string[] instead of any other type
 const mainCategories = computed((): string[] => {
-  console.log("All categories from store:", categories);
+  // console.log("All categories from store:", categories);
   // Ensure we're returning an array of strings
   return Array.isArray(categories.value) ? categories.value : Object.keys(categories.value || {});
 });

@@ -66,7 +66,7 @@ export const useSongStore = defineStore('song', () => {
         songs.value = JSON.parse(cachedSongs);
         setSubcategories(JSON.parse(cachedSubcategories));
         categories.value = JSON.parse(cachedCategories);
-        console.log('Loaded categories from cache:', categories.value);
+        // console.log('Loaded categories from cache:', categories.value);
         return categories.value;
       }
 
@@ -128,7 +128,7 @@ processedSongs.forEach(song => {
       localStorage.setItem(NEW_CACHE_PREFIX + 'cachedSubcategories', JSON.stringify(subcategories))
       localStorage.setItem(NEW_CACHE_PREFIX + 'cachedCategories', JSON.stringify(categories.value))
 
-      console.log('Updated categories with new cache keys:', categories.value)
+      // console.log('Updated categories with new cache keys:', categories.value)
 
       return categories.value // Return the categories
     } catch (error) {

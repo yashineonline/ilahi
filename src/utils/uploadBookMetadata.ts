@@ -22,7 +22,7 @@ export async function uploadBookMetadata() {
 
       try {
         const docRef = await addDoc(collection(db, 'books'), bookData);
-        console.log(`Added metadata for ${bookData.name} with ID: ${docRef.id}`);
+        // console.log(`Added metadata for ${bookData.name} with ID: ${docRef.id}`);
       } catch (error) {
         console.error(`Error adding metadata for ${bookData.name}:`, error);
       }
