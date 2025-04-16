@@ -89,8 +89,50 @@
       </div>
     </div>
 
-<!-- Replace the current text display section -->
+
+<div class="flex justify-center my-4">
+  <div class="flex flex-col items-center">
+    <div class="dropdown dropdown-end">
+      <label tabindex="0" class="btn btn-secondary m-1">
+    <!-- <label class="mb-2 font-bold text-lg">Zikr</label> -->
+    <!-- <div class="flex items-center mb-2"> -->
+      <!-- <div class="dropdown"> -->
+        <!-- <label tabindex="0" class="btn btn-secondary m-1" @click="isZikrDropdownOpen = !isZikrDropdownOpen"> -->
+          Select Zikr 
+        </label>
+        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-64 max-h-96 overflow-y-auto">
+
+        <!-- <ul v-if="isZikrDropdownOpen" class="dropdown-content z-[1] menu p-2 shadow rounded-box w-52 max-h-60 overflow-y-auto custom-dropdown"> -->
+          <li v-for="zikrGroup in zikrGroups" :key="zikrGroup.group">
+            <details class="dropdown" open>
+              <summary class="text-base-content font-semibold">{{ zikrGroup.group }}</summary>
+              <ul class="p-2">
+              <!-- <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52"> -->
+                <li v-for="zikr in zikrGroup.items" :key="zikr">
+                  <label class="flex items-center gap-2 p-2 hover:bg-base-200 rounded">
+                  <!-- <label class="text-base-content"> -->
+                    <input
+                      type="checkbox"
+                      :value="zikr"
+                      v-model="selectedZikrs"
+                      class="checkbox checkbox-primary"
+                    />
+                    <span class="text-base-content">{{ zikr }}</span>
+                  </label>
+                </li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
 <div class="text-center text-base-content/80 mb-4" role="status" aria-live="polite">
+  <span v-if="selectedZikrs.length > 0" aria-atomic="true">
+    {{ filteredByZikr.length }} ilahi{{ filteredByZikr.length !== 1 ? 's' : '' }} 
+    found for selected zikrs
+  </span>
   <span v-if="currentLetter" aria-atomic="true">
     {{ sortedFilteredSongs.length }} ilahi{{ sortedFilteredSongs.length !== 1 ? 's' : '' }} 
     found starting with letter "{{ currentLetter }}"
@@ -146,6 +188,9 @@
 >
   Sorry, no ilahi found starting with letter "{{ currentLetter }}".
 </div>
+<div v-if="paginatedSongs.length === 0 && selectedZikrs.length">
+  <p class="text-red-500">No songs found for selected zikrs</p>
+</div>
 
 
 
@@ -175,25 +220,40 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, inject } from "vue";
 import { storeToRefs } from "pinia";
-import { useSongStore } from "../stores/songStore";
+import { useSongStore, ParsedZikr } from "../stores/songStore";
 import { RouterLink, useRoute, useRouter } from "vue-router";
 import SearchBar from "./SearchBar.vue";
 import { getCurrentInstance } from "vue";
 import { slugify } from '../utils/search';
 import { CATEGORIES, getSubcategories, filterSongsByCategory, normalizeCategory, turkishToEnglish, getSortedSubcategories, processShortcuts, getMainCategories } from '../utils/categoryUtils';
+// import { ParsedZikr } from '../utils/zikrUtils';
+
 import { SongData } from "@/utils/types";
 import type { LocationQueryValue } from 'vue-router'
+import { parseZikrLine } from '../utils/zikrUtils';
 
 
 const route = useRoute();
 const router = useRouter();
 const songStore = useSongStore();
-const { filteredSongs, categories } = storeToRefs(songStore);
+const { filteredSongs, categories, filteredByZikr, selectedZikrs } = storeToRefs(songStore);
+
+
 
 const currentPage = ref(1);
 const itemsPerPage = 12;
 const currentLetter = ref("");
 const selectedCategories = ref<string[]>([]);
+const isZikrDropdownOpen = ref(false);
+
+// Add computed properties
+const zikrGroups = computed(() => {
+return Object.entries(songStore.suggestedZikrs).map(([group, items]) => ({
+    group,
+    items: Array.isArray(items) ? items : [items]
+  }))
+});
+
 
 const randomIlahi = ref<SongData | null>(null)
 
@@ -293,41 +353,15 @@ const mainCategories = computed((): string[] => {
   return Array.isArray(categories.value) ? categories.value : Object.keys(categories.value || {});
 });
 
-
-  // const mainCategoryHeadings = Object.keys(subcategories.value);
-  // const standardCategories = ['All', CATEGORIES.BASIC, CATEGORIES.INTERMEDIATE];
-  
-  // const categories = allCategories.value;
-  
-
-    // return categories.value;
-  // });
-
-  // .filter(category => {
-    // Skip empty categories
-    // const trimmedCategory = category.trim();
-    // return trimmedCategory && !trimmedCategory.endsWith(':') && trimmedCategory.length < 30;
-
-    // if (!trimmedCategory) return false;
-
-     // Include this category if it's a main category or in subcategories
-
-    //  return Object.keys(subcategories.value).includes(category) || 
-    //        category === 'All' || 
-    //        category === CATEGORIES.BASIC || 
-    //        category === 'Intermediate';
-  
-  
-           // return categories
-    // .filter(category => Object.keys(subcategories.value).includes(category) || category === 'All' || category === CATEGORIES.BASIC|| category === 'inter')
-    // .map(category => category === 'inter' ? 'Intermediate' : category);
-
-// });
-
 // Computed properties
 const sortedFilteredSongs = computed(() => {
-  // const { processedCategories, processedShortcuts } = processShortcuts(subcategories.value);
+
   let songsToDisplay = filteredSongs.value;
+
+  if (selectedZikrs.value.length > 0) {
+    console.log('[Component] Applying zikr filter');
+    songsToDisplay = filteredByZikr.value;
+  }
 
 
 
@@ -336,8 +370,7 @@ const sortedFilteredSongs = computed(() => {
       (song) =>      {
         const firstLetter = song.title[0].toUpperCase();
         const normalizedFirstLetter = turkishToEnglish(firstLetter);
-      const normalizedCurrentLetter = turkishToEnglish(currentLetter.value);
-            
+      const normalizedCurrentLetter = turkishToEnglish(currentLetter.value);      
       return normalizedFirstLetter === normalizedCurrentLetter;
     });
   }
@@ -352,20 +385,8 @@ const sortedFilteredSongs = computed(() => {
       turkishToEnglish(a.title.toLowerCase()).localeCompare(turkishToEnglish(b.title.toLowerCase()))
     );
   }
-
-  return songsToDisplay; // Already sorted by order in filterSongsByCategory if Basic category
+  return songsToDisplay; 
 });
-    // If only Basic category is selected, sort by order number
-  //   if (selectedCategories.value.length === 1 && selectedCategories.value[0] === CATEGORIES.BASIC) {
-  //     return songsToDisplay.sort((a, b) => (a.order || 999999) - (b.order || 999999));
-  //   }
-  // }
-
-   // Normal alphabetical sorting for other cases
-//    return songsToDisplay.sort((a, b) => 
-//     turkishToEnglish(a.title.toLowerCase()).localeCompare(turkishToEnglish(b.title.toLowerCase()))
-//   );
-// });
 
 const totalPages = computed(() =>
   Math.ceil(sortedFilteredSongs.value.length / itemsPerPage)
@@ -427,13 +448,19 @@ const debugSongCounts = computed(() => ({
 
 
 // Watchers
+
+watch(selectedZikrs, (newZikrs) => {
+  console.log('[Component] Selected Zikrs changed:', newZikrs);
+  console.log('Current filtered songs:', filteredByZikr.value.map(s => s.title));
+}, { deep: true });
+
 // Add a watch for currentLetter specifically
 watch(currentLetter, (newLetter) => {
   currentPage.value = 1;
 }, { immediate: true });
 
 
-watch([filteredSongs, currentLetter, selectedCategories], () => {
+watch([filteredSongs, currentLetter, selectedZikrs,selectedCategories], () => {
   currentPage.value = 1;
   updateQueryParams();
 });
@@ -508,6 +535,7 @@ const resetSearch = () => {
   songStore.setSearchQuery("");
   currentLetter.value = "";
   selectedCategories.value = [];
+  selectedZikrs.value = [];
   router.push({ query: {} });
   resetGlobalSearch();
 };
@@ -519,6 +547,22 @@ const app = getCurrentInstance()?.appContext.app;
 </script>
 
 <style>
+.checkbox-primary {
+ --chkbg: hsl(120, 60%, 50%); /* Green background */
+ --chkfg: white; /* White tick */
+}
+
+/* Center alignment for the main container */
+.w-full.max-w-4xl.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+/* Prevent page jump when checking checkboxes */
+input[type="checkbox"] {
+  scroll-margin-top: 100px;
+}
 .select option:checked {
   background-color: theme("colors.white");
   /* color: white; */

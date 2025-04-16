@@ -12,7 +12,9 @@ import {
   faChevronUp, faChevronDown, faTriangleExclamation,
   faInfoCircle, faHandPointer, faHandPointDown,
   faFilePdf, faQrcode, faMusic, faPause, faLanguage,  
-  faTimes
+  faTimes,
+  faHome,
+  faBars
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faCircleDown as farCircleDown } from '@fortawesome/free-regular-svg-icons'
@@ -41,7 +43,9 @@ library.add(
   faInfoCircle,
   faHandPointer,
   faHandPointDown,
-  faTimes
+  faTimes,
+  faHome,  
+faBars,
 )
 
 export { FontAwesomeIcon }

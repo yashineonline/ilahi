@@ -8,6 +8,7 @@ export interface SongData {
   mainLinks: string[];
   alternateTunes: string[];
   categories: string[];
+  suggestedZikrs: string[];
   order?: number; // Add this line
   tags: string[];
   isUnderEdit: boolean;
@@ -19,3 +20,13 @@ export interface ZikrItem {
   zikrLink: string;
   zikrLyrics?: string[][];  // Add optional lyrics property
 }
+
+     // src/utils/types.ts
+     export interface Quote {
+      text: string;
+    }
+
+    export interface AuthorQuotes {
+      name: string;
+      quotes: Quote[];
+    }

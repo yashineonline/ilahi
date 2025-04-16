@@ -5,19 +5,28 @@ import { useSongStore } from '@/stores/songStore.ts';
 
 
 
+// export const parseHyperlinks = (text: string): string => {
+//   // console.log('Input text:', text); // Add this
+//   const cleanText = DOMPurify.sanitize(text);
+//   const songStore = useSongStore();
+//   const result = cleanText.replace(/\$([\w-]+)/g, (_, slug) => {
+//     const url = `/player/${encodeURIComponent(slug)}`;
+//     const song = songStore.songs.find(s => s.slug === slug);
+//     const displayText = song ? song.title : slug;
+//     return `<a href="${url}" class="hyperlink" data-url="${url}" data-slug="${slug}" aria-label="Navigate to ${displayText}" tabindex="0">${displayText}</a>`;
+//   });
+//   return result;
+// };
+
 export const parseHyperlinks = (text: string): string => {
-  // console.log('Input text:', text); // Add this
   const cleanText = DOMPurify.sanitize(text);
   const songStore = useSongStore();
   const result = cleanText.replace(/\$([\w-]+)/g, (_, slug) => {
-    const url = `/player/${encodeURIComponent(slug)}`;
+    const url = `/player/${encodeURIComponent(slug)}`; // Updated URL structure
     const song = songStore.songs.find(s => s.slug === slug);
     const displayText = song ? song.title : slug;
-    return `<a href="${url}" class="hyperlink" data-url="${url}" data-slug="${slug}" aria-label="Navigate to ${displayText}" tabindex="0">${displayText}</a>`;
-
-    // return `<a href="${url}" class="hyperlink" data-url="${url}" aria-label="Navigate to ${slug}" tabindex="0">${slug}</a>`;
+    return `<a href="${url}" class="hyperlink flex items-center gap-2" data-url="${url}" data-slug="${slug}" aria-label="Navigate to ${displayText}" tabindex="0"><span class="text-primary"><font-awesome-icon icon="music" /></span>${displayText}</a>`;
   });
-  // console.log('Output HTML:', result); // Add this
   return result;
 };
 

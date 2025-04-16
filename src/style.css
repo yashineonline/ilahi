@@ -91,12 +91,31 @@ h1 {
   border-radius: 0.5rem;
   margin: 1rem 0;
 }
+
 .btn {
   /* Add your button styles here */
-  background-color: #007bff; /* Example button color */
+  /* background-color: #007bff; Example button color */
   color: white;
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 0.25rem;
   cursor: pointer;
+}
+
+.btn-circle {
+  border-radius: 50%;
+  opacity: 0.9;
+}
+
+.btn-circle:hover {
+  opacity: 1;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: all 0.3s ease;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+  transform: translateY(20px) scale(0.9);
 }

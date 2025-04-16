@@ -17,7 +17,7 @@
       </section>
 
       <section v-if="otherAuthors.length > 0" class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4 ">Poems by Dervishes of the AQRT</h2>
+        <h2 class="text-2xl font-semibold mb-4 ">More Poems</h2>
         <ul class="space-y-4">
           <li v-for="author in otherAuthors" :key="author.name">
             <router-link 

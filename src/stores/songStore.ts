@@ -7,9 +7,16 @@ import { searchSongs } from '../utils/search.ts'
 import { setSubcategories, CATEGORIES, categoryShortcuts } from '../utils/categoryUtils.ts'
 import type { SongData } from '@/utils/types'
 
+
 export interface Categories {
   [key: string]: string[]
 }
+
+export type ParsedZikr = Record<string, string[]>;  // Same structure as Categories
+
+// export interface ParsedZikr {
+//   [key: string]: string[]
+// }
 
 
 
@@ -18,11 +25,13 @@ export const useSongStore = defineStore('song', () => {
   // const filteredSongs = ref<SongData[]>([])
   const categories = ref<Categories>({})
   const songs = ref<SongData[]>([]);
-  // const categories = ref<string[]>([]);
+  const suggestedZikrs = ref<ParsedZikr>({})
   const zikrItems = ref<ZikrItem[]>([]);
   const searchQuery = ref('');
   const selectedSongs = ref<SongData[]>([]);
   const youtubeLinks = ref<string[]>([]);
+  const selectedZikrs = ref<string[]>([]);
+
 
   const getAllYoutubeLinks = computed(() => {
     const links: string[] = [];
@@ -44,6 +53,73 @@ export const useSongStore = defineStore('song', () => {
     return links;
   });
 
+// const filteredByZikr = computed(() => {
+//   console.log('[Store] Selected Zikrs:', selectedZikrs.value);
+//   if (!selectedZikrs.value.length) return songs.value;
+
+//   return songs.value.filter(song => {
+//     // Ensure song.suggestedZikrs exists and is an array
+//     if (!song.suggestedZikrs || !Array.isArray(song.suggestedZikrs)) return false;
+    
+//     // Check if any selected zikr exists in the song's suggested zikrs
+//     return selectedZikrs.value.some(selectedZikr => 
+//       song.suggestedZikrs.includes(selectedZikr)
+//     );
+//   });
+// });
+
+const filteredByZikr = computed(() => {
+  console.log('[Store] Selected Zikrs:', selectedZikrs.value);
+  if (selectedZikrs.value.length === 0) {
+    return songs.value; // Return all songs if no Zikrs are selected
+  }
+
+  return songs.value.filter(song => {
+    if (song.suggestedZikrs.length === 0) {
+      return false; // Skip songs without suggested Zikrs
+    }
+
+    return selectedZikrs.value.every(zikr => 
+      song.suggestedZikrs.includes(zikr)
+    );
+  });
+  
+});
+
+//   if (!selectedZikrs.value.length) {
+//     console.log('[Store] No zikrs selected, returning all songs');
+//     return songs.value;
+//   }
+
+//   const filtered = songs.value.filter(song => {
+//     console.log(`[Store] Checking song: "${song.title}"`);
+//     console.log('Song zikrs:', song.suggestedZikrs);
+    
+//     if (!song.suggestedZikrs || !song.suggestedZikrs.length) {
+//       console.log('Song has no suggested zikrs');
+//       return false;
+//     }
+//     console.log(`Selected Zikrs: ${selectedZikrs.value.join(', ')}`);
+//     console.log(`Song Zikrs: ${song.suggestedZikrs.join(', ')}`);
+    
+
+//     const hasZikr = selectedZikrs.value.some(selectedZikr => 
+//       song.suggestedZikrs.includes(selectedZikr) 
+//     );
+//     console.log(`Song "${song.title}" has matching zikr?`, hasZikr);
+//     console.log(`Has matching Zikr? ${hasZikr}`);
+//     return hasZikr;
+//        });
+
+//   console.log('[Store] Filtered songs:', filtered.map(s => s.title));
+
+
+//   return filtered;
+// });
+
+
+
+
   const filteredSongs = computed(() => {
     return searchSongs(songs.value, searchQuery.value);
   });
@@ -55,7 +131,7 @@ export const useSongStore = defineStore('song', () => {
   const fetchSongs = async (forceRefresh = false) => {
     try {
       // Use new cache keys with a timestamp to force a refresh
-      const NEW_CACHE_PREFIX = 'v10_'; // Change this prefix to force a refresh
+      const NEW_CACHE_PREFIX = 'v11_'; // Change this prefix to force a refresh
 
       const cachedSongs = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedSongs')
       const cachedSubcategories = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedSubcategories')
@@ -86,10 +162,11 @@ export const useSongStore = defineStore('song', () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const text = await response.text()
-      const { songs: processedSongs, subcategories, zikrItems: processedZikrItems } = processSongsFile(text)
+      const { songs: processedSongs, subcategories, zikrItems: processedZikrItems, allZikrs } = processSongsFile(text)
       songs.value = processedSongs
       zikrItems.value = processedZikrItems
       youtubeLinks.value = getAllYoutubeLinks.value;
+      suggestedZikrs.value = allZikrs; // Add this line
 
       // Properly structure categories as an object with arrays
       const categoriesObj: Categories = {
@@ -167,6 +244,9 @@ processedSongs.forEach(song => {
   return {
     songs,
     categories,
+    suggestedZikrs,
+    selectedZikrs, 
+    filteredByZikr,
     zikrItems,
     filteredSongs,
     youtubeLinks, // Expose YouTube links

@@ -17,7 +17,7 @@ async function updateVersion() {
 
     // Write the updated package.json back to the file
     await fs.writeFile(packageJsonPath, JSON.stringify(packageJson, null, 2));
-    console.log('Version updated to:', packageJson.version);
+    // console.log('Version updated to:', packageJson.version);
   } catch (err) {
     console.error('Error updating version:', err);
   }

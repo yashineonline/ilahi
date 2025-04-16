@@ -10,6 +10,11 @@ import { registerSW } from 'virtual:pwa-register';
 // import { useNotificationStore } from './stores/notificationStore'; // Import your notification store
 // import { initializeGlobalHyperlinks } from '@/utils/hyperlinkParser.ts';
 
+router.beforeEach((to, from, next) => {
+  // This will ensure all page navigations start at the top
+  window.scrollTo(0, 0)
+  next()
+})
 
 const app = createApp(App)
 const pinia = createPinia()

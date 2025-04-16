@@ -8,6 +8,18 @@
       
       <SearchBar ref="searchBarRef" v-if="navigationStore.isNavigationVisible" />
       <RouterView />
+
+      <transition name="fade">
+    <button 
+      v-show="showScrollTop"
+      @click="scrollToTop"
+      class="fixed bottom-6 right-6 btn btn-lg btn-primary shadow-2xl w-16 h-16 flex items-center justify-center hover:scale-110 transition-transform"
+      :class="{'bg-primary text-primary-content': true}"
+      aria-label="Scroll to top"
+    >
+    <font-awesome-icon icon="chevron-up" class="text-2xl" />
+  </button>
+  </transition>
     </main>
     <footer class="bg-green-600 text-white p-4 mt-8" v-if="navigationStore.isNavigationVisible">
       <button 
@@ -30,7 +42,7 @@ import NavigationBar from './components/NavigationBar.vue'
 import VersionDisplay from './components/VersionDisplay.vue'; // Import the Notification component
 import SearchBar from './components/SearchBar.vue'
 import ThemeToggle from './components/ThemeToggle.vue'
-import { ref, provide, onMounted } from 'vue'
+import { ref, provide, onMounted, onUnmounted } from 'vue'
  import { useNavigationStore } from './stores/navigationStore'
  import { useSongStore } from './stores/songStore';
  import { setupHyperlinkNavigation } from '@/utils/hyperlinkParser';
@@ -64,11 +76,32 @@ function refreshSongs() {
 }
 
 
+const showScrollTop = ref(false)
+
+const checkScroll = () => {
+  showScrollTop.value = window.scrollY > 300
+}
+
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
+}
+
+// Add scroll listener
+onMounted(() => {
+  window.addEventListener('scroll', checkScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', checkScroll)
+})
 
 
 </script>
 
-<style>
+<style scoped>
 @import './style.css';
 
 </style>

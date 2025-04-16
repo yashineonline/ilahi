@@ -2,16 +2,35 @@
   <nav class="navbar shadow-lg flex-col w-full" aria-label="Main navigation">
     <div class="w-full px-4 flex flex-col items-center">
       <ul class="flex flex-col w-full mb-4 list-none p-0">
-        <li class="flex justify-center items-center gap-2">
-          <router-link to="/songs" class="btn btn-ghost btn-sm text-xl mb-2">ilahi List</router-link>
-          <div class="flex items-center gap-2"> <!-- Group the icons -->
-          <Installation v-if="!isSongListView"/>
-      </div>
-      </li>
-        <div v-if="isHomePage" class="dropdown">
-          
-          <label tabindex="0" class="btn btn-ghost btn-sm text-xl mb-2">Menu</label>
-      <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow rounded-box w-52" :class="{'bg-gray-800/90 text-white': themeStore.theme === 'dark-theme', 'bg-white/90 text-gray-800': themeStore.theme === 'light-theme'}">
+        <li class="flex justify-center items-center gap-2 w-full">
+
+          <div class="flex items-center gap-2">
+          <button 
+          v-if="!isHomePage"
+              @click="goBack" 
+              class="btn btn-ghost btn-circle"
+              aria-label="Go back"
+            >
+              <font-awesome-icon icon="arrow-left" class="text-xl" />
+            </button>
+
+            <div v-if="isHomePage" class="dropdown">
+              <label 
+                tabindex="0" 
+                class="btn btn-ghost btn-circle"
+                aria-label="Open menu"
+              >
+                <font-awesome-icon icon="bars" class="text-xl" />
+              </label>
+
+              <ul 
+              tabindex="0" 
+              class="dropdown-content z-[1] menu p-2 shadow rounded-box w-52" 
+              :class="{
+                'bg-gray-800/90 text-white': themeStore.theme === 'dark-theme', 
+                'bg-white/90 text-gray-800': themeStore.theme === 'light-theme'
+                }"
+                >
         <li><router-link to="/zikr-practice" class="btn btn-ghost btn-sm">Zikr Practice</router-link></li>
         <li><router-link to="/wirds" class="btn btn-ghost btn-sm">Wird Slide</router-link></li>
         <li><router-link to="/book" class="btn btn-ghost btn-sm">Download ilahi Book</router-link></li>
@@ -23,8 +42,37 @@
         <li><router-link to="/miscellaneous" class="btn btn-ghost btn-sm">Miscellaneous</router-link></li>
       </ul>
     </div>
-    <li v-if="!isHomePage"><router-link to="/" class="btn btn-ghost btn-sm text-xl mb-2" aria-label="Home">Home</router-link></li>
-      </ul>
+
+            <router-link 
+            v-if="!isHomePage"
+              to="/" 
+              class="btn btn-ghost btn-circle"
+              aria-label="Home"
+            >
+              <font-awesome-icon icon="home" class="text-xl" />
+            </router-link>
+          </div>
+
+            <router-link 
+            to="/songs" 
+            class="btn btn-primary text-xl transform hover:scale-105 transition-transform duration-200 flex items-center gap-2 flex-grow justify-center"
+          >
+            <font-awesome-icon icon="music" />
+            ilahi List
+            <span class="text-sm opacity-75" v-if="!isSongListView">(Tap to Browse)</span>
+            <span class="text-sm opacity-75" v-else>(Scroll Down)</span>
+          </router-link>
+
+          <div class="flex items-center gap-2"> 
+          <Installation v-if="!isSongListView"/>
+      </div>
+        </li>    
+      </ul>         
+      
+          
+         
+
+      
       <div class="flex items-center space-x-4" role="group" aria-label="Additional actions">
         
         <!-- <button class="btn btn-ghost" @click="handleIconClick('whatsapp')" aria-label="Join ilahi Classes via WhatsApp">
@@ -77,6 +125,10 @@ const popupContent = ref({
   actionText: '',
   action: () => {}
 })
+
+const goBack = () => {
+  window.history.back()
+}
 
 const ilahiClasses = ref<InstanceType<typeof IlahiClasses> | null>(null)
 

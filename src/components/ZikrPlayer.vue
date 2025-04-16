@@ -30,7 +30,9 @@
       <div
         v-for="(zikr, index) in songStore.zikrItems"
         :key="index"
-        class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all cursor-pointer hover:-translate-y-1":class="{'bg-gray-800/90 text-white': themeStore.theme === 'dark-theme', 'bg-white/90 text-gray-800': themeStore.theme === 'light-theme'}"
+        :data-zikr-index="index"
+        class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all cursor-pointer hover:-translate-y-1"
+        :class="{'bg-gray-800/90 text-white': themeStore.theme === 'dark-theme', 'bg-white/90 text-gray-800': themeStore.theme === 'light-theme'}"
       >
         <div class="card-body">
           <h2 
@@ -73,8 +75,8 @@
                     v-for="(line, lineIndex) in stanzaLines"
                     :key="lineIndex"
                     class="text-lg leading-relaxed"
-                    v-html="parseHyperlinks(line)"  
-                  >
+                    v-html="parseHyperlinksWithIcon(line)"  
+                    >
                     
               </div>
                 </div>
@@ -126,6 +128,12 @@ const togglePlayer = async (index: number) => {
       
       // Then open the new one
       expandedIndex.value = index;
+
+      // Add scroll behavior after expanding
+      await nextTick();
+      const element = document.querySelector(`[data-zikr-index="${index}"]`);
+      element?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+   
     }
     
     // console.log(`After toggle: expanded index is now ${expandedIndex.value}`);
@@ -138,6 +146,22 @@ const togglePlayer = async (index: number) => {
     }, 100);
   }
 };
+
+const parseHyperlinksWithIcon = (text: string) => {
+  console.log('text:', text);  
+  const parsedText = parseHyperlinks(text);
+  console.log('parsedText:', parsedText);  
+  return parsedText.replace(
+    /<a\s+href="([^"]+)"/g, 
+    '<a href="$1" class="inline-flex items-center gap-2"><font-awesome-icon icon="music" class="text-primary" />'
+  );
+};
+
+// Add this to ensure pages start at the top
+onMounted(async () => {
+  window.scrollTo(0, 0);
+  // ... rest of your existing onMounted code ...
+});
 
 const onPlayerReady = (playerData: any) => {
   // console.log("Player ready:", playerData);
@@ -166,4 +190,15 @@ onMounted(async () => {
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
 }
+
+/* Add some hover effect for the hyperlinks */
+:deep(a) {
+  transition: all 0.2s;
+}
+
+:deep(a:hover) {
+  color: var(--primary-color);
+  transform: scale(1.05);
+}
+
 </style>

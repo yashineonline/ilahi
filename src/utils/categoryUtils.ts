@@ -141,15 +141,6 @@ export const filterSongsByCategory = (songs: SongData[], categories: string[]): 
 //   return filteredSongs;
 // };
 
-// export const getAllCategories = (songs: SongData[]): string[] => {
-//   const categories = new Set<string>(["All", CATEGORIES.BASIC, CATEGORIES.INTERMEDIATE]);
-//   songs.forEach((song) => {
-//     song.categories.forEach((category) => {
-//       categories.add(category.trim());
-//     });
-//   });
-//   return Array.from(categories);
-// };
 
 export const getSortedSubcategories = (subcategories: Record<string, string[]>) => {
   const sorted: Record<string, string[]> = {};

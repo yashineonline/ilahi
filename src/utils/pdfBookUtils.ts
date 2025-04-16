@@ -1,6 +1,7 @@
 import { PDFDocument as PDFLib, PDFPage, PDFFont, rgb, RGB, PDFImage } from 'pdf-lib';
 import { SongData } from './types';
-import { EXPLANATION_TEXT, QUOTES } from './contentConfig';
+import { EXPLANATION_TEXT } from './contentConfig';
+import { fetchAllQuotes } from '@/utils/quoteFetcher';
 
 export async function createCoverPage(pdfDoc: PDFLib, font: PDFFont, title: string, isCustom: boolean = false): Promise<PDFPage> {
   const page = pdfDoc.addPage();
@@ -289,10 +290,12 @@ export async function createPoemPage(pdfDoc: PDFLib, font: PDFFont): Promise<PDF
   pages.push(page);
   const { width, height } = page.getSize();
   
-  // console.log('Creating poem page');
-  // console.log(`Initial height: ${height}`);
+  try {
+    const authors = await fetchAllQuotes();
+    const allQuotes = authors.flatMap(author => author.quotes.map(quote => `${quote.text}\n\n`)).join('');
 
-  const newPages = drawMultilineText(pdfDoc, page, QUOTES.join('\n\n'), {
+
+  const newPages = drawMultilineText(pdfDoc, page, allQuotes, {
     x: 50,
     y: height - 50,
     maxWidth: width - 100,
@@ -303,8 +306,11 @@ export async function createPoemPage(pdfDoc: PDFLib, font: PDFFont): Promise<PDF
   });
 
   pages.push(...newPages);
+} catch (error) {
+  console.error('Error fetching quotes:', error);
+  // Handle error appropriately, e.g., show a message or use fallback content
+}
 
-  // console.log(`Total poem pages created: ${pages.length}`);
   return pages;
 }
 
