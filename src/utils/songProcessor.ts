@@ -24,7 +24,7 @@ export function processSong(song: SongData): SongData {
 export function renderSong(song: SongData, options: { fontSize: number, showTranslation: boolean, theme: 'light' | 'dark' }): string {
   const { fontSize = 16, showTranslation = true, theme = 'light' } = options;
 
-  const textColor = theme === 'light' ? 'text-gray-800' : 'text-gray-200';
+  const textColor = theme === 'light' ? 'text-base-content' : 'text-base-content';
 
   // Filter out the history stanza from lyrics
   const lyricsWithoutHistory = song.lyrics.filter(stanza => !stanza.some(line => line.includes('History:')));

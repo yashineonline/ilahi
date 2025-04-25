@@ -28,19 +28,19 @@ const getRandomQuote = () => {
 };
 
 const updateQuote = () => {
-  // const today = new Date().toDateString();
-  // const storedDate = localStorage.getItem('quoteDate');
-  // const storedQuote = localStorage.getItem('dailyQuote');
+  const today = new Date().toDateString();
+  const storedDate = localStorage.getItem('quoteDate');
+  const storedQuote = localStorage.getItem('dailyQuote');
 
-  // if (storedDate !== today || !storedQuote) {
+  if (storedDate !== today || !storedQuote) {
     const newQuote = getRandomQuote();
     dailyQuote.value = newQuote;
-    // localStorage.setItem('quoteDate', today);
+    localStorage.setItem('quoteDate', today);
     localStorage.setItem('dailyQuote', JSON.stringify(newQuote));
-  // } else {
-    // dailyQuote.value = JSON.parse(storedQuote);
+  } else {
+    dailyQuote.value = JSON.parse(storedQuote);
   }
-// };
+};
 
 onMounted(async () => {
   try {

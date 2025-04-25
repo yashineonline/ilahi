@@ -1,13 +1,7 @@
 <template>
-    <!-- <div v-if="$route.path === '/'" class="ilahiClasses"> -->
-      <!-- <button @click="handleClick" class="btn btn-primary rounded-full shadow-lg">
-        Join ilahi classes
-      </button> -->
-      
-      <!-- Popup -->
       <div v-if="showPopup" class="modal modal-open fixed inset-0 flex items-center justify-center z-50" @click="closePopup">
-        <div class="modal-overlay absolute inset-0 opacity-50"></div>
-        <div class="modal-box relative" p-6 rounded-lg shadow-xl max-w-md mx-auto z-50 @click.stop>
+        <div class="modal-overlay absolute inset-0 bg-black/50"></div>
+        <div class="modal-box relative bg-base-100 text-base-content p-6 rounded-lg shadow-2xl max-w-md mx-auto z-50" @click.stop>
           <button @click="closePopup" class="btn btn-sm btn-circle absolute right-2 top-2">✕</button>
           <h2 class="text-2xl font-bold mb-4">Join the ilahi Community</h2>
           <p class="mb-4">Connect with us via WhatsApp to join ilahi classes on Zoom 
@@ -19,23 +13,14 @@
           </button>
         </div>
       </div>
-    <!-- </div> -->
   </template>
-
-  
-
   
   <script setup lang="ts">
   import { ref } from 'vue'
   
   const showPopup = ref(false)
   
-  // const handleClick = () => {
-  //   showPopup.value = true
-  // }
-
    const openPopup = () => {
-    // console.log('Opening popup') // Debug log
   showPopup.value = true
 }
   
@@ -48,12 +33,12 @@
     closePopup()
   }
 
-  // Expose the openPopup method
 defineExpose({ openPopup })
   </script>
   
-  <style scoped>
-.modal {
+  <!-- <style scoped> -->
+
+ <!-- .modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -63,7 +48,7 @@ defineExpose({ openPopup })
   display: flex;
   align-items: center;
   justify-content: center;
-}
+} 
 
 .modal-box {
   background-color: var(--bg-color);
@@ -87,5 +72,8 @@ defineExpose({ openPopup })
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 50;
-}  </style>
+  z-index: 50; */
+ }  
+
+</style>
+-->

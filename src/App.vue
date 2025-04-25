@@ -1,5 +1,6 @@
 <template>
-  <div class="min-h-screen flex flex-col">
+    <div class="min-h-screen flex flex-col bg-base-100 text-base-content">
+  <!-- <div class="min-h-screen flex flex-col"> -->
     <header class="bg-green-600 text-white p-4" v-if="navigationStore.isNavigationVisible">
       <h1 class="text-2xl font-bold">ilahi Book App</h1>
     </header>
@@ -36,7 +37,6 @@
 </template>
 
 <script setup lang="ts">
-import RandomIlahi from './components/RandomIlahi.vue';
 import { RouterView } from 'vue-router'
 import NavigationBar from './components/NavigationBar.vue'
 import VersionDisplay from './components/VersionDisplay.vue'; // Import the Notification component
@@ -46,8 +46,13 @@ import { ref, provide, onMounted, onUnmounted } from 'vue'
  import { useNavigationStore } from './stores/navigationStore'
  import { useSongStore } from './stores/songStore';
  import { setupHyperlinkNavigation } from '@/utils/hyperlinkParser';
+ import { useThemeStore } from './stores/themeStore'
 
  const songStore = useSongStore();
+ const navigationStore = useNavigationStore()
+const searchBarRef = ref<InstanceType<typeof SearchBar> | null>(null)
+  const showScrollTop = ref(false)
+  const themeStore = useThemeStore()
 
 
 setupHyperlinkNavigation();
@@ -58,10 +63,8 @@ setupHyperlinkNavigation();
 onMounted(async () => {
   await songStore.fetchSongs();
   refreshSongs();
+  document.documentElement.classList.toggle('dark', themeStore.theme === 'dark')
 });
-
-const navigationStore = useNavigationStore()
-const searchBarRef = ref<InstanceType<typeof SearchBar> | null>(null)
 
 const resetGlobalSearch = () => {
   if (searchBarRef.value) {
@@ -76,7 +79,7 @@ function refreshSongs() {
 }
 
 
-const showScrollTop = ref(false)
+
 
 const checkScroll = () => {
   showScrollTop.value = window.scrollY > 300
@@ -101,7 +104,7 @@ onUnmounted(() => {
 
 </script>
 
-<style scoped>
+<!-- <style scoped>
 @import './style.css';
 
-</style>
+</style> -->

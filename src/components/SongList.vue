@@ -550,7 +550,24 @@ const app = getCurrentInstance()?.appContext.app;
 .checkbox-primary {
  --chkbg: hsl(120, 60%, 50%); /* Green background */
  --chkfg: white; /* White tick */
+ border-color: hsl(120, 60%, 50%);
 }
+
+.checkbox-primary:checked {
+  background-color: hsl(120, 60%, 50%);
+  border-color: hsl(120, 60%, 50%);
+}
+
+.checkbox-primary {
+  background-color: hsl(120, 60%, 50%);
+  border-color: hsl(120, 60%, 50%);
+}
+
+.checkbox-primary:checked {
+  background-color: hsl(120, 60%, 50%);
+  border-color: hsl(120, 60%, 50%);
+}
+
 
 /* Center alignment for the main container */
 .w-full.max-w-4xl.mx-auto {

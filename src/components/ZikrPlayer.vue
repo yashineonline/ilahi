@@ -32,7 +32,7 @@
         :key="index"
         :data-zikr-index="index"
         class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all cursor-pointer hover:-translate-y-1"
-        :class="{'bg-gray-800/90 text-white': themeStore.theme === 'dark-theme', 'bg-white/90 text-gray-800': themeStore.theme === 'light-theme'}"
+        :class="{'bg-gray-800/90 text-white': themeStore.theme === 'dark', 'bg-white/90 text-gray-800': themeStore.theme === 'light'}"
       >
         <div class="card-body">
           <h2 

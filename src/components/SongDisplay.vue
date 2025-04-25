@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full max-w-4xl mx-auto p-2 flex flex-col items-center">
+  <div class="w-full max-w-4xl mx-auto p-2 flex flex-col items-center bg-base-100 text-base-content">
     <div class="w-full flex flex-wrap gap-1 mb-2">
       <PronunciationGuide
         v-if="currentSong"
@@ -73,8 +73,8 @@
         <img :src="qrCodeDataUrl" alt="QR Code" class="mx-auto" />
       </div>
     </div>
-    <div v-else-if="!loading" class="text-center text-xl text-base-content" aria-live="polite">Song not found</div>
-    <div v-else class="text-center text-xl text-base-content" aria-live="polite">Loading song...</div>
+    <div v-else-if="!loading" class="text-center text-xl text-base-content" aria-live="polite">ilahi not found</div>
+    <div v-else class="text-center text-xl text-base-content" aria-live="polite">Loading ilahi...</div>
     <div v-if="errorMessage || playerError" class="mt-4 p-4 bg-error text-error-content rounded-lg" role="alert" aria-live="assertive">
       {{ errorMessage || playerError }}
     </div>
@@ -158,7 +158,7 @@ const renderedSong = computed(() => {
     return renderSong(currentSong.value, { 
       fontSize: fontSize.value, 
       showTranslation: showTranslationFlag.value,
-      theme: themeStore.theme === 'light-theme' ? 'light' : 'dark'
+      theme: themeStore.theme === 'light' ? 'light' : 'dark'
     })
   }
   return ''
@@ -382,19 +382,19 @@ watch(() => route.hash, scrollToHistory);
 </script>
 
 <style scoped>
-.container {
+/* .container {
   background-color: var(--bg-color);
   color: var(--text-color);
-}
+} */
 
-p {
+/* p {
   line-height: 1.6;
-}
+} */
 
-:deep(*:focus) {
+/* :deep(*:focus) {
   outline: 2px solid currentColor;
   outline-offset: 2px;
-}
+} */
 
 .card-body {
   display:flex;

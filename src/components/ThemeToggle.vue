@@ -1,7 +1,9 @@
 <template>
     <div>
-    <button @click="toggleTheme" class="p-2 rounded-full">
-      {{ themeStore.theme === 'light-theme' ? '🌙' : '☀️' }}
+    <button @click="toggleTheme" 
+    class="p-2 rounded-full hover:bg-opacity-20 hover:bg-gray-500 transition-colors"
+    >
+    {{ isDark ? '🌙' : '☀️' }}
     </button>
   </div>
   </template>
@@ -11,15 +13,19 @@
   import { ref, onMounted } from 'vue'
 
   const themeStore = useThemeStore()
+  const isDark = ref(themeStore.theme === 'dark')
+
 
   const toggleTheme = () => {
     themeStore.toggleTheme()
-    document.body.className = themeStore.theme
+    isDark.value = !isDark.value
+  document.documentElement.classList.toggle('dark', isDark.value)
+    // document.body.className = themeStore.theme
   }
 
 
 onMounted(() => {
-  document.body.className = themeStore.theme; // Set initial theme
-
+  document.documentElement.classList.toggle('dark', isDark.value)
+  // document.body.className = themeStore.theme; // Set initial theme
 });
   </script>

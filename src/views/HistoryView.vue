@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto p-4">
-    <h1 class="text-3xl font-bold mb-6">History</h1>
-    <p>Here, you can find some brief history behind the following ilahis:</p>
+    <h1 class="text-3xl font-bold mb-6">Tarih: History</h1>
+    <p>Here you can find links to ilahis for which a brief history and/or explanation is provided.:</p>
     <ul class="list-disc pl-5">
       <li v-for="song in songsWithHistory" :key="song.title" class="mb-2">
         <router-link 

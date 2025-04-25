@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar shadow-lg flex-col w-full" aria-label="Main navigation">
+  <nav class="navbar shadow-lg flex-col w-full bg-base-100 text-base-content" aria-label="Main navigation">
     <div class="w-full px-4 flex flex-col items-center">
       <ul class="flex flex-col w-full mb-4 list-none p-0">
         <li class="flex justify-center items-center gap-2 w-full">
@@ -25,10 +25,10 @@
 
               <ul 
               tabindex="0" 
-              class="dropdown-content z-[1] menu p-2 shadow rounded-box w-52" 
+              class="dropdown-content z-[1] menu p-2 shadow rounded-box w-52 bg-base-100 text-base-content" 
               :class="{
-                'bg-gray-800/90 text-white': themeStore.theme === 'dark-theme', 
-                'bg-white/90 text-gray-800': themeStore.theme === 'light-theme'
+                'bg-gray-800/90 text-white': themeStore.theme === 'dark', 
+                'bg-white/90 text-gray-800': themeStore.theme === 'light'
                 }"
                 >
         <li><router-link to="/zikr-practice" class="btn btn-ghost btn-sm">Zikr Practice</router-link></li>
@@ -74,11 +74,7 @@
 
       
       <div class="flex items-center space-x-4" role="group" aria-label="Additional actions">
-        
-        <!-- <button class="btn btn-ghost" @click="handleIconClick('whatsapp')" aria-label="Join ilahi Classes via WhatsApp">
-          <font-awesome-icon :icon="['fab', 'whatsapp']" style="color: #63E6BE;" size="2xl" aria-hidden="true" />
-        </button> -->
-        <button v-if="isHomePage" class="btn btn-ghost" @click="handleIconClick('youtube')" aria-label="Play ilahis on YouTube">
+                <button v-if="isHomePage" class="btn btn-ghost" @click="handleIconClick('youtube')" aria-label="Play ilahis">
           Play ilahis
           <font-awesome-icon :icon="['fab', 'youtube']" style="color: #ff3d3d;" size="2xl" aria-hidden="true" />
         </button>
@@ -86,10 +82,10 @@
 
       <IlahiClasses ref="ilahiClasses" />
 
-
       <!-- Large pop-up box -->
-      <div v-if="showPopup" class="modal modal-open" @click="closePopup">
-        <div class="modal-box relative" @click.stop role="dialog" aria-labelledby="popupTitle">
+      <div v-if="showPopup" class="modal modal-open fixed inset-0 flex items-center justify-center z-50" @click="closePopup">
+        <div class="modal-overlay absolute inset-0 bg-black/50"></div>
+  <div class="modal-box relative bg-base-100 text-base-content p-6 rounded-lg shadow-2xl max-w-md mx-auto z-50" @click.stop role="dialog" aria-labelledby="popupTitle">
           <button @click="closePopup" class="btn btn-sm btn-circle absolute right-2 top-2" aria-label="Close">✕</button>
           <h2 id="popupTitle" class="text-2xl font-bold mb-4">{{ popupContent.title }}</h2>
           <p class="mb-4">{{ popupContent.description }}</p>
@@ -179,13 +175,13 @@ defineExpose({ ilahiClasses })
 </script>
 
 <style scoped>
-.navbar {
+/* .navbar {
   background-color: var(--bg-color);
   color: var(--text-color);
-}
+} */
 
 /* Add these new styles */
-.modal-box {
+/* .modal-box {
   background-color: var(--bg-color);
   color: var(--text-color);
 }
@@ -201,5 +197,5 @@ defineExpose({ ilahiClasses })
 .modal-box button {
   background-color: var(--primary-color);
   color: var(--primary-content);
-}
+} */
 </style>

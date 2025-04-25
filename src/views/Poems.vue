@@ -12,7 +12,7 @@
           :to="{ name: 'AuthorPoems', params: { authorName: shaykhTanerPoems.name } }" 
           class="text-2xl font-semibold text-blue-700 hover:text-red-900"
         >
-        Poems on Love by Shaykh Taner
+        Poems on Love by Shaykh Taner and Shaykha Muzeyyen
         </router-link>
       </section>
 
