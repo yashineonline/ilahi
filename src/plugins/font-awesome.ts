@@ -11,10 +11,14 @@ import {
   faChevronRight,
   faChevronUp, faChevronDown, faTriangleExclamation,
   faInfoCircle, faHandPointer, faHandPointDown,
-  faFilePdf, faQrcode, faMusic, faPause, faLanguage,  
+  faFilePdf, faQrcode, 
+  faMusic, faPause, faPlay, 
+  faLanguage,  
   faTimes,
   faHome,
-  faBars
+  faBars,
+  faRotateLeft, faRotateRight,
+  faPlaneDeparture, faPlaneArrival, // Plane icons for slower and faster
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faCircleDown as farCircleDown } from '@fortawesome/free-regular-svg-icons'
@@ -29,6 +33,7 @@ library.add(
   faFilePdf, 
   faQrcode, 
   faMusic, 
+  faPlay,
   faPause, 
   faLanguage,
   faExpand,
@@ -46,6 +51,8 @@ library.add(
   faTimes,
   faHome,  
 faBars,
+faRotateLeft, faRotateRight, 
+faPlaneDeparture, faPlaneArrival, // Plane icons for slower and faster
 )
 
 export { FontAwesomeIcon }

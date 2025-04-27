@@ -32,13 +32,24 @@
       <audio ref="audioElement" :src="audioSrc" preload="auto"></audio>
     </div>
     <div class="controls mt-2 flex justify-center space-x-2">
-      <button @click="togglePlay" class="btn btn-primary btn-sm">
-        {{ isPlaying ? 'Pause' : 'Play' }}
-      </button>
-      <button @click="seekBackward" class="btn btn-primary btn-sm">-5s</button>
-      <button @click="seekForward" class="btn btn-primary btn-sm">+5s</button>
-      <button @click="decreaseSpeed" class="btn btn-primary btn-sm">Slower</button>
-      <button @click="increaseSpeed" class="btn btn-primary btn-sm">Faster</button>
+      <button @click="togglePlay" class="btn btn-primary btn-sm play-button" :aria-label="isPlaying ? 'Pause' : 'Play'" :title="isPlaying ? 'Pause' : 'Play'">
+    <font-awesome-icon :icon="isPlaying ? 'pause' : 'play'" class="play-icon" />
+  </button>
+
+      <button @click="seekBackward" class="btn btn-primary btn-sm seek-button" aria-label="Rewind 5 seconds">
+    <font-awesome-icon icon="rotate-left" class="rotate-icon" />
+    <span class="seek-number">5</span>
+  </button>
+  <button @click="seekForward" class="btn btn-primary btn-sm seek-button" aria-label="Forward 5 seconds">
+    <font-awesome-icon icon="rotate-right" class="rotate-icon" />
+    <span class="seek-number">5</span>
+  </button>
+  <button @click="decreaseSpeed" class="btn btn-primary btn-sm speed-button" aria-label="Decrease playback speed" title="Slower">
+    <font-awesome-icon :icon="['fas', 'plane-arrival']" class="speed-icon" />
+  </button>
+  <button @click="increaseSpeed" class="btn btn-primary btn-sm speed-button" aria-label="Increase playback speed" title="Faster">
+    <font-awesome-icon :icon="['fas', 'plane-departure']" class="speed-icon" />
+  </button>
     </div>
   </div>
 </template>
@@ -47,6 +58,7 @@
 import { ref, onMounted, watch, computed, onBeforeUnmount } from 'vue';
 import YouTube from 'vue3-youtube';
 import { Howl } from 'howler';
+
 
 export type PlayerType = 'youtube' | 'audio' | 'googledrive' | 'soundcloud'
 
@@ -489,4 +501,66 @@ onBeforeUnmount(() => {
     height: 100%;
   }
 }
+
+.seek-button, .speed-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; /* Adjust size as needed */
+  height: 40px; /* Adjust size as needed */
+  border-radius: 50%; /* Makes the button circular */
+  padding: 0; /* Remove default padding */
+  background-color: #2563eb; /* Match your button's primary color */
+  border: none; /* Remove default border */
+  cursor: pointer;
+}
+
+.rotate-icon, .speed-icon {
+  font-size: 1.5rem; /* Adjust size as needed */
+  color: white; /* Icon color */
+  position: absolute; /* Position the icon */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Perfect centering */
+}
+
+.seek-number {
+  position: absolute;
+  font-size: 0.8rem; /* Adjust size as needed */
+  font-weight: bold;
+  color: white; /* Number color */
+  top: 50%; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%, -50%); /* Perfect centering */
+}
+
+.seek-button:active, .speed-button:active {
+  transform: scale(0.95); /* Slightly shrink on click */
+}
+
+.play-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; /* Adjust size as needed */
+  height: 40px; /* Adjust size as needed */
+  border-radius: 50%; /* Makes the button circular */
+  padding: 0; /* Remove default padding */
+  background-color: #2563eb; /* Match your button's primary color */
+  border: none; /* Remove default border */
+  cursor: pointer;
+}
+
+.play-button:active {
+  transform: scale(0.95); /* Slightly shrink on click */
+}
+
+.play-icon {
+  font-size: 1.5rem; /* Adjust size as needed */
+  color: white; /* Icon color */
+}
+
+
 </style>

@@ -1,6 +1,6 @@
 {
   "name": "ilahi-app",
-  "version": "7.0.5",
+  "version": "7.0.6",
   "private": true,
   "scripts": {
     "increment-version": "node incrementVersion.mjs",
@@ -18,7 +18,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
-    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "@pdf-lib/fontkit": "^1.1.1",
     "@types/cors": "^2.8.17",
