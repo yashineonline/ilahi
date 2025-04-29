@@ -74,16 +74,16 @@
             
             <!-- <div class="relative justify-self-center"> -->
               <div class="relative" justify-self: center>
-            <router-link 
-            to="/songs" 
+                <button 
                 class="btn btn-primary transform hover:scale-105 transition-transform duration-200 flex items-center gap-2 justify-center"
                 @mouseenter="showTooltip = true"
                 @mouseleave="showTooltip = false"
+                @click="handleSongListClick"
                 @touchstart.prevent="onTooltipTouch('songList')"
           >
             <font-awesome-icon icon="music" />
             ilahi List
-          </router-link>
+          </button>
 
               <div 
                 v-if="showTooltip" 
@@ -91,7 +91,7 @@
                 :class="{'bg-gray-700 text-white': themeStore.theme === 'dark'}"
                 style="height: auto; min-height: 80px;"
               >
-                <span v-if="!isSongListView" class="text-lg font-medium">Tap to browse ilahis</span>
+                <span v-if="!isSongListView" class="text-lg font-medium">Tap me again to browse ilahis</span>
                 <span v-else class="text-lg font-medium">Scroll down to see ilahis</span>
                 <div class="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45 bg-base-200"
                    :class="{'bg-gray-700': themeStore.theme === 'dark'}"></div>
@@ -115,7 +115,7 @@
                   :class="{'bg-gray-700 text-white': themeStore.theme === 'dark'}"
                   style="height: auto; min-height: 80px;"
                 >
-                  <span class="text-lg font-medium">Play ilahis</span>
+                  <span class="text-lg font-medium">Tap me again to play ilahis</span>
                   <div class="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45 bg-base-200"
                     :class="{'bg-gray-700': themeStore.theme === 'dark'}"></div>
                 </div>
@@ -138,10 +138,12 @@
                   :class="{'bg-gray-700 text-white': themeStore.theme === 'dark'}"
                 >
                   <div class="flex flex-col items-center">
-                    <span class="text-xl font-bold animate-pulse-text">Join</span>
-                    <span class="text-xl font-bold animate-pulse-text animation-delay-100">Our</span>
+                    <span class="text-xl font-bold animate-pulse-text">Tap me</span>
+                    <span class="text-xl font-bold animate-pulse-text">again to</span>
+                    <span class="text-xl font-bold animate-pulse-text">join</span>
+                    <span class="text-xl font-bold animate-pulse-text animation-delay-100">our</span>
                     <span class="text-xl font-bold animate-pulse-text animation-delay-200">ilahi</span>
-                    <span class="text-xl font-bold animate-pulse-text animation-delay-300">Community</span>
+                    <span class="text-xl font-bold animate-pulse-text animation-delay-300">community</span>
                   </div>
                   <div class="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45 bg-base-200"
                     :class="{'bg-gray-700': themeStore.theme === 'dark'}"></div>
@@ -155,7 +157,7 @@
                 </div>
               </div>
               
-              <div class="relative" style="margin-right: -10px; padding: 1px;">
+              <div class="relative" style="margin-right: -10px; padding: 1px;" v-if="!isAppInstalled">
                 <button 
                 class="btn btn-ghost btn-circle" 
                 @mouseenter="showInstallTooltip = true"
@@ -171,11 +173,11 @@
                   :class="{'bg-gray-700 text-white': themeStore.theme === 'dark'}"
                   style="height: auto; min-height: 40px;"
                 >
-                  <span class="text-lg font-medium">Install the ilahi app</span>
+                  <span class="text-lg font-medium">Tap me again to install the ilahi app</span>
                   <div class="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45 bg-base-200"
                     :class="{'bg-gray-700': themeStore.theme === 'dark'}"></div>
                 </div>
-                <Installation ref="installationComponent" />
+                <Installation ref="installationComponent" @app-installed="isAppInstalled = true" />
               </div>
             </div>
       </div>
@@ -214,6 +216,7 @@ const songStore = useSongStore()
 const route = useRoute()
 const router = useRouter()
 const installationComponent = ref<InstanceType<typeof Installation> | null>(null)
+const isAppInstalled = ref(false)
 
 
 const isSongListView = computed(() => route.path === '/songs')
@@ -224,6 +227,18 @@ const showWhatsappTooltip = ref(false)
 const showFloatingNav = ref(false)
 const menuOpen = ref(false)
 const touchedButton = ref<null | string>(null)
+
+// Add this new function to handle the song list click
+const handleSongListClick = () => {
+  if (touchedButton.value === 'songList') {
+    // This is the second tap, navigate to songs
+    router.push('/songs')
+    touchedButton.value = null
+  } else {
+    // First tap already handled by onTooltipTouch
+  }
+}
+
 
 // Toggle menu
 const toggleMenu = (event?: Event) => {
@@ -253,9 +268,7 @@ const onTooltipTouch = (button: string) => {
   showWhatsappTooltip.value = false
   
   // If this is second tap on same button, perform action
-  if (touchedButton.value === button) {
-    touchedButton.value = null
-    
+  if (touchedButton.value === button) {   
     // Perform button action
     if (button === 'youtube') {
       handleIconClick('youtube')
@@ -266,8 +279,9 @@ const onTooltipTouch = (button: string) => {
         installationComponent.value.showInstallInstructions()
       }
     } else if (button === 'songList') {
-      // Router link handles navigation itself
+      router.push('/songs')
     }
+    touchedButton.value = null
     return
   }
   
@@ -301,6 +315,11 @@ onMounted(() => {
   window.addEventListener('touchstart', handleTouchStart)
   window.addEventListener('scroll', handleScroll)
   
+// Check if app is installed
+isAppInstalled.value = window.matchMedia('(display-mode: standalone)').matches || 
+                         (window.navigator as any).standalone === true
+  
+
   // Click outside to close menu
   const handleClickOutside = (event: MouseEvent) => {
     const target = event.target as Element

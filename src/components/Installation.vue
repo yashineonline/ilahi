@@ -38,6 +38,9 @@ const showInstructions = ref(false);
 const isIOS = ref(false);
 const isAndroid = ref(false);
 const isAppInstalled = ref(false);
+const emit = defineEmits(['app-installed'])
+
+
 
 const installInstructions = {
   ios: {
@@ -74,10 +77,8 @@ const promptInstall = () => {
     deferredPrompt.value.prompt();
     deferredPrompt.value.userChoice.then((choiceResult: { outcome: string }) => {
       if (choiceResult.outcome === 'accepted') {
-        // console.log('User accepted the install prompt');
-      } else {
-        // console.log('User dismissed the install prompt');
-      }
+        isAppInstalled.value = true
+      } 
       deferredPrompt.value = null;
     });
   }
@@ -100,6 +101,7 @@ const closeInstructions = () => {
 const checkIfInstalled = () => {
   if (window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone === true) {
     isAppInstalled.value = true;
+    emit('app-installed')
   }
 };
 
