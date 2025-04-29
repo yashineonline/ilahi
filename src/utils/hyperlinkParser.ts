@@ -25,7 +25,8 @@ export const parseHyperlinks = (text: string): string => {
     const url = `/player/${encodeURIComponent(slug)}`; // Updated URL structure
     const song = songStore.songs.find(s => s.slug === slug);
     const displayText = song ? song.title : slug;
-    return `<a href="${url}" class="hyperlink flex items-center gap-2" data-url="${url}" data-slug="${slug}" aria-label="Navigate to ${displayText}" tabindex="0"><span class="text-primary"><font-awesome-icon icon="music" /></span>${displayText}</a>`;
+    return `<a href="${url}" class="hyperlink music-link font-bold" data-url="${url}" data-slug="${slug}" aria-label="Navigate to ${displayText}" tabindex="0">${displayText}</a>`;
+     
   });
   return result;
 };

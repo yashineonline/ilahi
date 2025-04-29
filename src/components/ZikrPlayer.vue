@@ -75,7 +75,7 @@
                     v-for="(line, lineIndex) in stanzaLines"
                     :key="lineIndex"
                     class="text-lg leading-relaxed"
-                    v-html="parseHyperlinksWithIcon(line)"  
+                    v-html="parseHyperlinks(line)"  
                     >
                     
               </div>
@@ -147,15 +147,15 @@ const togglePlayer = async (index: number) => {
   }
 };
 
-const parseHyperlinksWithIcon = (text: string) => {
-  console.log('text:', text);  
-  const parsedText = parseHyperlinks(text);
-  console.log('parsedText:', parsedText);  
-  return parsedText.replace(
-    /<a\s+href="([^"]+)"/g, 
-    '<a href="$1" class="inline-flex items-center gap-2"><font-awesome-icon icon="music" class="text-primary" />'
-  );
-};
+// const parseHyperlinksWithIcon = (text: string) => {
+//   console.log('text:', text);  
+//   const parsedText = parseHyperlinks(text);
+//   console.log('parsedText:', parsedText);  
+//   return parsedText.replace(
+//     /<a\s+href="([^"]+)"/g, 
+//     '<a href="$1" class="inline-flex items-center gap-2"><font-awesome-icon icon="music" class="text-primary" />'
+//   );
+// };
 
 // Add this to ensure pages start at the top
 onMounted(async () => {
@@ -183,6 +183,10 @@ onMounted(async () => {
 </script>
 
 <style>
+.music-link::before {
+  content: "🎵 ";
+  color: var(--primary-color);
+}
 /* Add transitions for a smoother experience */
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.3s;

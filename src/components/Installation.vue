@@ -1,16 +1,16 @@
 <template>
   <div>
-    
+    <div v-if="!isAppInstalled" 
+    class="cursor-pointer w-full h-full" 
+    @click="showInstallInstructions"
+    style="touch-action: manipulation;"
+    >
+</div>
   
-  <div v-if="!isAppInstalled" class="cursor-pointer" @click="showInstallInstructions">
-    <font-awesome-icon :icon="['far', 'circle-down']" shake style="color: #B197FC;" class="mr-2" size="lg" />
-    <!-- <span class="text-sm font-medium">Install App</span> -->
-  </div>
-  <div v-if="showInstructions" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @click="closeInstructions">
-    <div class="p-6 rounded-lg shadow-xl max-w-sm w-full m-4 relative" @click.stop>
-      <button @click="closeInstructions" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
-        <font-awesome-icon :icon="['fas', 'times']" />
-      </button>
+<div v-if="showInstructions" class="fixed inset-0 bg-base-300 bg-opacity-50 flex items-center justify-center z-[200]" @click="closeInstructions">
+
+    <div class="p-6 rounded-lg shadow-xl max-w-sm w-full m-4 relative bg-base-100 text-base-content" @click.stop>
+      <button @click="closeInstructions" class="btn btn-sm btn-circle absolute top-2 right-2" aria-label="Close">✕</button>
       <h2 class="text-2xl font-bold mb-4">{{ getCurrentInstructions.title }}</h2>
       <div v-if="isIOS || isAndroid">
         <p class="mb-4">To install this app on your device:</p>
@@ -20,10 +20,11 @@
       </div>
       <div v-else>
         <p class="mb-4">{{ installInstructions.default.description }}</p>
-        <button @click="promptInstall" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <button @click="promptInstall" class="btn btn-primary font-bold py-2 px-4 rounded">
           Install App
         </button>
       </div>
+      <button @click="closeInstructions" class="btn btn-outline w-full mt-4">Close</button>
     </div>
   </div>
   </div>
@@ -31,9 +32,6 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-
-
-
 
 const deferredPrompt = ref<any>(null);
 const showInstructions = ref(false);
@@ -90,7 +88,8 @@ const handleBeforeInstallPrompt = (e: Event) => {
   deferredPrompt.value = e;
 };
 
-const showInstallInstructions = () => {
+const showInstallInstructions = (event?: Event) => {
+  if (event) event.stopPropagation();
   showInstructions.value = true;
 };
 
@@ -123,4 +122,6 @@ const getCurrentInstructions = computed(() => {
   if (isAndroid.value) return installInstructions.android;
   return { ...installInstructions.default, steps: [] };
 });
+
+defineExpose({ showInstallInstructions });
 </script>

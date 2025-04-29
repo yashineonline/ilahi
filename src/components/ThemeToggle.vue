@@ -1,7 +1,7 @@
 <template>
     <div>
     <button @click="toggleTheme" 
-    class="p-2 rounded-full hover:bg-opacity-20 hover:bg-gray-500 transition-colors"
+    class="p-0 mt-12  rounded-full hover:bg-opacity-20 hover:bg-gray-500 transition-colors"
     >
     {{ isDark ? '🌙' : '☀️' }}
     </button>
