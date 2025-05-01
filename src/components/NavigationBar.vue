@@ -1,14 +1,17 @@
 <template>
   <nav class="navbar shadow-lg flex-col w-full bg-base-100 text-base-content" aria-label="Main navigation">
-    <div class="w-full px-4 flex flex-col items-center">
-      <!-- Floating navigation tab that appears on hover -->
-      <div 
-        class="fixed top-16 left-0 transition-all duration-300 z-50"
-        :class="showFloatingNav ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'"
-        @mouseenter="showFloatingNav = true"
-        @mouseleave="showFloatingNav = false"
-      >
-        <div class="bg-base-200 rounded-r-lg shadow-lg px-4 py-2 flex flex-col items-start gap-4">
+<!-- Add this after your nav opening tag -->
+<div 
+  v-if="!isHomePage"
+  class="fixed top-16 left-0 transition-all duration-300 z-50"
+  :class="{
+  'translate-x-0 opacity-100': showFloatingNav || isDesktop,
+  '-translate-x-full opacity-0': !showFloatingNav && !isDesktop
+}"
+  @mouseenter="showFloatingNav = true"
+  @mouseleave="handleFloatingNavLeave"
+>
+  <div class="bg-base-200 rounded-r-lg shadow-lg px-4 py-2 flex flex-col items-start gap-4">
           <button 
               @click="goBack" 
               class="btn btn-ghost btn-circle"
@@ -17,37 +20,19 @@
               <font-awesome-icon icon="arrow-left" class="text-xl" />
             </button>
 
-          <div class="dropdown dropdown-open-on-click">
-              <label 
-                tabindex="0" 
+    <button 
+      @click.stop="toggleMenu" 
                 class="btn btn-ghost btn-circle"
                 aria-label="Open menu"
-              @click.stop="toggleMenu"
               >
                 <font-awesome-icon icon="bars" class="text-xl" />
-              </label>
-
-              <ul 
-              v-if="menuOpen"
-              tabindex="0" 
-              class="dropdown-content z-[1] menu p-2 shadow rounded-box w-52 bg-base-100 text-base-content ml-10" 
-              :class="{
-                'bg-gray-800/90 text-white': themeStore.theme === 'dark', 
-                'bg-white/90 text-gray-800': themeStore.theme === 'light'
-                }"
-              @click.stop
-                >
-        <li><router-link to="/zikr-practice" class="btn btn-ghost btn-sm">Zikr Practice</router-link></li>
-        <li><router-link to="/wirds" class="btn btn-ghost btn-sm">Wird Slide</router-link></li>
-        <li><router-link to="/book" class="btn btn-ghost btn-sm">Download ilahi Book</router-link></li>
-        <li><router-link to="/about" class="btn btn-ghost btn-sm">About ilahi</router-link></li>
-              <li><button @click="handleIlahiClassesClick" class="btn btn-ghost btn-sm w-full text-left">Join ilahi Community</button></li>
-        <li><router-link to="/history" class="btn btn-ghost btn-sm">History</router-link></li>
-        <li><router-link to="/poems" class="btn btn-ghost btn-sm">Poems</router-link></li>
-        <li><router-link to="/books" class="btn btn-ghost btn-sm">Other ilahi Books</router-link></li>
-        <li><router-link to="/miscellaneous" class="btn btn-ghost btn-sm">Miscellaneous</router-link></li>
-      </ul>
-    </div>
+    </button>
+    <div v-if="menuOpen" class="relative">
+    <MenuItems 
+      class="absolute top-2 left-16 z-[100]" 
+      @ilahi-classes-click="handleIlahiClassesClick" 
+    />
+  </div>
 
             <router-link 
               to="/" 
@@ -57,29 +42,43 @@
               <font-awesome-icon icon="home" class="text-xl" />
             </router-link>
           </div>
-      </div>
+</div>
+
+<div v-if="isHomePage" class="fixed top-16 left-4 z-50">
+  <div class="flex flex-row gap-2">
+    <button @click="goBack" class="btn btn-ghost btn-circle" aria-label="Go back">
+      <font-awesome-icon icon="arrow-left" class="text-xl" />
+    </button>
+    <button @click.stop="toggleMenu" class="btn btn-ghost btn-circle" aria-label="Open menu">
+      <font-awesome-icon icon="bars" class="text-xl" />
+    </button>
+  </div>
+  
+  <div v-if="menuOpen" class="relative">
+    <MenuItems 
+      class="absolute top-2 left-0 z-[100]" 
+      @ilahi-classes-click="handleIlahiClassesClick" 
+    />
+  </div>
+</div>
+
+
       
-      <!-- Hover trigger at the top of the screen -->
-      <div 
-        class="fixed top-0 left-0 w-20 h-full z-40"
-        @mouseenter="showFloatingNav = true"
-      ></div>
       
-      <ul class="flex flex-col w-full mb-4 list-none p-0">
-        <li class="flex justify-center items-center gap-2 w-full">
           <!-- Main content area with centered ilahi List button and right-aligned icons -->
         <!--           <div class="w-full grid grid-cols-3 items-center"> -->
+        
           <div class="w-full grid items-center" style="grid-template-columns: 1fr auto 1fr;">
             <div></div> <!-- Empty left column for spacing -->
             
-            <!-- <div class="relative justify-self-center"> -->
+            
               <div class="relative" justify-self: center>
                 <button 
                 class="btn btn-primary transform hover:scale-105 transition-transform duration-200 flex items-center gap-2 justify-center"
                 @mouseenter="showTooltip = true"
                 @mouseleave="showTooltip = false"
-                @click="handleSongListClick"
                 @touchstart.prevent="onTooltipTouch('songList')"
+                @click="handleSongListClick"
           >
             <font-awesome-icon icon="music" />
             ilahi List
@@ -96,7 +95,7 @@
                 <div class="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45 bg-base-200"
                    :class="{'bg-gray-700': themeStore.theme === 'dark'}"></div>
               </div>
-            </div>
+      </div>
             
             <div style="display: flex; gap: 0;" class="justify-self-end" v-if="isHomePage"> 
               <div class="relative" style="margin-right: -10px; padding: 1px;">
@@ -105,6 +104,8 @@
                   @mouseenter="showYoutubeTooltip = true"
                   @mouseleave="showYoutubeTooltip = false"
                   @touchstart.prevent="onTooltipTouch('youtube')"
+                  @click="handleIconClick('youtube')" 
+
                 >
                   <font-awesome-icon :icon="['fab', 'youtube']" style="color: #ff3d3d;" size="lg" aria-hidden="true" />
                 </button>
@@ -166,7 +167,7 @@
                   @touchstart.prevent="onTooltipTouch('install')"
                 >
                 <font-awesome-icon :icon="['far', 'circle-down']" shake class="text-primary" size="lg" />
-              </button>
+        </button>
                 <div 
                   v-if="showInstallTooltip" 
                   class="fixed-tooltip p-4 bg-base-200 rounded-lg shadow-lg text-base-content w-64 mt-2 tooltip-bounce"
@@ -181,8 +182,7 @@
               </div>
             </div>
       </div>
-        </li>    
-      </ul>         
+   
 
       <IlahiClasses ref="ilahiClasses" />
 
@@ -198,19 +198,22 @@
           </button>
         </div>
       </div>
-    </div>
+    
   </nav>
 </template>
 
 <script setup lang="ts">
 import { useThemeStore } from '../stores/themeStore'
 import { useSongStore } from '../stores/songStore'
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Installation from './Installation.vue'
 import IlahiClasses from './IlahiClasses.vue' // Import the IlahiClasses component
+import MenuItems from './MenuItems.vue'
 
+declare const window: Window & typeof globalThis
 
+const isDesktop = computed(() => window.innerWidth >= 768);
 const themeStore = useThemeStore()
 const songStore = useSongStore()
 const route = useRoute()
@@ -228,16 +231,47 @@ const showFloatingNav = ref(false)
 const menuOpen = ref(false)
 const touchedButton = ref<null | string>(null)
 
+
+const handleFloatingNavLeave = () => {
+  // Only hide the floating nav if the menu is closed and on mobile
+  if (!menuOpen.value && isDesktop.value) {
+    showFloatingNav.value = false
+  }
+}
+
+watch(menuOpen, (newVal) => {
+  if (!newVal && isDesktop.value) {
+    showFloatingNav.value = false
+  }
+})
+
 // Add this new function to handle the song list click
 const handleSongListClick = () => {
-  if (touchedButton.value === 'songList') {
+  // For desktop: navigate immediately
+  if (isDesktop.value) { // 768px is a common breakpoint for desktop
+    showTooltip.value = true
+    setTimeout(() => {
+      showTooltip.value = false
+    }, 2000) // Close tooltip after 2 seconds
+    router.push('/songs')
+    return
+  }
+  // For mobile: check if this is the second tap
+    if (touchedButton.value === 'songList') {
     // This is the second tap, navigate to songs
     router.push('/songs')
     touchedButton.value = null
-  } else {
-    // First tap already handled by onTooltipTouch
-  }
+  }  // For desktop: navigate immediately
 }
+
+// Add this to close the tooltip after 2 seconds
+watch(showTooltip, (newVal) => {
+  if (newVal && window.innerWidth >= 768) {
+    setTimeout(() => {
+      showTooltip.value = false
+    }, 2000)
+  }
+})
 
 
 // Toggle menu
