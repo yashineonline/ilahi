@@ -31,6 +31,8 @@
     <MenuItems 
       class="absolute top-2 left-16 z-[100]" 
       @ilahi-classes-click="handleIlahiClassesClick" 
+      @menu-item-click="menuOpen = false"
+
     />
   </div>
 
@@ -58,6 +60,8 @@
     <MenuItems 
       class="absolute top-2 left-0 z-[100]" 
       @ilahi-classes-click="handleIlahiClassesClick" 
+      @menu-item-click="menuOpen = false"
+
     />
   </div>
 </div>
@@ -433,9 +437,11 @@ const handlePopupAction = () => {
 const handleFloatingNavOpen = () => {
   showFloatingNav.value = true;
   // On mobile, auto-hide after 2 seconds
-  if (!isDesktop.value) {
+  if (!isDesktop.value && !menuOpen.value) {
     setTimeout(() => {
+      if (!menuOpen.value) {
       showFloatingNav.value = false;
+      }
     }, 2000);
   }
 }
