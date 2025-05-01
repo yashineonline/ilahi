@@ -8,7 +8,7 @@
   'translate-x-0 opacity-100': showFloatingNav || isDesktop,
   '-translate-x-full opacity-0': !showFloatingNav && !isDesktop
 }"
-  @mouseenter="showFloatingNav = true"
+  @mouseenter="handleFloatingNavOpen"
   @mouseleave="handleFloatingNavLeave"
 >
   <div class="bg-base-200 rounded-r-lg shadow-lg px-4 py-2 flex flex-col items-start gap-4">
@@ -77,7 +77,6 @@
                 class="btn btn-primary transform hover:scale-105 transition-transform duration-200 flex items-center gap-2 justify-center"
                 @mouseenter="showTooltip = true"
                 @mouseleave="showTooltip = false"
-                @touchstart.prevent="onTooltipTouch('songList')"
                 @click="handleSongListClick"
           >
             <font-awesome-icon icon="music" />
@@ -231,6 +230,9 @@ const showFloatingNav = ref(false)
 const menuOpen = ref(false)
 const touchedButton = ref<null | string>(null)
 
+// Add computed property to check if we're on the Home page
+const isHomePage = computed(() => route.path === '/')
+
 
 const handleFloatingNavLeave = () => {
   // Only hide the floating nav if the menu is closed and on mobile
@@ -247,22 +249,16 @@ watch(menuOpen, (newVal) => {
 
 // Add this new function to handle the song list click
 const handleSongListClick = () => {
-  // For desktop: navigate immediately
+  // Navigate immediately for both desktop and mobile
+  router.push('/songs');
+
   if (isDesktop.value) { // 768px is a common breakpoint for desktop
     showTooltip.value = true
     setTimeout(() => {
       showTooltip.value = false
     }, 2000) // Close tooltip after 2 seconds
-    router.push('/songs')
-    return
-  }
-  // For mobile: check if this is the second tap
-    if (touchedButton.value === 'songList') {
-    // This is the second tap, navigate to songs
-    router.push('/songs')
-    touchedButton.value = null
-  }  // For desktop: navigate immediately
-}
+    }
+};
 
 // Add this to close the tooltip after 2 seconds
 watch(showTooltip, (newVal) => {
@@ -283,7 +279,7 @@ const toggleMenu = (event?: Event) => {
 // Handle touch events for mobile devices
 const handleTouchStart = () => {
   if (window.scrollY < 20) {
-    showFloatingNav.value = true
+    handleFloatingNavOpen();
   }
 }
 
@@ -386,8 +382,6 @@ const goBack = () => {
 
 const ilahiClasses = ref<InstanceType<typeof IlahiClasses> | null>(null)
 
-// Add computed property to check if we're on the Home page
-const isHomePage = computed(() => route.path === '/')
 
 const handleIlahiClassesClick = () => {
   if (ilahiClasses.value) {
@@ -434,6 +428,16 @@ const closePopup = () => {
 const handlePopupAction = () => {
   popupContent.value.action()
   closePopup()
+}
+
+const handleFloatingNavOpen = () => {
+  showFloatingNav.value = true;
+  // On mobile, auto-hide after 2 seconds
+  if (!isDesktop.value) {
+    setTimeout(() => {
+      showFloatingNav.value = false;
+    }, 2000);
+  }
 }
 
 // Expose the ilahiClasses ref

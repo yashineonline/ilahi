@@ -19,6 +19,7 @@ import {
   faBars,
   faRotateLeft, faRotateRight,
   faPlaneDeparture, faPlaneArrival, // Plane icons for slower and faster
+  faPlus,faMinus
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faCircleDown as farCircleDown } from '@fortawesome/free-regular-svg-icons'
@@ -53,6 +54,7 @@ library.add(
 faBars,
 faRotateLeft, faRotateRight, 
 faPlaneDeparture, faPlaneArrival, // Plane icons for slower and faster
+faPlus,faMinus,
 )
 
 export { FontAwesomeIcon }

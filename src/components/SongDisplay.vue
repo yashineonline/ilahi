@@ -7,6 +7,10 @@
         :lyrics="currentSong.lyrics"
         @shown="scrollToPronunciation"
       />
+
+      <button @click="slideMode = !slideMode" class="btn btn-primary btn-sm">
+     {{ slideMode ? 'show full ilahi' : 'Slide Mode' }}
+   </button>
       <button v-if="hasAudioLinks" class="btn btn-primary btn-sm" @click="toggleMusicPlayer">
         <font-awesome-icon :icon="['fas', hideMusicPlayer ? 'music' : 'pause']" class="mr-2" />
         {{ hideMusicPlayer ? 'Show' : 'Hide' }} Music
@@ -22,9 +26,6 @@
         <font-awesome-icon :icon="['fas', 'language']" class="mr-2" />
         {{ showTranslationFlag ? 'Hide' : 'Show' }} Translation
       </button>
-      <Modal v-if="showNoTranslationModal" @close="showNoTranslationModal = false">
-    <p>Translation of this ilahi will be available in future insha Allah.</p>
-  </Modal>
       <div class="flex items-center gap-2">
         <span class="text-sm">Smaller</span>
         <input 
@@ -47,7 +48,62 @@
           @player-ready="onPlayerReady"
         />
       </div>
-      <div class="mb-6" v-html="renderedSong"></div>
+
+      <div v-if="slideMode" class="fixed inset-0 z-50 bg-base-100 text-base-content flex flex-col items-center justify-center">
+        <div class="fixed top-4 right-4 z-50">
+          <ThemeToggle />
+        </div>
+        <div class="flex flex-col items-center w-full max-w-2xl mx-auto">
+          <div class="flex justify-between items-center w-full mb-4">
+            <button @click="slideMode = false" class="btn btn-circle btn-ghost" aria-label="Back">
+              <font-awesome-icon :icon="['fas', 'arrow-left']" />
+            </button>
+            <h1 class="text-3xl font-bold text-center flex-1">{{ currentSong?.title }}</h1>
+            <div style="width:40px;"></div>
+          </div>
+          <div class="flex flex-col sm:flex-row justify-between items-center w-full mb-4 gap-4">
+            <div class="flex items-center gap-0">
+              <button @click="decreaseStanzaCount" :disabled="slideCount <= 1" class="btn btn-circle btn-primary text-lg">
+                <font-awesome-icon :icon="['fas', 'minus']" />
+              </button>
+              <span class="text-xl font-bold w-10 text-center select-none">{{ slideCount }}</span>
+              <button @click="increaseStanzaCount" :disabled="slideCount >= slides.length" class="btn btn-circle btn-primary text-lg">
+                <font-awesome-icon :icon="['fas', 'plus']" />
+              </button>
+            <span class="mx-4"></span>
+              <button @click="decreaseFontSize" :disabled="fontSize <= 12" class="btn btn-circle btn-secondary text-lg">
+                <font-awesome-icon :icon="['fas', 'minus']" />
+              </button>
+              <span class="text-xl font-bold w-10 text-center select-none">{{ fontSize }}</span>
+              <button @click="increaseFontSize" :disabled="fontSize >= 132" class="btn btn-circle btn-secondary text-lg">
+                <font-awesome-icon :icon="['fas', 'plus']" />
+              </button>
+            </div>
+            <button @click="toggleFullIlahi" class="btn btn-accent btn-sm text-lg">
+              {{ showingFullIlahi ? 'By stanza' : 'Full ilahi' }}
+            </button>
+
+          </div>
+          <transition name="slide" mode="out-in">
+            <div :key="currentSlideIndex + '-' + slideCount" class="w-full p-4 overflow-y-auto" :style="{ fontSize: fontSize + 'px', maxHeight: '70vh' }">
+              <template v-for="(stanza, idx) in slidesToShow" :key="currentSlideIndex + idx">
+                <div v-html="stanza"></div>
+                <hr v-if="idx < slidesToShow.length - 1" class="my-2 border-t border-base-300" />
+              </template>
+            </div>
+          </transition>
+          <div class="flex justify-center gap-4 mt-4">
+            <button @click="prevSlide" :disabled="currentSlideIndex === 0 || showingFullIlahi" class="btn btn-secondary">
+              Previous
+            </button>
+            <button @click="nextSlide" :disabled="currentSlideIndex + slideCount >= slides.length || showingFullIlahi" class="btn btn-secondary">
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+      <div v-else class="mb-6" v-html="renderedSong"></div>
+
       <div v-if="!hideMusicPlayer && currentSong.mainLinks && currentSong.mainLinks.length > 1" class="mt-4">
         <h2 class="text-2xl font-semibold mb-2">More Versions</h2>
         <div v-for="(link, index) in currentSong.mainLinks.slice(1)" :key="index" class="mb-2">
@@ -112,6 +168,7 @@ import { faFilePdf, faQrcode, faMusic, faPause, faLanguage } from '@fortawesome/
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import type { PlayerType } from './AudioPlayer.vue' // Assuming you've exported this type from AudioPlayer.vue
 import PronunciationGuide from './PronunciationGuide.vue'
+import ThemeToggle from './ThemeToggle.vue'
 // import { parseHyperlinks } from '@/utils/hyperlinkParser.ts';
 // import { useHyperlinkNavigation } from '@/composables/useHyperlinkNavigation';
 
@@ -143,7 +200,7 @@ const hideMusicPlayer = ref(true)
 // const player = ref(null)
 const isPlaying = ref(false)
 const showQRCodeFlag = ref(false)
-const showNoTranslationModal = ref(false)
+// const showNoTranslationModal = ref(false)
 // const { navigateToContent } = useHyperlinkNavigation();
 
 const currentSong = computed(() => {
@@ -167,9 +224,7 @@ const renderedSong = computed(() => {
 const showTranslation = () => {
   if (currentSong.value?.translation && currentSong.value.translation.length > 0) {
     showTranslationFlag.value = !showTranslationFlag.value;
-  } else {
-    showNoTranslationModal.value = true;
-  }
+  } 
 }
 
 const generatePDF = async () => {
@@ -326,30 +381,6 @@ onMounted(async () => {
   }
 })
 
-// onMounted(() => {
-//   document.addEventListener('click', (e) => {
-//     const target = e.target as HTMLElement;
-//     if (target.classList.contains('hyperlink')) {
-//       e.preventDefault();
-//       const slug = target.getAttribute('data-slug');
-//       if (slug) {
-//         navigateToContent(slug);
-//       }
-//     }
-//   });
-// });
-
-// const renderedLyrics = computed(() => {
-//   return currentSong.value.lyrics.map(stanza => 
-//     stanza.map(line => parseHyperlinks(line)).join('<br>')
-//   ).join('<br><br>');
-// });
-
-// const renderedLyrics = computed(() => {
-//   return currentSong.value.lyrics.map(stanza =>
-//     stanza.map(line => parseHyperlinks(line)).join('<br>')
-//   ).join('<br><br>');
-// });
 
 
 const updateFontSize = (event: Event) => {
@@ -379,23 +410,63 @@ const scrollToPronunciation = () => {
 
 onMounted(scrollToHistory);
 watch(() => route.hash, scrollToHistory);
+
+// Slide mode state
+const slideMode = ref(false);
+const currentSlideIndex = ref(0);
+const slideCount = ref(1);
+const previousSlideCount = ref(1);
+const showingFullIlahi = computed(() => slideCount.value === slides.value.length);
+
+const slides = computed(() => {
+  if (!currentSong.value) return [];
+  return currentSong.value.lyrics.map(stanza => stanza.join('<br>'));
+});
+
+const slidesToShow = computed(() => {
+  return slides.value.slice(currentSlideIndex.value, currentSlideIndex.value + slideCount.value);
+});
+
+function prevSlide() {
+  currentSlideIndex.value = Math.max(0, currentSlideIndex.value - slideCount.value);
+}
+function nextSlide() {
+  currentSlideIndex.value = Math.min(slides.value.length - slideCount.value, currentSlideIndex.value + slideCount.value);
+}
+function toggleFullIlahi() {
+  if (!showingFullIlahi.value) {
+    previousSlideCount.value = slideCount.value;
+    slideCount.value = slides.value.length;
+    currentSlideIndex.value = 0;
+  } else {
+    slideCount.value = previousSlideCount.value || 1;
+    currentSlideIndex.value = 0;
+  }
+}
+
+// Reset index and slideCount when toggling slide mode or changing song
+watch([slideMode, currentSong], () => {
+  currentSlideIndex.value = 0;
+  slideCount.value = 1;
+  previousSlideCount.value = 1;
+});
+
+function increaseStanzaCount() {
+  if (slideCount.value < slides.value.length) slideCount.value++;
+}
+function decreaseStanzaCount() {
+  if (slideCount.value > 1) slideCount.value--;
+}
+function increaseFontSize() {
+  if (fontSize.value < 132) fontSize.value += 2;
+}
+function decreaseFontSize() {
+  if (fontSize.value > 12) fontSize.value -= 2;
+}
+
 </script>
 
 <style scoped>
-/* .container {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-} */
-
-/* p {
-  line-height: 1.6;
-} */
-
-/* :deep(*:focus) {
-  outline: 2px solid currentColor;
-  outline-offset: 2px;
-} */
-
 .card-body {
   display:flex;
   flex-direction: column;

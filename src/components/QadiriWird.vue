@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <div class="controls mb-4 p-4 bg-gray-100 rounded-lg" v-if="showSettings">
+    <div class="controls mb-4 p-4 bg-base-200 text-base-content rounded-lg" v-if="showSettings">
       <div class="collapse collapse-arrow">
         <input type="checkbox" /> 
         <div class="collapse-title text-xl font-medium">
@@ -74,16 +74,15 @@
         <div v-if="showPrevious" class="flex-shrink-0 w-full p-2 text-gray-400 text-center" :style="{ fontSize: `${prevNextFontSize}px` }">
           <div v-html="formatPrevNext(wird[currentIndex - 1])"></div>
         </div>
-        <transition-group :name="selectedTransition" tag="div" mode="out-in" class="flex-grow flex items-center justify-center overflow-auto">
-          <div 
-            v-for="(part, index) in wird" 
-            :key="index"
-            v-show="currentIndex === index"
-            class="w-full h-full flex items-center justify-center p-4 overflow-y-auto"
-          >
-            <div class="wird-part-content" v-html="part"></div>
-          </div>
-        </transition-group>
+        <transition :name="selectedTransition" mode="out-in">
+  <div
+    v-if="wird[currentIndex] !== undefined"
+    :key="currentIndex"
+    class="w-full h-full flex items-center justify-center p-4 overflow-y-auto"
+  >
+    <div class="wird-part-content" v-html="wird[currentIndex]"></div>
+  </div>
+</transition>
         <div v-if="showNext" class="flex-shrink-0 w-full p-2 text-gray-400 text-center" :style="{ fontSize: `${prevNextFontSize}px` }">
           <div v-html="formatPrevNext(wird[currentIndex + 1])"></div>
         </div>
