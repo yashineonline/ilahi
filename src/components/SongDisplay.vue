@@ -41,6 +41,12 @@
     </div>
     <div v-if="currentSong" class="w-full">
       <h1 class="text-3xl font-bold mb-4 text-center">{{ currentSong.title }}</h1>
+      <div v-if="currentSong.suggestedZikrs && currentSong.suggestedZikrs.length" class="flex flex-wrap gap-2 mb-4 justify-center">
+        <span class="text-sm text-gray-500 mr-2 font-medium">Suggested zikr:</span>
+        <span v-for="zikr in currentSong.suggestedZikrs" :key="zikr" class="px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-xs font-semibold border border-green-200">
+          {{ zikr }}
+        </span>
+      </div>
       <div v-if="!hideMusicPlayer && currentSong.mainLinks && currentSong.mainLinks.length > 0" class="mb-4">
         <audio-player
           :audio-src="currentSong.mainLinks[0]"
