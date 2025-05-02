@@ -29,27 +29,26 @@
       ></iframe>
     </div>
     <div v-else class="audio-controls">
-      <audio ref="audioElement" :src="audioSrc" preload="auto"></audio>
+      <audio ref="audioElement" :src="getAudioSrc" preload="auto" controls></audio>
     </div>
-    <div class="controls mt-2 flex justify-center space-x-2">
+    <div v-if="playerType !== 'googledrive'" class="controls mt-2 flex justify-center space-x-2">
       <button @click="togglePlay" class="btn btn-primary btn-sm play-button" :aria-label="isPlaying ? 'Pause' : 'Play'" :title="isPlaying ? 'Pause' : 'Play'">
-    <font-awesome-icon :icon="isPlaying ? 'pause' : 'play'" class="play-icon" />
-  </button>
-
+        <font-awesome-icon :icon="isPlaying ? 'pause' : 'play'" class="play-icon" />
+      </button>
       <button @click="seekBackward" class="btn btn-primary btn-sm seek-button" aria-label="Rewind 5 seconds">
-    <font-awesome-icon icon="rotate-left" class="rotate-icon" />
-    <span class="seek-number">5</span>
-  </button>
-  <button @click="seekForward" class="btn btn-primary btn-sm seek-button" aria-label="Forward 5 seconds">
-    <font-awesome-icon icon="rotate-right" class="rotate-icon" />
-    <span class="seek-number">5</span>
-  </button>
-  <button @click="decreaseSpeed" class="btn btn-primary btn-sm speed-button" aria-label="Decrease playback speed" title="Slower">
-    <font-awesome-icon :icon="['fas', 'plane-arrival']" class="speed-icon" />
-  </button>
-  <button @click="increaseSpeed" class="btn btn-primary btn-sm speed-button" aria-label="Increase playback speed" title="Faster">
-    <font-awesome-icon :icon="['fas', 'plane-departure']" class="speed-icon" />
-  </button>
+        <font-awesome-icon icon="rotate-left" class="rotate-icon" />
+        <span class="seek-number">5</span>
+      </button>
+      <button @click="seekForward" class="btn btn-primary btn-sm seek-button" aria-label="Forward 5 seconds">
+        <font-awesome-icon icon="rotate-right" class="rotate-icon" />
+        <span class="seek-number">5</span>
+      </button>
+      <button @click="decreaseSpeed" class="btn btn-primary btn-sm speed-button" aria-label="Decrease playback speed" title="Slower">
+        <font-awesome-icon :icon="['fas', 'plane-arrival']" class="speed-icon" />
+      </button>
+      <button @click="increaseSpeed" class="btn btn-primary btn-sm speed-button" aria-label="Increase playback speed" title="Faster">
+        <font-awesome-icon :icon="['fas', 'plane-departure']" class="speed-icon" />
+      </button>
     </div>
   </div>
 </template>
@@ -465,7 +464,9 @@ onBeforeUnmount(() => {
 .player-wrapper {
   position: relative;
   width: 100%;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  max-width: 600px;
+  margin: 0 auto;
+  aspect-ratio: 16/9;
   overflow: hidden;
 }
 

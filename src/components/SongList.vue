@@ -42,6 +42,21 @@
     <div class="flex justify-center my-4">
       <div class="flex flex-col items-center">
         <label class="mb-2 font-bold text-lg">Categories</label>
+        <div class="flex gap-2 mb-2">
+          <span
+            v-for="shaykh in ['Shaykh Taner', 'Shaykh Muhyiddin']"
+            :key="shaykh"
+            @click="toggleShaykhCategory(shaykh)"
+            class="px-2 py-0.5 rounded-full cursor-pointer border text-xs font-semibold transition-colors border-green-200"
+            :class="[
+              selectedCategories.includes(shaykh)
+                ? 'bg-green-600 text-white border-green-600'
+                : 'bg-green-100 text-green-800 hover:bg-green-200'
+            ]"
+          >
+            {{ shaykh }}
+          </span>
+        </div>
         <div class="flex items-center mb-2">
           <input
             type="checkbox"
@@ -131,9 +146,9 @@
 <div class="text-center text-base-content/80 mb-4" role="status" aria-live="polite">
   <span v-if="selectedZikrs.length > 0" aria-atomic="true">
     {{ filteredByZikr.length }} ilahi{{ filteredByZikr.length !== 1 ? 's' : '' }} 
-    found for selected zikrs
+    found for: {{ selectedZikrs.join(', ') }}
   </span>
-  <span v-if="currentLetter" aria-atomic="true">
+  <span v-else-if="currentLetter" aria-atomic="true">
     {{ sortedFilteredSongs.length }} ilahi{{ sortedFilteredSongs.length !== 1 ? 's' : '' }} 
     found starting with letter "{{ currentLetter }}"
   </span>
@@ -544,6 +559,15 @@ const resetSearch = () => {
 const isDropdownOpen = ref(false);
 
 const app = getCurrentInstance()?.appContext.app;
+
+function toggleShaykhCategory(shaykh: string) {
+  const idx = selectedCategories.value.indexOf(shaykh);
+  if (idx === -1) {
+    selectedCategories.value.push(shaykh);
+  } else {
+    selectedCategories.value.splice(idx, 1);
+  }
+}
 </script>
 
 <style>

@@ -31,7 +31,7 @@
         v-for="(zikr, index) in songStore.zikrItems"
         :key="index"
         :data-zikr-index="index"
-        class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all cursor-pointer hover:-translate-y-1"
+        class="card zikr-fullwidth-card bg-base-100 shadow-xl hover:shadow-2xl transition-all cursor-pointer hover:-translate-y-1"
         :class="{'bg-gray-800/90 text-white': themeStore.theme === 'dark', 'bg-white/90 text-gray-800': themeStore.theme === 'light'}"
       >
         <div class="card-body">
@@ -45,8 +45,8 @@
           v-show="expandedIndex === index" 
           class="mt-6 space-y-6"
           >
-            <div class="card bg-base-200">
-              <div class="card-body">
+            <!-- <div class="card bg-base-200"> -->
+              <!-- <div class="card-body"> -->
                 <div v-if="expandedIndex === index">
                   <suspense>
                 <audio-player
@@ -56,15 +56,15 @@
                   @player-ready="onPlayerReady"
                 />
               </suspense>
-              </div>
-            </div>
+              <!-- </div> -->
+            <!-- </div> -->
           </div>
 
             <div 
               v-if="zikr.zikrLyrics" 
-              class="card bg-base-200"
+              class="card-body prose max-w-none"
             >
-              <div class="card-body prose max-w-none">
+              <!-- <div class="card-body prose max-w-none"> -->
                 <!-- <h3 class="card-title text-xl mb-4">Words</h3> -->
                 <div 
                   v-for="(stanzaLines, stanzaIndex) in zikr.zikrLyrics" 
@@ -80,7 +80,7 @@
                     
               </div>
                 </div>
-              </div>
+              <!-- </div> -->
             </div>
           </div>
         </transition>
@@ -205,4 +205,20 @@ onMounted(async () => {
   transform: scale(1.05);
 }
 
+.zikr-fullwidth-card {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: -16px;
+  margin-right: -16px;
+  border-radius: 0;
+}
+@media (min-width: 640px) {
+  .zikr-fullwidth-card {
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 1rem;
+  }
+}
 </style>
