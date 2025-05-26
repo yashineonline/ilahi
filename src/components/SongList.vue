@@ -1,11 +1,7 @@
 <template>
   <div class="w-full max-w-4xl mx-auto p-4">
-    <!-- <h2 class="text-2xl font-bold mb-4">ilahi List</h2> -->
-    <!-- <div class="flex justify-center my-4"> -->
       <button @click="resetSearch" class="btn btn-secondary">Reset Search</button>
       <button @click="generateRandomIlahi" class="btn btn-primary">What to Sing?</button>
-    <!-- </div> -->
-    <!-- Add this after the pagination buttons -->
     <div v-if="randomIlahi" class="mt-4 text-center">
       <p>Try to Sing:</p>
       <router-link 
@@ -37,7 +33,6 @@
     {{ letter }}
   </button>
 </div>
-
     <!-- Category filter -->
     <div class="flex justify-center my-4">
       <div class="flex flex-col items-center">
@@ -247,6 +242,7 @@ import { SongData } from "@/utils/types";
 import type { LocationQueryValue } from 'vue-router'
 import { parseZikrLine } from '../utils/zikrUtils';
 
+const props = defineProps<{ filePath?: string }>();
 
 const route = useRoute();
 const router = useRouter();
@@ -524,25 +520,24 @@ watch(
   { immediate: true }
 );
 
+// Watch filePath and reload songs when it changes
+watch(() => props.filePath, async (newPath, oldPath) => {
+  if (newPath && newPath !== oldPath) {
+    await songStore.fetchSongs(false, newPath);
+  }
+}, { immediate: true });
+
+// On mount, load songs from filePath (or default)
 onMounted(async () => {
-  try {
-    await songStore.fetchSongs();
-
-    // const loadedCategories = await songStore.fetchSongs();
-    // if (loadedCategories) {
-
-    // }
-    if (route.query.search) {
-      songStore.setSearchQuery(String(route.query.search));
-    }
-    if (route.query.categories) {
-      const categories = Array.isArray(route.query.categories)
+  await songStore.fetchSongs(false, props.filePath || 'ilahi.txt');
+  if (route.query.search) {
+    songStore.setSearchQuery(String(route.query.search));
+  }
+  if (route.query.categories) {
+    const categories = Array.isArray(route.query.categories)
       ? route.query.categories.map(String)
-        : [String(route.query.categories)];
-      selectedCategories.value = categories.filter(Boolean);
-    }
-  } catch (error) {
-    console.error('Error loading songs and categories:', error);
+      : [String(route.query.categories)];
+    selectedCategories.value = categories.filter(Boolean);
   }
 });
 

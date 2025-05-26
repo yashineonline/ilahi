@@ -31,42 +31,25 @@ export const useSongStore = defineStore('song', () => {
   const selectedSongs = ref<SongData[]>([]);
   const youtubeLinks = ref<string[]>([]);
   const selectedZikrs = ref<string[]>([]);
+  const currentPath = ref('ilahi.txt'); // Default path
 
 
-  const getAllYoutubeLinks = computed(() => {
+  const getAllYoutubeLinks = computed<string[]>(() => {
     const links: string[] = [];
-
     songs.value.forEach(song => {
       if (song.mainLinks) {
         links.push(...song.mainLinks.filter(link =>
           link.includes('youtube.com') || link.includes('youtu.be')
         ));
       }
-
       if (song.alternateTunes) {
         links.push(...song.alternateTunes.filter(link =>
           link.includes('youtube.com') || link.includes('youtu.be')
         ));
       }
     });
-
     return links;
   });
-
-// const filteredByZikr = computed(() => {
-//   console.log('[Store] Selected Zikrs:', selectedZikrs.value);
-//   if (!selectedZikrs.value.length) return songs.value;
-
-//   return songs.value.filter(song => {
-//     // Ensure song.suggestedZikrs exists and is an array
-//     if (!song.suggestedZikrs || !Array.isArray(song.suggestedZikrs)) return false;
-    
-//     // Check if any selected zikr exists in the song's suggested zikrs
-//     return selectedZikrs.value.some(selectedZikr => 
-//       song.suggestedZikrs.includes(selectedZikr)
-//     );
-//   });
-// });
 
 const filteredByZikr = computed(() => {
   console.log('[Store] Selected Zikrs:', selectedZikrs.value);
@@ -95,20 +78,12 @@ const filteredByZikr = computed(() => {
 //     console.log(`[Store] Checking song: "${song.title}"`);
 //     console.log('Song zikrs:', song.suggestedZikrs);
     
-//     if (!song.suggestedZikrs || !song.suggestedZikrs.length) {
-//       console.log('Song has no suggested zikrs');
-//       return false;
-//     }
-//     console.log(`Selected Zikrs: ${selectedZikrs.value.join(', ')}`);
-//     console.log(`Song Zikrs: ${song.suggestedZikrs.join(', ')}`);
-    
 
 //     const hasZikr = selectedZikrs.value.some(selectedZikr => 
 //       song.suggestedZikrs.includes(selectedZikr) 
 //     );
 //     console.log(`Song "${song.title}" has matching zikr?`, hasZikr);
 //     console.log(`Has matching Zikr? ${hasZikr}`);
-//     return hasZikr;
 //        });
 
 //   console.log('[Store] Filtered songs:', filtered.map(s => s.title));
@@ -128,33 +103,34 @@ const filteredByZikr = computed(() => {
   const CATEGORY_FIX_VERSION = '1.0'; // Increment this if you need to apply the fix again
 
 
-  const fetchSongs = async (forceRefresh = false) => {
+  const fetchSongs = async (forceRefresh = false, pathOverride?: string) => {
     try {
       // Use new cache keys with a timestamp to force a refresh
       const NEW_CACHE_PREFIX = 'v11_'; // Change this prefix to force a refresh
 
-      const cachedSongs = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedSongs')
-      const cachedSubcategories = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedSubcategories')
-      const cachedCategories = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedCategories')
+      // Use the provided path or the currentPath
+      const path = pathOverride || currentPath.value || 'ilahi.txt';
+      currentPath.value = path;
 
+      const cachedSongs = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedSongs_' + path)
+      const cachedSubcategories = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedSubcategories_' + path)
+      const cachedCategories = localStorage.getItem(NEW_CACHE_PREFIX + 'cachedCategories_' + path)
 
       if (!forceRefresh && cachedSongs && cachedSubcategories && cachedCategories) {
         songs.value = JSON.parse(cachedSongs);
         setSubcategories(JSON.parse(cachedSubcategories));
         categories.value = JSON.parse(cachedCategories);
-        // console.log('Loaded categories from cache:', categories.value);
         return categories.value;
       }
 
       const owner = 'yashineonline';
       const repo = 'ilahiRepository';
-      const path = 'ilahi.txt';
+      // const path = 'ilahi.txt'; // Now dynamic
       const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
 
       const response = await fetch(url, {
         headers: {
           'Accept': 'application/vnd.github.v3.raw',
-
         }
       });
 
@@ -174,26 +150,12 @@ const filteredByZikr = computed(() => {
         [CATEGORIES.BASIC]: [],
         [CATEGORIES.INTERMEDIATE]: [],
       };
-// Add subcategories structure from the data file
-// Object.entries(subcategories).forEach(([mainCategory, subCats]) => {
-//   categoriesObj[mainCategory] = subCats;
-// });
-
-processedSongs.forEach(song => {
-  song.categories.forEach(category => {
-
-// below was working to just get all the categories into the drop-down, 
-// above is supposed to get the sub working
+      processedSongs.forEach(song => {
+        song.categories.forEach(category => {
           const mainCategory = category.split('/')[0].trim();
           if (!categoriesObj[mainCategory]) {
             categoriesObj[mainCategory] = [];
           }
-      //     if (category.includes('/')) {
-      //       const subCategory = category.split('/')[1].trim();
-      //       if (!categoriesObj[mainCategory].includes(subCategory)) {
-      //         categoriesObj[mainCategory].push(subCategory);
-      //       }
-      //     }
         });
       });
 
@@ -201,11 +163,9 @@ processedSongs.forEach(song => {
       setSubcategories(subcategories)
 
       // Store with the new cache keys
-      localStorage.setItem(NEW_CACHE_PREFIX + 'cachedSongs', JSON.stringify(songs.value))
-      localStorage.setItem(NEW_CACHE_PREFIX + 'cachedSubcategories', JSON.stringify(subcategories))
-      localStorage.setItem(NEW_CACHE_PREFIX + 'cachedCategories', JSON.stringify(categories.value))
-
-      // console.log('Updated categories with new cache keys:', categories.value)
+      localStorage.setItem(NEW_CACHE_PREFIX + 'cachedSongs_' + path, JSON.stringify(songs.value))
+      localStorage.setItem(NEW_CACHE_PREFIX + 'cachedSubcategories_' + path, JSON.stringify(subcategories))
+      localStorage.setItem(NEW_CACHE_PREFIX + 'cachedCategories_' + path, JSON.stringify(categories.value))
 
       return categories.value // Return the categories
     } catch (error) {
@@ -259,6 +219,7 @@ processedSongs.forEach(song => {
     deselectSong,
     clearSelectedSongs,
     songsWithHistory,
-    getSongsWithHistory
+    getSongsWithHistory,
+    currentPath // Expose currentPath
   }
 })

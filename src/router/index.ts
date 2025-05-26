@@ -100,6 +100,12 @@ const routes = [
     name: 'ZikrPlayer',
     component: ZikrPlayer
   },
+  {
+    path: '/naat',
+    name: 'NaatList',
+    component: SongList,
+    props: { filePath: 'naat.txt' }
+  },
   // {
   //   path: '/ilahi-classes',
   //   name: 'IlahiClasses',

@@ -1,5 +1,29 @@
+<!-- we used firebase to store the books. look for firebase on email.  -->
 <template>
-  <div class="container mx-auto p-4">
+  <div class="container mx-auto p-4 relative">
+    <!-- Secret Door Font Awesome Icon -->
+    <button
+      class="absolute top-4 right-4 text-2xl z-50"
+      @click="$router.push({ name: 'NaatList' })"
+      aria-label="Open Naat list"
+    >
+    <font-awesome-icon :icon="['fas', 'door-open']" />
+    </button>
+
+    <!-- Naat Modal -->
+    <div v-if="showNaatModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+      <div class="bg-white dark:bg-gray-900 p-6 rounded-lg max-w-4xl w-full relative">
+        <button
+          class="absolute top-2 right-2 text-xl"
+          @click="showNaatModal = false"
+          aria-label="Close Naat list"
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <SongList filePath="naat.txt" />
+      </div>
+    </div>
+
     <h1 class="text-3xl font-bold mb-6">ilahi Books</h1>
     
     <div v-if="loading" class="text-center text-xl">Loading books...</div>
@@ -38,7 +62,23 @@
         <button @click="showModal = false" class="mt-4 btn btn-primary">Close</button>
       </div>
     </div>
-    <button @click="uploadMetadata" disabled class="btn btn-primary mt-4">Upload Book Metadata</button>
+    <button @click="uploadMetadata" class="btn btn-primary mt-4"
+    :disabled="uploading"
+  aria-label="Upload new book metadata from Firebase Storage"
+    >
+    <span v-if="uploading" aria-live="polite">Uploading...</span>
+  <span v-else>Upload Book Metadata</span>
+    <!-- Upload Book Metadata -->
+  </button>
+  <button
+  @click="cleanupDuplicates"
+  disabled
+  class="btn btn-warning mt-4"
+  aria-label="Remove duplicate book metadata"
+>
+  Remove Duplicate Books
+</button>
+
   </div>
 </template>
 
@@ -47,6 +87,8 @@ import { ref, onMounted } from 'vue';
 import { uploadBookMetadata } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { db, BookData, ImageFolderData } from '../firebase';
+import { removeBookDuplicates } from '../utils/removeBookDuplicates';
+import SongList from '../components/SongList.vue';
 
 const pdfBooks = ref<BookData[]>([]);
 const imageFolders = ref<ImageFolderData[]>([]);
@@ -54,8 +96,11 @@ const loading = ref(true);
 const error = ref('');
 const showModal = ref(false);
 const currentFolder = ref<ImageFolderData | null>(null);
+const uploading = ref(false);
+const showNaatModal = ref(false);
 
 const uploadMetadata = async () => {
+  uploading.value = true;
   try {
     await uploadBookMetadata();
     alert('Book metadata uploaded successfully!');
@@ -63,8 +108,16 @@ const uploadMetadata = async () => {
   } catch (error) {
     console.error('Error uploading metadata:', error);
     alert('Failed to upload book metadata. Check console for details.');
+  }finally {
+    uploading.value = false;
   }
 };
+
+const cleanupDuplicates = async () => {
+  const count = await removeBookDuplicates();
+  alert(`${count} duplicate book entries removed.`);
+};
+
 
 const fetchDriveContents = async () => {
   try {

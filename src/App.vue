@@ -53,6 +53,7 @@ import { ref, provide, onMounted, onUnmounted } from 'vue'
 const searchBarRef = ref<InstanceType<typeof SearchBar> | null>(null)
   const showScrollTop = ref(false)
   const themeStore = useThemeStore()
+  const props = defineProps<{ filePath?: string }>();
 
 
 setupHyperlinkNavigation();
@@ -75,7 +76,8 @@ const resetGlobalSearch = () => {
 provide('resetGlobalSearch', resetGlobalSearch)
 
 function refreshSongs() {
-  songStore.fetchSongs(true)
+  songStore.fetchSongs(true, songStore.currentPath || 'ilahi.txt');
+  // songStore.fetchSongs(true)
 }
 
 

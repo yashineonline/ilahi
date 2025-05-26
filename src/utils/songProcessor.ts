@@ -331,7 +331,7 @@ const aggregatedZikrs: ParsedZikr = {}; // This should be the grouped collection
       } 
       else if (trimmedLine.startsWith('SuggestedZikr:')) {
         let zikrContent = trimmedLine;
-        console.log('zikrContent:', zikrContent);
+        // console.log('zikrContent:', zikrContent);
         let jz = i + 1;
         while (jz < lines.length && lines[jz].trim() !== '') {
           zikrContent += ' ' + lines[jz].trim();
