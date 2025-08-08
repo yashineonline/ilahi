@@ -1,20 +1,36 @@
 import { createRouter, createWebHistory, RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 import Home from '../views/Home.vue'
-import SongList from '../components/SongList.vue'
-import SongDisplay from '../components/SongDisplay.vue'
-import BookView from '../views/BookView.vue'
-import AboutView from '../views/AboutView.vue'
-import YouTubePlayer from '../components/YouTubePlayer.vue'
-import Poems from '../views/Poems.vue'
-import Entrance from '../components/Entrance.vue'
-import Wirds from '../views/Wirds.vue'
-import BooksView from '../views/BooksView.vue'
-import HistoryView from '../views/HistoryView.vue'
-import MiscellaneousView from '../views/MiscellaneousView.vue'
-import AuthorPoems from '../views/AuthorPoems.vue';
+
+// import SongList from '../components/SongList.vue'
+// import SongDisplay from '../components/SongDisplay.vue'
+// import BookView from '../views/BookView.vue'
+// import AboutView from '../views/AboutView.vue'
+// import YouTubePlayer from '../components/YouTubePlayer.vue'
+// import Poems from '../views/Poems.vue'
+// import Entrance from '../components/Entrance.vue'
+// import Wirds from '../views/Wirds.vue'
+// import BooksView from '../views/BooksView.vue'
+// import HistoryView from '../views/HistoryView.vue'
+// import MiscellaneousView from '../views/MiscellaneousView.vue'
+// import AuthorPoems from '../views/AuthorPoems.vue';
 import { useSongStore } from '../stores/songStore'
-import ZikrPlayer from '../components/ZikrPlayer.vue'
+// import ZikrPlayer from '../components/ZikrPlayer.vue'
 // import IlahiClasses from '../components/IlahiClasses.vue'
+
+// Lazy (split chunks)
+const SongList = () => import('../components/SongList.vue')
+const SongDisplay = () => import('../components/SongDisplay.vue')
+const BookView = () => import('../views/BooksView.vue')
+const BooksView = () => import('../views/BooksView.vue')
+const Poems = () => import('../views/Poems.vue')
+const AboutView = () => import('../views/AboutView.vue')
+const YouTubePlayer = () => import('../components/YouTubePlayer.vue')
+const Entrance = () => import('../components/Entrance.vue')
+const Wirds = () => import('../views/Wirds.vue')
+const HistoryView = () => import('../views/HistoryView.vue')
+const MiscellaneousView = () => import('../views/MiscellaneousView.vue')
+const AuthorPoems = () => import('../views/AuthorPoems.vue')
+const ZikrPlayer = () => import('../components/ZikrPlayer.vue')
 
 const routes = [
   {

@@ -81,9 +81,25 @@ export default defineConfig({
   },
   build: {
     outDir: 'docs', // convention is keep this dist, but we make docs for
+    chunkSizeWarningLimit: 1500, // optional: only changes the warning threshold
+
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html')
+      },
+      output: {
+        manualChunks: {
+          vue: ['vue', 'vue-router', 'pinia'],
+          firebase: ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage', 'firebase/analytics'],
+          pdf: ['pdf-lib'],
+          fa: [
+            '@fortawesome/fontawesome-svg-core',
+            '@fortawesome/free-solid-svg-icons',
+            '@fortawesome/free-regular-svg-icons',
+            '@fortawesome/free-brands-svg-icons',
+            '@fortawesome/vue-fontawesome'
+          ]
+        }
       }
     }
   },
