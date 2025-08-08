@@ -20,11 +20,18 @@
       <button 
         v-if="currentSong?.translation && currentSong.translation.length > 0"
         class="btn btn-primary btn-sm" 
-        @click="showTranslation" 
-        :aria-pressed="showTranslationFlag"
+        @click="toggleTranslation" 
+        :aria-pressed="settings.showTranslation"
       >
         <font-awesome-icon :icon="['fas', 'language']" class="mr-2" />
-        {{ showTranslationFlag ? 'Hide' : 'Show' }} Translation
+        {{ settings.showTranslation ? 'Hide' : 'Show' }} Translation
+      </button>
+      <button 
+        v-if="currentSong?.translation && currentSong.translation.length > 0 && settings.showTranslation"
+        class="btn btn-outline btn-sm"
+        @click="settings.toggleTranslationLayout"
+      >
+        {{ settings.translationLayout === 'below' ? 'Side-by-side' : 'Below lyrics' }}
       </button>
       <div class="flex items-center gap-2">
         <span class="text-sm">Smaller</span>
@@ -175,8 +182,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import type { PlayerType } from './AudioPlayer.vue' // Assuming you've exported this type from AudioPlayer.vue
 import PronunciationGuide from './PronunciationGuide.vue'
 import ThemeToggle from './ThemeToggle.vue'
-// import { parseHyperlinks } from '@/utils/hyperlinkParser.ts';
-// import { useHyperlinkNavigation } from '@/composables/useHyperlinkNavigation';
+import { useSettingsStore } from '@/stores/settingsStore'
 
 // Add a type for the player
 type Player = {
@@ -194,7 +200,7 @@ const playerType = ref<PlayerType | null>(null)
 const route = useRoute()
 const songStore = useSongStore()
 const themeStore = useThemeStore()
-const showTranslationFlag = ref(false)
+const settings = useSettingsStore()
 const qrCodeDataUrl = ref('')
 const errorMessage = ref('')
 const playerError = ref<string | null>(null)
@@ -220,16 +226,17 @@ const renderedSong = computed(() => {
   if (currentSong.value) {
     return renderSong(currentSong.value, { 
       fontSize: fontSize.value, 
-      showTranslation: showTranslationFlag.value,
+      showTranslation: settings.showTranslation,
+      translationLayout: settings.translationLayout,
       theme: themeStore.theme === 'light' ? 'light' : 'dark'
     })
   }
   return ''
 })
 
-const showTranslation = () => {
+const toggleTranslation = () => {
   if (currentSong.value?.translation && currentSong.value.translation.length > 0) {
-    showTranslationFlag.value = !showTranslationFlag.value;
+    settings.toggleTranslationVisibility()
   } 
 }
 
@@ -269,7 +276,8 @@ const currentAudioLink = computed(() => {
 
 const loadQRCode = async () => {
   if (currentSong.value) {
-    const songUrl = `${window.location.origin}/songs/${currentSong.value.slug}`;
+    //   const songUrl = `${window.location.origin}/songs/${currentSong.value.slug}`;
+    const songUrl = `${window.location.origin}${import.meta.env.BASE_URL}player/${currentSong.value.slug}`;
     try {
       qrCodeDataUrl.value = await generateQRCode(songUrl);
     } catch (error) {
@@ -374,11 +382,11 @@ onMounted(async () => {
     if (currentSong.value) {
       loadQRCode()
     }
-    if (hasAudioLinks.value) {
-      // console.log('Detected audio links for this song')
-    } else {
-      // console.log('No audio links detected for this song')
-    }
+    // if (hasAudioLinks.value) {
+    //   // console.log('Detected audio links for this song')
+    // } else {
+    //   // console.log('No audio links detected for this song')
+    // }
   } catch (error) {
     console.error('Error loading song:', error)
     errorMessage.value = 'Failed to load song. Please try again later.'

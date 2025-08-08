@@ -21,23 +21,42 @@ export function processSong(song: SongData): SongData {
   };
 }
 
-export function renderSong(song: SongData, options: { fontSize: number, showTranslation: boolean, theme: 'light' | 'dark' }): string {
-  const { fontSize = 16, showTranslation = true, theme = 'light' } = options;
+export function renderSong(song: SongData, options: { fontSize: number, showTranslation: boolean, theme: 'light' | 'dark', translationLayout?: 'below' | 'side' }): string {
+  const { fontSize = 16, showTranslation = true, theme = 'light', translationLayout = 'below' } = options;
 
   const textColor = theme === 'light' ? 'text-base-content' : 'text-base-content';
 
   // Filter out the history stanza from lyrics
   const lyricsWithoutHistory = song.lyrics.filter(stanza => !stanza.some(line => line.includes('History:')));
 
-  let html = `<section class="lyrics mb-6" style="font-size: ${fontSize}px;">
-    ${renderStanzas(lyricsWithoutHistory, textColor)}
-  </section>`;
+  let html = '';
 
-  if (showTranslation && song.translation && song.translation.length > 0) {
-    html += `<section class="translation mb-6" style="font-size: ${fontSize}px;">
-      <h2 class="text-2xl font-semibold mb-4 ${textColor}">Translation</h2>
-      ${renderStanzas(song.translation, textColor)}
+  if (showTranslation && translationLayout === 'side' && song.translation && song.translation.length > 0) {
+    // Side-by-side layout
+    html += `<section class="mb-6" style="font-size: ${fontSize}px;">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h2 class="text-2xl font-semibold mb-4 ${textColor}">Lyrics</h2>
+          ${renderStanzas(lyricsWithoutHistory, textColor)}
+        </div>
+        <div>
+          <h2 class="text-2xl font-semibold mb-4 ${textColor}">Translation</h2>
+          ${renderStanzas(song.translation, textColor)}
+        </div>
+      </div>
     </section>`;
+  } else {
+    // Default: lyrics then optional translation below
+    html += `<section class="lyrics mb-6" style="font-size: ${fontSize}px;">
+      ${renderStanzas(lyricsWithoutHistory, textColor)}
+    </section>`;
+
+    if (showTranslation && song.translation && song.translation.length > 0) {
+      html += `<section class="translation mb-6" style="font-size: ${fontSize}px;">
+        <h2 class="text-2xl font-semibold mb-4 ${textColor}">Translation</h2>
+        ${renderStanzas(song.translation, textColor)}
+      </section>`;
+    }
   }
 
   if (song.audioLink) {

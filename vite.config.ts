@@ -18,11 +18,29 @@ export default defineConfig({
     vue(),
     VitePWA({
       registerType: 'autoUpdate',
+      devOptions: { enabled: true },
       workbox: {
         clientsClaim: true,
-          skipWaiting: true, // Immediately activates new service worker
-          cleanupOutdatedCaches: true, // Remove old caches
-          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 3MB
+        skipWaiting: true, // Immediately activates new service worker
+        cleanupOutdatedCaches: true, // Remove old caches
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 3MB
+        navigateFallback: 'index.html',
+        navigateFallbackDenylist: [/^\/api\//, /\.[^/]+$/],
+        runtimeCaching: [
+          {
+            // Cache GitHub content API responses for songs data
+            urlPattern: ({ url }) => url.origin === 'https://api.github.com' && /\/repos\/yashineonline\/ilahiRepository\/contents\//.test(url.pathname),
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'github-content',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+              },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
       },     
       includeAssets: [
 '512.png', '1024.png', '180.png', '167.png', '152.png', '120.png'
@@ -38,12 +56,12 @@ export default defineConfig({
         theme_color: "#16a34a",
         orientation: "any",
         icons: [
-          { src: '/512.png', sizes: '512x512', type: 'image/png' },
-          { src: '/1024.png', sizes: '1024x1024', type: 'image/png' },
-          { src: '/120.png', sizes: '120x120', type: 'image/png' },
-          { src: '/152.png', sizes: '152x152', type: 'image/png' },
-          { src: '/167.png', sizes: '167x167', type: 'image/png' },
-          { src: '/180.png', sizes: '180x180', type: 'image/png' },
+          { src: '512.png', sizes: '512x512', type: 'image/png' },
+          { src: '1024.png', sizes: '1024x1024', type: 'image/png' },
+          { src: '120.png', sizes: '120x120', type: 'image/png' },
+          { src: '152.png', sizes: '152x152', type: 'image/png' },
+          { src: '167.png', sizes: '167x167', type: 'image/png' },
+          { src: '180.png', sizes: '180x180', type: 'image/png' },
         ]
       }
     })

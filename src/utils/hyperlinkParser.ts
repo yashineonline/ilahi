@@ -19,15 +19,31 @@ import { useSongStore } from '@/stores/songStore.ts';
 // };
 
 export const parseHyperlinks = (text: string): string => {
+  // Sanitize first
   const cleanText = DOMPurify.sanitize(text);
   const songStore = useSongStore();
-  const result = cleanText.replace(/\$([\w-]+)/g, (_, slug) => {
-    const url = `/player/${encodeURIComponent(slug)}`; // Updated URL structure
+
+  // 1) In-app song links: $slug → <a ...>Title</a>
+  let result = cleanText.replace(/\$([\w-]+)/g, (_, slug) => {
+    const url = `/player/${encodeURIComponent(slug)}`;
     const song = songStore.songs.find(s => s.slug === slug);
     const displayText = song ? song.title : slug;
     return `<a href="${url}" class="hyperlink music-link font-bold" data-url="${url}" data-slug="${slug}" aria-label="Navigate to ${displayText}" tabindex="0">${displayText}</a>`;
-     
   });
+
+  // 2) External/custom links: £url|Text or £url (text optional, shows domain if no text)
+  // Examples: £https://example.com|Visit site  OR  £https://example.com
+  result = result.replace(/£([^\s|]+)(?:\|([^£#]+))?/g, (_, rawUrl: string, linkText?: string) => {
+    const safeUrl = DOMPurify.sanitize(rawUrl);
+    const text = (linkText ? DOMPurify.sanitize(linkText) : safeUrl.replace(/^https?:\/\//, ''));
+    return `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer" class="external-link link link-primary">${text}</a>`;
+  });
+
+  // 3) Bold spans: ##bold text##
+  result = result.replace(/##([^#]+)##/g, (_, bold: string) => {
+    return `<strong>${DOMPurify.sanitize(bold)}</strong>`;
+  });
+
   return result;
 };
 
@@ -59,17 +75,12 @@ export const setupHyperlinkNavigation = () => {
 
   document.addEventListener('click', (e) => {
     const target = e.target as HTMLElement;
-    // if (target.matches('.hyperlink')) {
-
     if (target.classList.contains('hyperlink')) {
       e.preventDefault();
-      const url = target.getAttribute('data-url'); // Use data-url instead of href
+      const url = target.getAttribute('data-url');
       if (url) {
-
-      // const href = target.getAttribute('href');
-      // if (href && href.startsWith('/player/')) {
-        navigateToContent(url); // Pass the correct URL
-      }   
+        navigateToContent(url);
+      }
     }
   });
 };

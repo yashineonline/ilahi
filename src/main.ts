@@ -23,26 +23,33 @@ app.component('YouTube', YouTube)
 app.component('Installation', Installation)
 app.component('font-awesome-icon', FontAwesomeIcon)
 
-
-
-
 app.use(pinia)
 app.use(router)
 
 // Initialize global hyperlink handling
 // initializeGlobalHyperlinks();
 
-registerSW({ immediate: true }) // Ensures updates are applied immediately
-
-
-if ('serviceWorker' in navigator) {
+// Register/unregister Service Worker depending on env
+const enableSWInDev = import.meta.env.VITE_SW_DEV === 'true'
+if (import.meta.env.PROD || enableSWInDev) {
+  // Production or explicitly enabled dev: register SW and ensure updates
+  registerSW({ immediate: true })
+  if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then(registrations => {
       registrations.forEach(registration => {
-        registration.update(); // Force update
+        registration.update();
       });
     });
   }
-
+} else {
+  // Development default: ensure no SW controls the page to avoid stale caches
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      registrations.forEach(registration => registration.unregister());
+    });
+  }
+}
 
 app.mount('#app')
+
 
