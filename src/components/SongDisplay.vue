@@ -19,8 +19,9 @@
     <div class="w-full flex flex-wrap items-center gap-2 mb-4">
       <button 
         v-if="currentSong?.translation && currentSong.translation.length > 0"
-        class="btn btn-primary btn-sm" 
-        @click="toggleTranslation" 
+        class="btn btn-primary btn-sm"
+        data-no-float-nav
+        @click.stop="toggleTranslation" 
         :aria-pressed="settings.showTranslation"
       >
         <font-awesome-icon :icon="['fas', 'language']" class="mr-2" />

@@ -360,6 +360,8 @@ isAppInstalled.value = window.matchMedia('(display-mode: standalone)').matches |
   // Click outside to close menu
   const handleClickOutside = (event: MouseEvent) => {
     const target = event.target as Element
+    // Ignore clicks on elements that opt-out (e.g., translation toggle)
+    if ((target as HTMLElement).closest('[data-no-float-nav]')) return
     if (menuOpen.value && !target.closest('.dropdown-open-on-click')) {
       menuOpen.value = false
     }
