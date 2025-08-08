@@ -62,23 +62,27 @@
         <button @click="showModal = false" class="mt-4 btn btn-primary">Close</button>
       </div>
     </div>
-    <button @click="uploadMetadata" class="btn btn-primary mt-4"
-    :disabled="uploading"
-  aria-label="Upload new book metadata from Firebase Storage"
-    >
-    <span v-if="uploading" aria-live="polite">Uploading...</span>
-  <span v-else>Upload Book Metadata</span>
-    <!-- Upload Book Metadata -->
-  </button>
-  <button
-  @click="cleanupDuplicates"
-  disabled
-  class="btn btn-warning mt-4"
-  aria-label="Remove duplicate book metadata"
->
-  Remove Duplicate Books
-</button>
 
+    <div v-if="showAdminTools" class="mt-6 flex flex-wrap gap-3">
+      <button @click="uploadMetadata" class="btn btn-primary"
+        :disabled="uploading"
+        aria-label="Upload new book metadata from Firebase Storage">
+        <span v-if="uploading" aria-live="polite">Uploading...</span>
+        <span v-else>Upload Book Metadata</span>
+      </button>
+
+      <button @click="cleanupDuplicates" disabled class="btn btn-warning" aria-label="Remove duplicate book metadata">
+        Remove Duplicate Books
+      </button>
+
+      <button @click="onCleanupMissing" class="btn btn-outline" aria-label="Remove Firestore entries for missing Storage files">
+        Cleanup Missing (Storage vs Firestore)
+      </button>
+
+      <button @click="onClearAllBooks" class="btn btn-error" aria-label="Delete ALL book entries">
+        Delete ALL Books (Firestore)
+      </button>
+    </div>
   </div>
 </template>
 
@@ -89,6 +93,8 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db, BookData, ImageFolderData } from '../firebase';
 import { removeBookDuplicates } from '../utils/removeBookDuplicates';
 import SongList from '../components/SongList.vue';
+import { cleanupMissingBooks, clearAllBooks } from '../utils/cleanupMissingBooks'
+
 
 const pdfBooks = ref<BookData[]>([]);
 const imageFolders = ref<ImageFolderData[]>([]);
@@ -98,6 +104,9 @@ const showModal = ref(false);
 const currentFolder = ref<ImageFolderData | null>(null);
 const uploading = ref(false);
 const showNaatModal = ref(false);
+
+// Hide admin tools in production; show in dev by default
+const showAdminTools = ref(import.meta.env.DEV);
 
 const uploadMetadata = async () => {
   uploading.value = true;
@@ -118,6 +127,19 @@ const cleanupDuplicates = async () => {
   alert(`${count} duplicate book entries removed.`);
 };
 
+const onCleanupMissing = async () => {
+  if (!confirm('Remove Firestore docs that do not have a file in Storage?')) return
+  const count = await cleanupMissingBooks('ilahiBooks')
+  alert(`Removed ${count} missing entries from Firestore.`)
+  await fetchDriveContents()
+}
+
+const onClearAllBooks = async () => {
+  if (!confirm('This will delete ALL book documents from Firestore. Continue?')) return
+  const count = await clearAllBooks()
+  alert(`Deleted ${count} docs from Firestore.`)
+  await fetchDriveContents()
+}
 
 const fetchDriveContents = async () => {
   try {
