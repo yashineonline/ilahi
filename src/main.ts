@@ -32,14 +32,35 @@ app.use(router)
 // Register/unregister Service Worker depending on env
 const enableSWInDev = import.meta.env.VITE_SW_DEV === 'true'
 if (import.meta.env.PROD || enableSWInDev) {
-  // Production or explicitly enabled dev: register SW and ensure updates
-  registerSW({ immediate: true })
+  const updateServiceWorker = registerSW({ immediate: true })
+
+  // Listen for the custom event dispatched by the injected runtime when a new SW is waiting
+  // We implement a simple polling to check for a waiting SW and prompt the user
   if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      console.log('Service worker controller changed')
+    })
+
+    setInterval(async () => {
+      const regs = await navigator.serviceWorker.getRegistrations()
+      for (const reg of regs) {
+        if (reg.waiting) {
+          const accept = window.confirm('A new version of ilahi is available. Reload now?')
+          if (accept) {
+            // Ask the waiting SW to take control, then reload on controller change
+            reg.waiting.postMessage({ type: 'SKIP_WAITING' })
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+              window.location.reload()
+            }, { once: true })
+          }
+          break
+        }
+      }
+    }, 15000)
+
     navigator.serviceWorker.getRegistrations().then(registrations => {
-      registrations.forEach(registration => {
-        registration.update();
-      });
-    });
+      registrations.forEach(registration => registration.update())
+    })
   }
 } else {
   // Development default: ensure no SW controls the page to avoid stale caches

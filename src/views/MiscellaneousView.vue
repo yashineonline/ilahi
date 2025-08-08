@@ -2,6 +2,7 @@
     <div>
       <h1>Miscellaneous</h1>
       test run
+      <button>Test</button>
       <!-- Add your content here -->
     </div>
   </template>

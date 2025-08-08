@@ -284,8 +284,17 @@ const toggleMenu = (event?: Event) => {
 }
 
 // Handle touch events for mobile devices
-const handleTouchStart = () => {
-  if (window.scrollY < 20) {
+const handleTouchStart = (e: TouchEvent) => {
+  const touch = e.touches && e.touches[0];
+  const target = e.target as HTMLElement;
+  // Ignore taps on interactive elements
+  if (target && target.closest('button, a, input, select, textarea, [role="button"], [data-no-float-nav]')) {
+    return;
+  }
+  // Only open when swiping/tapping from the very left edge and near top
+  const edgeThreshold = 24; // px from left edge
+  const topThreshold = 20; // px from top scroll
+  if (touch && touch.clientX <= edgeThreshold && window.scrollY < topThreshold) {
     handleFloatingNavOpen();
   }
 }
