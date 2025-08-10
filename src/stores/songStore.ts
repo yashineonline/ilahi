@@ -126,13 +126,32 @@ const filteredByZikr = computed(() => {
       const owner = 'yashineonline';
       const repo = 'ilahiRepository';
       // const path = 'ilahi.txt'; // Now dynamic
-      const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+      // const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
 
-      const response = await fetch(url, {
-        headers: {
-          'Accept': 'application/vnd.github.v3.raw',
-        }
-      });
+      // const response = await fetch(url, {
+        // headers: {
+          // 'Accept': 'application/vnd.github.v3.raw',
+        // }
+      // });
+
+      // pick ONE of these base URLs (raw is immediate; CDN may take minutes to update)
+const base = `https://raw.githubusercontent.com/${owner}/${repo}/main/`
+// const base = `https://cdn.jsdelivr.net/gh/${owner}/${repo}@main/`
+
+      const cacheBust = forceRefresh ? `?t=${Date.now()}` : ''
+
+      const url = `${base}${path}${cacheBust}`
+
+// NEW (raw.githubusercontent)
+// const url = `https://raw.githubusercontent.com/${owner}/${repo}/main/${path}`
+const response = await fetch(url, { cache: 'no-store' })
+
+// OR (jsDelivr CDN)
+// const url = `https://cdn.jsdelivr.net/gh/${owner}/${repo}@main/${path}`
+// const response = await fetch(url, { cache: 'no-cache' })
+
+
+
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

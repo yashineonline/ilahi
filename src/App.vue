@@ -24,7 +24,9 @@
     </main>
     <footer class="bg-green-600 text-white p-4 mt-8" v-if="navigationStore.isNavigationVisible">
       <button 
-          @click="refreshSongs" class="btn btn-ghost btn-circle" aria-label="Update ilahi list">
+          @click="refreshSongs" 
+          class="btn btn-ghost btn-circle" 
+          aria-label="Update ilahi list and clear cache">
           <font-awesome-icon :icon="['fas', 'rotate']" spin style="color: #17a6ee;" aria-hidden="true" />
         </button>
       <VersionDisplay /> <!-- Import and use the Notification component here -->
@@ -45,15 +47,17 @@ import ThemeToggle from './components/ThemeToggle.vue'
 import { ref, provide, onMounted, onUnmounted } from 'vue'
  import { useNavigationStore } from './stores/navigationStore'
  import { useSongStore } from './stores/songStore';
- import { setupHyperlinkNavigation } from '@/utils/hyperlinkParser';
+ import { setupHyperlinkNavigation, initializePoemCache } from '@/utils/hyperlinkParser';
  import { useThemeStore } from './stores/themeStore'
+ import { usePoemStore } from './stores/poemStore';
 
- const songStore = useSongStore();
- const navigationStore = useNavigationStore()
+const poemStore = usePoemStore();
+const songStore = useSongStore();
+const navigationStore = useNavigationStore()
 const searchBarRef = ref<InstanceType<typeof SearchBar> | null>(null)
-  const showScrollTop = ref(false)
-  const themeStore = useThemeStore()
-  const props = defineProps<{ filePath?: string }>();
+const showScrollTop = ref(false)
+const themeStore = useThemeStore()
+  // const props = defineProps<{ filePath?: string }>();
 
 
 setupHyperlinkNavigation();
@@ -63,7 +67,8 @@ setupHyperlinkNavigation();
 // Automatically fetch songs when the app is mounted
 onMounted(async () => {
   await songStore.fetchSongs();
-  refreshSongs();
+  await initializePoemCache(false); // Add this line
+  // refreshSongs();
   document.documentElement.classList.toggle('dark', themeStore.theme === 'dark')
 });
 
@@ -78,6 +83,50 @@ provide('resetGlobalSearch', resetGlobalSearch)
 function refreshSongs() {
   songStore.fetchSongs(true, songStore.currentPath || 'ilahi.txt');
   // songStore.fetchSongs(true)
+  // Also refresh poems
+  // Clear all caches and reload
+  refreshPoems();
+  clearAppCache();
+}
+
+// Add this new function
+async function clearAppCache() {
+  try {
+    // Clear localStorage caches
+    localStorage.removeItem('v1_cachedPoems');
+    localStorage.removeItem('cachedSongs');
+    
+    // Clear service worker cache
+    if ('caches' in window) {
+      const cacheNames = await caches.keys();
+      await Promise.all(cacheNames.map(name => caches.delete(name)));
+    }
+    
+    // Force service worker update
+    if ('serviceWorker' in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      for (const registration of registrations) {
+        await registration.update();
+      }
+    }
+    
+    // Reload the page to get fresh content
+    window.location.reload();
+  } catch (error) {
+    console.error('Error clearing cache:', error);
+  }
+}
+
+
+
+
+
+// Add this new function
+async function refreshPoems() {
+  console.log('🔄 refreshPoems called');
+  localStorage.removeItem('v1_cachedPoems'); // Force clear cache
+  await initializePoemCache(true); // Force refresh
+  // await poemStore.fetchPoems(true); // this line could work too.
 }
 
 

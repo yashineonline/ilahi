@@ -40,7 +40,8 @@ if (import.meta.env.PROD || enableSWInDev) {
     navigator.serviceWorker.addEventListener('controllerchange', () => {
       console.log('Service worker controller changed')
     })
-
+ // only poll and prompt in production
+ if (import.meta.env.PROD) {
     setInterval(async () => {
       const regs = await navigator.serviceWorker.getRegistrations()
       for (const reg of regs) {
@@ -57,14 +58,14 @@ if (import.meta.env.PROD || enableSWInDev) {
         }
       }
     }, 15000)
-
+  }
     navigator.serviceWorker.getRegistrations().then(registrations => {
       registrations.forEach(registration => registration.update())
     })
   }
 } else {
   // Development default: ensure no SW controls the page to avoid stale caches
-  if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then(registrations => {
       registrations.forEach(registration => registration.unregister());
     });

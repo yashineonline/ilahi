@@ -4,9 +4,10 @@ export interface Poem {
   title: string;
   content: string[];
   slug: string;
+  authorName: string;
 }
 
-export function processPoems(fileContent: string): Poem[] {
+export function processPoems(fileContent: string, authorName: string): Poem[] {
   const lines = fileContent.split('\n');
   const poems: Poem[] = [];
   let currentPoem: Poem | null = null;
@@ -18,7 +19,12 @@ export function processPoems(fileContent: string): Poem[] {
         poems.push(currentPoem);
       }
       const title = trimmedLine.substring(2).trim();
-      currentPoem = { title, content: [], slug: slugify(title) };
+      currentPoem = { 
+        title, 
+        content: [], 
+        slug: slugify(title), // Simple title slug
+        authorName // Store author name in the poem object
+      };
     } else if (currentPoem) {
       if (trimmedLine === '') {
         currentPoem.content.push(''); // Add empty line to preserve paragraphs

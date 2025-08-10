@@ -257,7 +257,7 @@ const handleSongListClick = () => {
   router.push('/songs');
 
   // Always refresh with ilahi.txt when clicking the ilahi list button
-  songStore.fetchSongs(true, 'ilahi.txt');
+  songStore.fetchSongs(false, 'ilahi.txt');
 
   if (isDesktop.value) { // 768px is a common breakpoint for desktop
     showTooltip.value = true

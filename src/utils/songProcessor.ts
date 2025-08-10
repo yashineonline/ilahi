@@ -48,14 +48,14 @@ export function renderSong(song: SongData, options: { fontSize: number, showTran
   } else {
     // Default: lyrics then optional translation below
     html += `<section class="lyrics mb-6" style="font-size: ${fontSize}px;">
-      ${renderStanzas(lyricsWithoutHistory, textColor)}
-    </section>`;
+    ${renderStanzas(lyricsWithoutHistory, textColor)}
+  </section>`;
 
-    if (showTranslation && song.translation && song.translation.length > 0) {
-      html += `<section class="translation mb-6" style="font-size: ${fontSize}px;">
-        <h2 class="text-2xl font-semibold mb-4 ${textColor}">Translation</h2>
-        ${renderStanzas(song.translation, textColor)}
-      </section>`;
+  if (showTranslation && song.translation && song.translation.length > 0) {
+    html += `<section class="translation mb-6" style="font-size: ${fontSize}px;">
+      <h2 class="text-2xl font-semibold mb-4 ${textColor}">Translation</h2>
+      ${renderStanzas(song.translation, textColor)}
+    </section>`;
     }
   }
 

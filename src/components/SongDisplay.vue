@@ -16,7 +16,39 @@
         {{ hideMusicPlayer ? 'Show' : 'Hide' }} Music
       </button>
     </div>
-    <div class="w-full flex flex-wrap items-center gap-2 mb-4">
+
+    <!-- NEW: Replace with components -->
+<div class="w-full flex flex-wrap items-center gap-4 mb-4">
+  <TranslationControls
+    v-if="currentSong"
+    :has-translation="!!(currentSong?.translation && currentSong.translation.length > 0)"
+    :show-translation="settings.showTranslation"
+    :layout="settings.translationLayout"
+    @toggle-translation="settings.toggleTranslationVisibility"
+    @toggle-layout="settings.toggleTranslationLayout"
+  />
+  
+  <div class="flex items-center gap-2">
+    <span class="text-sm">Smaller</span>
+    <input 
+      type="range" 
+      min="12" 
+      max="132" 
+      :value="fontSize" 
+      class="range range-xs range-primary custom-range" 
+      @input="updateFontSize"
+    />
+    <span class="normal-case">Larger</span>
+  </div>
+  
+  <ShareControls
+    v-if="currentSong"
+    :song-slug="currentSong.slug"
+    :song-title="currentSong.title"
+  />
+</div>
+
+    <!-- <div class="w-full flex flex-wrap items-center gap-2 mb-4">
       <button 
         v-if="currentSong?.translation && currentSong.translation.length > 0"
         class="btn btn-primary btn-sm"
@@ -32,6 +64,7 @@
         class="btn btn-outline btn-sm"
         @click="settings.toggleTranslationLayout"
       >
+      <font-awesome-icon :icon="['fas', settings.translationLayout === 'below' ? 'columns' : 'bars']" />
         {{ settings.translationLayout === 'below' ? 'Side-by-side' : 'Below lyrics' }}
       </button>
       <div class="flex items-center gap-2">
@@ -45,8 +78,21 @@
           @input="updateFontSize"
         />
         <span class="normal-case">Larger</span>
-      </div>
-    </div>
+      </div> 
+
+
+
+      <button v-if="currentSong" class="btn btn-ghost btn-sm" @click="shareSong">
+        <font-awesome-icon :icon="['fas', 'share-alt']" />
+        Share
+      </button>
+      <button v-if="currentSong" class="btn btn-ghost btn-sm" @click="copyLink">
+        <font-awesome-icon :icon="['fas', 'copy']" />
+        Copy Link
+      </button>
+    </div> -->
+
+
     <div v-if="currentSong" class="w-full">
       <h1 class="text-3xl font-bold mb-4 text-center">{{ currentSong.title }}</h1>
       <div v-if="currentSong.suggestedZikrs && currentSong.suggestedZikrs.length" class="flex flex-wrap gap-2 mb-4 justify-center">
@@ -94,7 +140,7 @@
               </button>
             </div>
             <button @click="toggleFullIlahi" class="btn btn-accent btn-sm text-lg">
-              {{ showingFullIlahi ? 'By stanza' : 'Full ilahi' }}
+              {{ showingFull ? 'By stanza' : 'Full ilahi' }}
             </button>
 
           </div>
@@ -107,10 +153,10 @@
             </div>
           </transition>
           <div class="flex justify-center gap-4 mt-4">
-            <button @click="prevSlide" :disabled="currentSlideIndex === 0 || showingFullIlahi" class="btn btn-secondary">
+            <button @click="prevSlide" :disabled="currentSlideIndex === 0 || showingFull" class="btn btn-secondary">
               Previous
             </button>
-            <button @click="nextSlide" :disabled="currentSlideIndex + slideCount >= slides.length || showingFullIlahi" class="btn btn-secondary">
+            <button @click="nextSlide" :disabled="currentSlideIndex + slideCount >= slides.length || showingFull" class="btn btn-secondary">
               Next
             </button>
           </div>
@@ -138,10 +184,11 @@
           />
         </div>
       </div>
-      <div v-if="showQRCodeFlag && qrCodeDataUrl" class="mt-4 text-center">
+
+      <!-- <div v-if="showQRCodeFlag && qrCodeDataUrl" class="mt-4 text-center">
         <h3 class="text-xl font-semibold mb-2">QR Code For This ilahi</h3>
         <img :src="qrCodeDataUrl" alt="QR Code" class="mx-auto" />
-      </div>
+      </div> -->
     </div>
     <div v-else-if="!loading" class="text-center text-xl text-base-content" aria-live="polite">ilahi not found</div>
     <div v-else class="text-center text-xl text-base-content" aria-live="polite">Loading ilahi...</div>
@@ -152,9 +199,13 @@
       <button class="btn btn-accent" @click="generatePDF">
         <font-awesome-icon :icon="['fas', 'file-pdf']" class="mr-2" size="2xl" />
       </button>
-      <button v-if="hasAudioLinks" class="btn btn-secondary" @click="showQRCode">
-        <font-awesome-icon :icon="['fas', 'qrcode']" class="mr-2" size="2xl" />
-      </button>
+      
+      <!--    <button v-if="hasAudioLinks" class="btn btn-secondary" 
+      @click="showQRCode">
+        <font-awesome-icon :icon="['fas', 'qrcode']" class="mr-2" 
+        size="2xl" />
+      </button> -->
+
     </div>
 
     <div class="mt-6 text-center text-sm text-base-content">
@@ -170,20 +221,21 @@ import { useRouter, useRoute, RouterLink } from 'vue-router'
 import { useSongStore } from '../stores/songStore'
 import { useThemeStore } from '../stores/themeStore'
 import { generateSingleSongPage } from '../utils/singleSongPDF'
-import { generateQRCode } from '../utils/qrCodeGenerator'
-import { useZoom } from '../utils/zoom'
+// import { generateQRCode } from '../utils/qrCodeGenerator'
+import { useZoom, useSlides } from '../utils/zoom'
 import { renderSong } from '../utils/songProcessor'
 import { PDFDocument as PDFLib, StandardFonts } from 'pdf-lib'
 import { downloadPDF } from '../utils/pdfBookUtils'
 import AudioPlayer from './AudioPlayer.vue'
-import { slugify } from '../utils/search';
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faFilePdf, faQrcode, faMusic, faPause, faLanguage } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+// import { slugify } from '../utils/search';
 import type { PlayerType } from './AudioPlayer.vue' // Assuming you've exported this type from AudioPlayer.vue
 import PronunciationGuide from './PronunciationGuide.vue'
 import ThemeToggle from './ThemeToggle.vue'
 import { useSettingsStore } from '@/stores/settingsStore'
+import { getPlayerType } from '@/utils/playerUtils'
+// import { isYoutubeLink, getLinkType, buildSongUrl} from '@/utils/linkUtils'
+import TranslationControls from './TranslationControls.vue'
+import ShareControls from './ShareControls.vue'
 
 // Add a type for the player
 type Player = {
@@ -192,7 +244,7 @@ type Player = {
 } | null;
 
 
-library.add(faFilePdf, faQrcode, faMusic, faPause, faLanguage)
+
 
 // Update the player ref with the correct type
 const player = ref<Player>(null);
@@ -202,7 +254,7 @@ const route = useRoute()
 const songStore = useSongStore()
 const themeStore = useThemeStore()
 const settings = useSettingsStore()
-const qrCodeDataUrl = ref('')
+// const qrCodeDataUrl = ref('')
 const errorMessage = ref('')
 const playerError = ref<string | null>(null)
 const loading = ref(true)
@@ -212,13 +264,14 @@ const showMusicPlayer = computed(() => {
 const hideMusicPlayer = ref(true)
 // const player = ref(null)
 const isPlaying = ref(false)
-const showQRCodeFlag = ref(false)
+// const showQRCodeFlag = ref(false)
 // const showNoTranslationModal = ref(false)
 // const { navigateToContent } = useHyperlinkNavigation();
 
 const currentSong = computed(() => {
   const slugParam = route.params.slug as string;
-  return songStore.songs.find(song => slugify(song.title) === slugParam);
+  return songStore.songs.find(song => song.slug === slugParam)
+  // return songStore.songs.find(song => slugify(song.title) === slugParam);
 })
 
 const { fontSize, increaseFont, decreaseFont } = useZoom()
@@ -235,11 +288,11 @@ const renderedSong = computed(() => {
   return ''
 })
 
-const toggleTranslation = () => {
-  if (currentSong.value?.translation && currentSong.value.translation.length > 0) {
-    settings.toggleTranslationVisibility()
-  } 
-}
+// const toggleTranslation = () => {
+//   if (currentSong.value?.translation && currentSong.value.translation.length > 0) {
+//     settings.toggleTranslationVisibility()
+//   } 
+// }
 
 const generatePDF = async () => {
   if (currentSong.value) {
@@ -275,18 +328,28 @@ const currentAudioLink = computed(() => {
   return '';
 });
 
-const loadQRCode = async () => {
-  if (currentSong.value) {
-    //   const songUrl = `${window.location.origin}/songs/${currentSong.value.slug}`;
-    const songUrl = `${window.location.origin}${import.meta.env.BASE_URL}player/${currentSong.value.slug}`;
-    try {
-      qrCodeDataUrl.value = await generateQRCode(songUrl);
-    } catch (error) {
-      console.error('Error generating QR code:', error);
-      errorMessage.value = 'Failed to generate QR code.';
-    }
-  }
-}
+//  
+// const loadQRCode = async () => {
+//   if (currentSong.value) {
+//     //   const songUrl = `${window.location.origin}/songs/$
+//     {currentSong.value.slug}`;
+//     const songUrl = `${window.location.origin}${import.meta.env.
+//     BASE_URL}player/${currentSong.value.slug}`;
+//     try {
+//       qrCodeDataUrl.value = await generateQRCode(songUrl);
+//     } catch (error) {
+//       console.error('Error generating QR code:', error);
+//       errorMessage.value = 'Failed to generate QR code.';
+//     }
+//   }
+// }
+
+// 
+// inside <script setup>
+const fileParam = computed(() => {
+  const q = route.query.file
+  return typeof q === 'string' && q.trim() ? q : 'ilahi.txt'
+})
 
 
 const toggleMusicPlayer = () => {
@@ -311,78 +374,101 @@ const playPause = () => {
   }
 }
 
+// 
+// const showQRCode = async () => {
+//   if (currentSong.value) {
+//     if (!qrCodeDataUrl.value) {
+//       await loadQRCode();
+//     }
+//     showQRCodeFlag.value = true;
+//   }
+// }
+// 
 
-const showQRCode = async () => {
-  if (currentSong.value) {
-    if (!qrCodeDataUrl.value) {
-      await loadQRCode();
-    }
-    showQRCodeFlag.value = true;
-  }
-}
 
+// const isYoutubeLink = (url: string) => {
+//   return url && (url.includes('youtube.com') || url.includes('youtu.be'));
+// }
 
-const isYoutubeLink = (url: string) => {
-  return url && (url.includes('youtube.com') || url.includes('youtu.be'));
-}
-
-function getPlayerType(url: string): 'youtube' | 'audio' | 'googledrive' | 'soundcloud' {
-  if (isYoutubeLink(url)) {
-    return 'youtube';
-  } else if (url.includes('drive.google.com')) {
-    return 'googledrive';
-  } else if (url.includes('soundcloud.com')) {
-    return 'soundcloud';
-  } else {
-    return 'audio';
-  }
-}
-const getLinkType = (url: string) => {
-  if (isYoutubeLink(url)) return 'YouTube';
-  if (url.includes('soundcloud.com')) return 'SoundCloud';
-  if (url.includes('drive.google.com')) return 'Google Drive';
-  return 'Listen';
-}
+// removed local getPlayerType in favor of util import
+// const getLinkType = (url: string) => {
+//   if (isYoutubeLink(url)) return 'YouTube';
+//   if (url.includes('soundcloud.com')) return 'SoundCloud';
+//   if (url.includes('drive.google.com')) return 'Google Drive';
+//   return 'Listen';
+// }
 
 // Modify the computed property to get all YouTube links
-const youtubeLinks = computed(() => {
-  const links: string[] = [];
+// const youtubeLinks = computed(() => {
+//   const links: string[] = [];
   
-  if (currentSong.value?.mainLinks) {
-    links.push(...currentSong.value.mainLinks.filter(link => 
-      link.includes('youtube.com') || link.includes('youtu.be')
-    ));
-  }
+//   if (currentSong.value?.mainLinks) {
+//     links.push(...currentSong.value.mainLinks.filter(link => 
+//       link.includes('youtube.com') || link.includes('youtu.be')
+//     ));
+//   }
   
-  if (currentSong.value?.alternateTunes) {
-    links.push(...currentSong.value.alternateTunes.filter(link => 
-      link.includes('youtube.com') || link.includes('youtu.be')
-    ));
-  }
+//   if (currentSong.value?.alternateTunes) {
+//     links.push(...currentSong.value.alternateTunes.filter(link => 
+//       link.includes('youtube.com') || link.includes('youtu.be')
+//     ));
+//   }
   
-  return links;
-});
+//   return links;
+// });
 
-watch(() => route.params.slug, async (newSlug) => {
-  if (newSlug) {
-    loading.value = true;
-    await songStore.fetchSongs();
-    if (currentSong.value) {
-      loadQRCode();
+watch([() => route.params.slug, () => route.query.file], async () => {
+  loading.value = true
+  try {
+    if (songStore.songs.length === 0 || songStore.currentPath !== fileParam.value) {
+      await songStore.fetchSongs(false, fileParam.value)
     }
-    loading.value = false;
+     // Fallback (optional): if still not found and file wasn’t naat.txt, try naat.txt
+     if (!currentSong.value && fileParam.value !== 'naat.txt') {
+      await songStore.fetchSongs(true, 'naat.txt')
+    }
+  } finally {
+    loading.value = false
   }
-});
+})
+
+
+ 
+// watch(() => route.params.slug, async (newSlug) => {
+  // if (newSlug) {
+    // loading.value = true;
+    // try {
+    // await songStore.fetchSongs(true, fileParam.value)
+  // }
+    // await songStore.fetchSongs();
+    // 
+    // if (currentSong.value) {
+    //   loadQRCode();
+    // }
+    // 
+    // loading.value = false;
+  // }
+// });
 
 onMounted(async () => {
   loading.value = true
   try {
-    if (songStore.songs.length === 0) {
-      songStore.fetchSongs(true)
+    if (songStore.songs.length === 0 || songStore.currentPath !== fileParam.value) {
+      await songStore.fetchSongs(true, fileParam.value)
+    // if (songStore.songs.length === 0 || songStore.currentPath !== 'naat.txt') {
+    // if (songStore.songs.length === 0) {
+      // await songStore.fetchSongs(true, 'naat.txt')
+
+      // await songStore.fetchSongs(true) // await is critical
+      console.log('Available slugs:', songStore.songs.map(s => s.slug))
+      // songStore.fetchSongs(true)
     }
-    if (currentSong.value) {
-      loadQRCode()
-    }
+    // 
+    // if (currentSong.value) {
+    //   loadQRCode()
+    // }
+    // 
+    // QR removed from runtime UI
     // if (hasAudioLinks.value) {
     //   // console.log('Detected audio links for this song')
     // } else {
@@ -428,42 +514,25 @@ watch(() => route.hash, scrollToHistory);
 
 // Slide mode state
 const slideMode = ref(false);
-const currentSlideIndex = ref(0);
-const slideCount = ref(1);
-const previousSlideCount = ref(1);
-const showingFullIlahi = computed(() => slideCount.value === slides.value.length);
+// const currentSlideIndex = ref(0);
+// const slideCount = ref(1);
+// const previousSlideCount = ref(1);
+// const showingFullIlahi = computed(() => slideCount.value === slides.
+// value.length);
+const { currentSlideIndex, slideCount, previousSlideCount, slides, slidesToShow, showingFull, prev, next, toggleFull, reset } = useSlides(() => currentSong.value ? currentSong.value.lyrics : [])
 
-const slides = computed(() => {
-  if (!currentSong.value) return [];
-  return currentSong.value.lyrics.map(stanza => stanza.join('<br>'));
-});
-
-const slidesToShow = computed(() => {
-  return slides.value.slice(currentSlideIndex.value, currentSlideIndex.value + slideCount.value);
-});
-
-function prevSlide() {
-  currentSlideIndex.value = Math.max(0, currentSlideIndex.value - slideCount.value);
-}
-function nextSlide() {
-  currentSlideIndex.value = Math.min(slides.value.length - slideCount.value, currentSlideIndex.value + slideCount.value);
-}
-function toggleFullIlahi() {
-  if (!showingFullIlahi.value) {
-    previousSlideCount.value = slideCount.value;
-    slideCount.value = slides.value.length;
-    currentSlideIndex.value = 0;
-  } else {
-    slideCount.value = previousSlideCount.value || 1;
-    currentSlideIndex.value = 0;
-  }
-}
+function prevSlide() { prev() }
+function nextSlide() { next() }
+function toggleFullIlahi() { toggleFull() }
 
 // Reset index and slideCount when toggling slide mode or changing song
 watch([slideMode, currentSong], () => {
-  currentSlideIndex.value = 0;
-  slideCount.value = 1;
-  previousSlideCount.value = 1;
+  // 
+  // currentSlideIndex.value = 0;
+  // slideCount.value = 1;
+  // previousSlideCount.value = 1;
+  // 
+  reset()
 });
 
 function increaseStanzaCount() {
@@ -478,6 +547,31 @@ function increaseFontSize() {
 function decreaseFontSize() {
   if (fontSize.value > 12) fontSize.value -= 2;
 }
+
+// function buildSongUrl() {
+//   if (!currentSong.value) return ''
+//   return `${window.location.origin}${import.meta.env.BASE_URL}player/${currentSong.value.slug}`
+// }
+
+// async function shareSong() {
+//   if (!currentSong.value) return
+//   const url = buildSongUrl(currentSong.value.slug)
+//   try {
+//     if (navigator.share) {
+//       await navigator.share({ title: currentSong.value?.title, url })
+//     } else {
+//       await navigator.clipboard.writeText(url)
+//       alert('Link copied to clipboard')
+//     }
+//   } catch {}
+// }
+
+// async function copyLink() {
+//   if (!currentSong.value) return
+//   const url = buildSongUrl(currentSong.value.slug)
+//   await navigator.clipboard.writeText(url)
+//   alert('Link copied to clipboard')
+// }
 
 </script>
 

@@ -5,7 +5,7 @@
     <div v-if="randomIlahi" class="mt-4 text-center">
       <p>Try to Sing:</p>
       <router-link 
-      :to="{ name: 'SongDisplay', params: { slug: randomIlahi.slug } }" 
+      :to="{ name: 'SongDisplay', params: { slug: randomIlahi.slug }, query: { file: songStore.currentPath } }"
         class="text-primary hover:underline"
         >
         {{ randomIlahi.title }}
@@ -177,7 +177,7 @@
             v-if="song.title"
             :to="{
               name: 'SongDisplay',
-              params: { slug: slugify(song.title) },
+              params: { slug: song.slug }, query: { file: songStore.currentPath }
             }"
             class="text-blue-600 hover:text-blue-800"
           >

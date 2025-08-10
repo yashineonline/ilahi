@@ -87,6 +87,11 @@ const routes = [
     component: Poems
   },
   {
+    path: '/poems/:authorName',
+    name: 'AuthorPoems', 
+    component: () => import('../views/AuthorPoems.vue')
+  },
+  {
     path: '/wirds',
     name: 'wirds',
     component: Wirds

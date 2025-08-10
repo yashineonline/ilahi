@@ -20,7 +20,8 @@ import {
   faRotateLeft, faRotateRight,
   faPlaneDeparture, faPlaneArrival, // Plane icons for slower and faster
   faPlus,faMinus,
-  faDoorOpen
+  faDoorOpen,
+  faShareAlt, faCopy, faColumns,
 } from '@fortawesome/free-solid-svg-icons'
 
 import { faCircleDown as farCircleDown } from '@fortawesome/free-regular-svg-icons'
@@ -57,6 +58,7 @@ faBars,
 faRotateLeft, faRotateRight, 
 faPlaneDeparture, faPlaneArrival, // Plane icons for slower and faster
 faPlus,faMinus,
+faShareAlt, faCopy, faColumns, 
 )
 
 export { FontAwesomeIcon }

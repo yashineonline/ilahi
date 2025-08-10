@@ -34,8 +34,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, nextTick, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import { fetchAllPoems } from '../utils/poemFetcher';
+
+const route = useRoute();
 
 interface Author {
   name: string;
@@ -56,6 +59,20 @@ const otherAuthors = computed(() => authors.value.filter(author => author.name !
 onMounted(async () => {
   try {
     authors.value = await fetchAllPoems();
+  
+    // Handle poem parameter for direct poem links
+    if (route.query.poem) {
+      await nextTick();
+      const targetSlug = route.query.poem as string;
+      const targetElement = document.getElementById(targetSlug);
+      if (targetElement) {
+        targetElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+            }
+    }  
+  
   } catch (err) {
     console.error('Error fetching poems:', err);
     error.value = 'Failed to load poems. Please try again later.';
@@ -63,4 +80,20 @@ onMounted(async () => {
     loading.value = false;
   }
 });
+
+// Watch for route changes
+watch(() => route.query.poem, async (newPoem) => {
+  if (newPoem) {
+    await nextTick();
+    const targetElement = document.getElementById(newPoem as string);
+    if (targetElement) {
+      targetElement.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
+  }
+});
+
+
 </script>
