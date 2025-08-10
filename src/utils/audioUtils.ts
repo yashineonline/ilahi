@@ -20,3 +20,5 @@ export function getYoutubeLinks(song: { mainLinks?: string[], alternateTunes?: s
     return Boolean((song.mainLinks && song.mainLinks.length > 0) ||
            (song.alternateTunes && song.alternateTunes.length > 0))
   }
+
+  

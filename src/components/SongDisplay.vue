@@ -11,7 +11,7 @@
       <button @click="slideMode = !slideMode" class="btn btn-primary btn-sm">
      {{ slideMode ? 'show full ilahi' : 'Slide Mode' }}
    </button>
-      <button v-if="hasAudioLinks" class="btn btn-primary btn-sm" @click="toggleMusicPlayer">
+      <button v-if="showMusicPlayer" class="btn btn-primary btn-sm" @click="toggleMusicPlayer">
         <font-awesome-icon :icon="['fas', hideMusicPlayer ? 'music' : 'pause']" class="mr-2" />
         {{ hideMusicPlayer ? 'Show' : 'Hide' }} Music
       </button>
@@ -236,6 +236,11 @@ import { getPlayerType } from '@/utils/playerUtils'
 // import { isYoutubeLink, getLinkType, buildSongUrl} from '@/utils/linkUtils'
 import TranslationControls from './TranslationControls.vue'
 import ShareControls from './ShareControls.vue'
+import { hasAudioLinks } from '@/utils/audioUtils'
+import { useFontSize } from '@/utils/fontUtils';
+import { useSlideControls } from '@/utils/slideUtils';
+
+
 
 // Add a type for the player
 type Player = {
@@ -258,9 +263,9 @@ const settings = useSettingsStore()
 const errorMessage = ref('')
 const playerError = ref<string | null>(null)
 const loading = ref(true)
-const showMusicPlayer = computed(() => {
-  return hasAudioLinks.value && !hideMusicPlayer.value
-})
+
+const showMusicPlayer = computed(() => currentSong.value ? hasAudioLinks(currentSong.value) && !hideMusicPlayer.value : false)
+// const showMusicPlayer = computed(() => {return hasAudioLinks.value &&!hideMusicPlayer.value})
 const hideMusicPlayer = ref(true)
 // const player = ref(null)
 const isPlaying = ref(false)
@@ -274,7 +279,7 @@ const currentSong = computed(() => {
   // return songStore.songs.find(song => slugify(song.title) === slugParam);
 })
 
-const { fontSize, increaseFont, decreaseFont } = useZoom()
+const { increaseFont, decreaseFont } = useZoom()
 
 const renderedSong = computed(() => {
   if (currentSong.value) {
@@ -313,10 +318,10 @@ const generatePDF = async () => {
   }
 }
 
-const hasAudioLinks = computed(() => {
-  return (currentSong.value?.mainLinks && currentSong.value.mainLinks.length > 0) ||
-         (currentSong.value?.alternateTunes && currentSong.value.alternateTunes.length > 0);
-});
+// const hasAudioLinks = computed(() => {
+  // return (currentSong.value?.mainLinks && currentSong.value.mainLinks.length > 0) ||
+        //  (currentSong.value?.alternateTunes && currentSong.value.alternateTunes.length > 0);
+// });
 
 const currentAudioLink = computed(() => {
   if (currentSong.value?.mainLinks && currentSong.value.mainLinks.length > 0) {
@@ -482,12 +487,14 @@ onMounted(async () => {
   }
 })
 
+const { fontSize, updateFontSize, increaseFontSize, decreaseFontSize } = useFontSize();
 
 
-const updateFontSize = (event: Event) => {
-  const newSize = parseInt((event.target as HTMLInputElement).value);
-  fontSize.value = newSize;
-}
+// const updateFontSize = (event: Event) => {
+//   const newSize = parseInt((event.target as HTMLInputElement).value);
+//   fontSize.value = newSize;
+//   localStorage.setItem('fontSize', newSize.toString());
+// }
 
 const scrollToHistory = () => {
   if (route.hash === '#history') {
@@ -519,7 +526,7 @@ const slideMode = ref(false);
 // const previousSlideCount = ref(1);
 // const showingFullIlahi = computed(() => slideCount.value === slides.
 // value.length);
-const { currentSlideIndex, slideCount, previousSlideCount, slides, slidesToShow, showingFull, prev, next, toggleFull, reset } = useSlides(() => currentSong.value ? currentSong.value.lyrics : [])
+const { currentSlideIndex, previousSlideCount, slides, slidesToShow, showingFull, prev, next, toggleFull, reset } = useSlides(() => currentSong.value ? currentSong.value.lyrics : [])
 
 function prevSlide() { prev() }
 function nextSlide() { next() }
@@ -535,18 +542,20 @@ watch([slideMode, currentSong], () => {
   reset()
 });
 
-function increaseStanzaCount() {
-  if (slideCount.value < slides.value.length) slideCount.value++;
-}
-function decreaseStanzaCount() {
-  if (slideCount.value > 1) slideCount.value--;
-}
-function increaseFontSize() {
-  if (fontSize.value < 132) fontSize.value += 2;
-}
-function decreaseFontSize() {
-  if (fontSize.value > 12) fontSize.value -= 2;
-}
+const { slideCount, increaseStanzaCount, decreaseStanzaCount } = useSlideControls(slides);
+
+// function increaseStanzaCount() {
+//   if (slideCount.value < slides.value.length) slideCount.value++;
+// }
+// function decreaseStanzaCount() {
+//   if (slideCount.value > 1) slideCount.value--;
+// }
+// function increaseFontSize() {
+//   if (fontSize.value < 132) fontSize.value += 2;
+// }
+// function decreaseFontSize() {
+//   if (fontSize.value > 12) fontSize.value -= 2;
+// }
 
 // function buildSongUrl() {
 //   if (!currentSong.value) return ''

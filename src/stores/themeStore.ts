@@ -2,8 +2,10 @@ import { ref, watch, onMounted } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useThemeStore = defineStore('theme', () => {
-  const storedTheme = localStorage.getItem('theme') as 'light' 
-  const theme = ref(storedTheme as 'light' | 'dark')
+  const storedTheme = localStorage.getItem('theme')
+  const theme = ref<'light' | 'dark'>(storedTheme === 'dark' ? 'dark' : 'light')
+  // const storedTheme = localStorage.getItem('theme') as 'light' 
+  // const theme = ref(storedTheme as 'light' | 'dark')
 
 
   // Persist theme changes
