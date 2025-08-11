@@ -287,14 +287,19 @@ const toggleMenu = (event?: Event) => {
 const handleTouchStart = (e: TouchEvent) => {
   const touch = e.touches && e.touches[0];
   const target = e.target as HTMLElement;
+  // const isInteractiveElement = target.closest('button, a, input, textarea, select, [data-no-float-nav]');
+// const isNotInteractive = !isInteractiveElement;
+
   // Ignore taps on interactive elements
   if (target && target.closest('button, a, input, select, textarea, [role="button"], [data-no-float-nav]')) {
     return;
   }
+  if (touch) {
+
   // Only open when swiping/tapping from the very left edge and near top
-  const edgeThreshold = 24; // px from left edge
-  const topThreshold = 20; // px from top scroll
-  if (touch && touch.clientX <= edgeThreshold && window.scrollY < topThreshold) {
+  // const edgeThreshold = 24; // px from left edge
+  // const topThreshold = 20; // px from top scroll
+  // if (touch && touch.clientX <= edgeThreshold && window.scrollY < topThreshold) {
     handleFloatingNavOpen();
   }
 }
