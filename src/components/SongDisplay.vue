@@ -217,10 +217,10 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch, nextTick } from 'vue'
-import { useRouter, useRoute, RouterLink } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useSongStore } from '../stores/songStore'
 import { useThemeStore } from '../stores/themeStore'
-import { generateSingleSongPage } from '../utils/singleSongPDF'
+// import { generateSingleSongPage } from '../utils/singleSongPDF'
 // import { generateQRCode } from '../utils/qrCodeGenerator'
 import { useZoom, useSlides } from '../utils/zoom'
 import { renderSong } from '../utils/songProcessor'
@@ -239,6 +239,7 @@ import ShareControls from './ShareControls.vue'
 import { hasAudioLinks } from '@/utils/audioUtils'
 import { useFontSize } from '@/utils/fontUtils';
 import { useSlideControls } from '@/utils/slideUtils';
+import { generateSongPDF } from '../utils/pdfBookUtils'
 
 
 
@@ -302,36 +303,50 @@ const renderedSong = computed(() => {
 const generatePDF = async () => {
   if (currentSong.value) {
     try {
-      const pdfDoc = await PDFLib.create();
-      await generateSingleSongPage(pdfDoc, currentSong.value);
-      const pdfBytes = await pdfDoc.save();
-      
-      await downloadPDF(pdfBytes, `${currentSong.value.title}.pdf`);
-      
+      await generateSongPDF(currentSong.value);
       errorMessage.value = '';
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      errorMessage.value = 'Failed to generate PDF. Please try again later.';
+    } catch (error: any) {
+      errorMessage.value = error.message || 'Failed to generate PDF. Please try again later.';
     }
   } else {
     errorMessage.value = 'Song data is not available. Please try reloading the page.';
   }
 }
 
+
+// const generatePDF = async () => {
+//   if (currentSong.value) {
+//     try {
+//       const pdfDoc = await PDFLib.create();
+//       await generateSingleSongPage(pdfDoc, currentSong.value);
+//       const pdfBytes = await pdfDoc.save();
+      
+//       await downloadPDF(pdfBytes, `${currentSong.value.title}.pdf`);
+      
+//       errorMessage.value = '';
+//     } catch (error) {
+//       console.error('Error generating PDF:', error);
+//       errorMessage.value = 'Failed to generate PDF. Please try again later.';
+//     }
+//   } else {
+//     errorMessage.value = 'Song data is not available. Please try reloading the page.';
+//   }
+// }
+
 // const hasAudioLinks = computed(() => {
   // return (currentSong.value?.mainLinks && currentSong.value.mainLinks.length > 0) ||
         //  (currentSong.value?.alternateTunes && currentSong.value.alternateTunes.length > 0);
 // });
 
-const currentAudioLink = computed(() => {
-  if (currentSong.value?.mainLinks && currentSong.value.mainLinks.length > 0) {
-    return currentSong.value.mainLinks[0];
-  }
-  if (currentSong.value?.alternateTunes && currentSong.value.alternateTunes.length > 0) {
-    return currentSong.value.alternateTunes[0];
-  }
-  return '';
-});
+// const currentAudioLink = computed(() => {
+//   if (currentSong.value?.mainLinks && currentSong.value.mainLinks.length > 0) {
+//     return currentSong.value.mainLinks[0];
+//   }
+//   if (currentSong.value?.alternateTunes && currentSong.value.alternateTunes.length > 0) {
+//     return currentSong.value.alternateTunes[0];
+//   }
+//   return '';
+// });
 
 //  
 // const loadQRCode = async () => {
@@ -368,16 +383,16 @@ const onPlayerReady = (playerData: { player: any, type: PlayerType }) => {
   // console.log('Player ready:', playerData);
 }
 
-const playPause = () => {
-  if (player.value && playerType.value !== 'googledrive') {
-    if (isPlaying.value) {
-      player.value.pauseVideo();
-    } else {
-      player.value.playVideo();
-    }
-    isPlaying.value = !isPlaying.value;
-  }
-}
+// const playPause = () => {
+//   if (player.value && playerType.value !== 'googledrive') {
+//     if (isPlaying.value) {
+//       player.value.pauseVideo();
+//     } else {
+//       player.value.playVideo();
+//     }
+//     isPlaying.value = !isPlaying.value;
+//   }
+// }
 
 // 
 // const showQRCode = async () => {

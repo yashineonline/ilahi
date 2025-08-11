@@ -2,6 +2,7 @@ import { PDFDocument as PDFLib, PDFPage, PDFFont, rgb, RGB, PDFImage } from 'pdf
 import { SongData } from './types';
 import { EXPLANATION_TEXT } from './contentConfig';
 import { fetchAllQuotes } from '@/utils/quoteFetcher';
+import { generateSingleSongPage } from '../utils/singleSongPDF'
 
 export async function createCoverPage(pdfDoc: PDFLib, font: PDFFont, title: string, isCustom: boolean = false): Promise<PDFPage> {
   const page = pdfDoc.addPage();
@@ -360,3 +361,17 @@ export async function embedImage(pdfDoc: PDFLib, imageUrl: string): Promise<PDFI
   const imageData = await response.arrayBuffer();
   return await pdfDoc.embedPng(imageData);
 }
+
+// Add to pdfBookUtils.ts from SongDisplay on Aug 10, 2025
+export async function generateSongPDF(song: any): Promise<void> {
+  try {
+    const pdfDoc = await PDFLib.create();
+    await generateSingleSongPage(pdfDoc, song);
+    const pdfBytes = await pdfDoc.save();
+    await downloadPDF(pdfBytes, `${song.title}.pdf`);
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    throw new Error('Failed to generate PDF. Please try again later.');
+  }
+}
+
