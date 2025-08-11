@@ -9,6 +9,7 @@
       
       <SearchBar ref="searchBarRef" v-if="navigationStore.isNavigationVisible" />
       <RouterView />
+      <GlobalToast />
 
       <transition name="fade">
     <button 
@@ -50,6 +51,7 @@ import { ref, provide, onMounted, onUnmounted } from 'vue'
  import { setupHyperlinkNavigation, initializePoemCache } from '@/utils/hyperlinkParser';
  import { useThemeStore } from './stores/themeStore'
  import { usePoemStore } from './stores/poemStore';
+ import GlobalToast from './components/GlobalToast.vue'
 
 const poemStore = usePoemStore();
 const songStore = useSongStore();

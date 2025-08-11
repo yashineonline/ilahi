@@ -16,7 +16,7 @@ export const getSubcategories = () => subcategories;
 type CategoryShortcut = [string, string]; // [mainCategory, subCategory]
 
 export const categoryShortcuts: Record<string, CategoryShortcut> = {
-  "sbt": ["Sung By", "Shaykh Taner"],
+  "sbt": ["Sung By", "Shaykh Taner and Shaykha Muzeyyen"],
   "sbm": ["Sung By", "Shaykh Muhyiddin"],
 };
 

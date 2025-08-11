@@ -19,7 +19,7 @@ export default defineConfig({
         clientsClaim: true,
         skipWaiting: true, // Immediately activates new service worker
         cleanupOutdatedCaches: true, // Remove old caches
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 3MB
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB
         navigateFallback: 'index.html',
         navigateFallbackDenylist: [/^\/api\//, /\.[^/]+$/],
         runtimeCaching: [

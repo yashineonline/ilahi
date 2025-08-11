@@ -39,7 +39,7 @@
         <label class="mb-2 font-bold text-lg">Categories</label>
         <div class="flex gap-2 mb-2">
           <span
-            v-for="shaykh in ['Shaykh Taner', 'Shaykh Muhyiddin']"
+            v-for="shaykh in ['Shaykh Muhyiddin', 'Shaykh Taner and Shaykha Muzeyyen']"
             :key="shaykh"
             @click="toggleShaykhCategory(shaykh)"
             class="px-2 py-0.5 rounded-full cursor-pointer border text-xs font-semibold transition-colors border-green-200"

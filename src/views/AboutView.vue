@@ -17,7 +17,7 @@
       </a>
     </p>
     <router-link to="/poems" class="btn btn-link text-primary hover:text-primary-focus underline">
-      Poems on Love by Shaykh Taner
+      Poems on Love by Shaykh Taner and Shaykha Muzeyyen
     </router-link>
   </div>
 </template>

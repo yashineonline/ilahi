@@ -11,6 +11,23 @@ import { registerSW } from 'virtual:pwa-register';
 // import { useNotificationStore } from './stores/notificationStore'; // Import your notification store
 // import { initializeGlobalHyperlinks } from '@/utils/hyperlinkParser.ts';
 
+function waitForToast(): Promise<void> {
+  return new Promise((resolve) => {
+    if (window.showGlobalToast) {
+      resolve();
+      return;
+    }
+    const interval = setInterval(() => {
+      if (window.showGlobalToast) {
+        clearInterval(interval);
+        resolve();
+      }
+    }, 100);
+  });
+}
+
+
+
 router.beforeEach((to, from, next) => {
   // This will ensure all page navigations start at the top
   window.scrollTo(0, 0)
@@ -33,6 +50,7 @@ app.use(router)
 const enableSWInDev = import.meta.env.VITE_SW_DEV === 'true'
 // Only poll and prompt in production
 if (import.meta.env.PROD) {
+  waitForToast().then(() => {
   setInterval(async () => {
     const regs = await navigator.serviceWorker.getRegistrations();
 
@@ -45,8 +63,6 @@ if (import.meta.env.PROD) {
             'New version available! Click here to update.',
             () => {
               waitingSW.postMessage({ type: 'SKIP_WAITING' });
-
-              // reg.waiting.postMessage({ type: 'SKIP_WAITING' });
               navigator.serviceWorker.addEventListener(
                 'controllerchange',
                 () => window.location.reload(),
@@ -59,6 +75,7 @@ if (import.meta.env.PROD) {
       }
     }
   }, 15000);
+});
 
   // Force check for new SW on load
   navigator.serviceWorker.getRegistrations().then(registrations => {
