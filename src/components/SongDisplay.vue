@@ -265,7 +265,10 @@ const errorMessage = ref('')
 const playerError = ref<string | null>(null)
 const loading = ref(true)
 
-const showMusicPlayer = computed(() => currentSong.value ? hasAudioLinks(currentSong.value) && !hideMusicPlayer.value : false)
+
+const showMusicPlayer = computed(() => currentSong.value ? hasAudioLinks(currentSong.value) : false)
+
+// const showMusicPlayer = computed(() => currentSong.value ? hasAudioLinks(currentSong.value) && !hideMusicPlayer.value : false)
 // const showMusicPlayer = computed(() => {return hasAudioLinks.value &&!hideMusicPlayer.value})
 const hideMusicPlayer = ref(true)
 // const player = ref(null)
