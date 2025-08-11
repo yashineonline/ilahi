@@ -199,4 +199,79 @@ This application represents a modern approach to serving cultural heritage conte
 
 ---
 
+## Number of active lines per file
+
+SongList.vue: 695
+NavigationBar.vue: 647
+SongDisplay.vue: 645
+AudioPlayer.vue: 567
+songProcessor.ts: 472
+pdfBookUtils.ts: 378
+YouTubePlayer.vue: 377
+CategorySelector.vue: 260
+songStore.ts: 244
+categoryUtils.ts: 228
+BookView.vue: 214
+singleSongPDF.ts: 182
+pronunciationService.ts: 177
+hyperlinkParser.ts: 172
+PronunciationGuide.vue: 175
+fullSongBookPDF.ts: 116
+poemFetcher.ts: 113
+BooksView.vue: 166
+App.vue: 161
+RandomIlahi.vue: 106
+Installation.vue: 129
+Poems.vue: 99
+AuthorPoems.vue: 95
+Home.vue: 89
+contentConfig.ts: 84
+main.ts: 78
+IlahiClasses.vue: 79
+Quotes.vue: 57
+cleanupMissingBooks.ts: 54
+quoteFetcher.ts: 55
+themeStore.ts: 51
+zoom.ts: 68
+poemProcessor.ts: 42
+ShareControls.vue: 39
+TranslationControls.vue: 36
+SearchBar.vue: 36
+settingsStore.ts: 35
+types.ts: 32
+search.ts: 32
+fontUtils.ts: 27
+audioUtils.ts: 24
+linkUtils.ts: 21
+uploadBookMetadata.ts: 41
+firebase.ts: 42
+version.mts: 15
+slideUtils.ts: 15
+playerUtils.ts: 14
+removeBookDuplicates.ts: 29
+AboutView.vue: 27
+translator.ts: 23
+pdfWorker.ts: 12
+qrCodeGenerator.ts: 11
+fontConfig.ts: 11
+navigationStore.ts: 12
+HistoryView.vue: 34
+MiscellaneousView.vue: 12
+ThemeToggle.vue: 31
+MenuItems.vue: 47
+LanguageSelection.vue: 43
+SelectedSongsManager.vue: 69
+Settings.vue: 12
+VersionDisplay.vue: 15
+Poem.vue: 54
+
+There is always more...
+
+
+
+
+
+
+
+
 
