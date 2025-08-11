@@ -1,1 +1,0 @@
-import{d as s,e as n,g as t,s as o,k as a}from"./vue-Car_zgcF.js";const c=s({__name:"MiscellaneousView",setup(l){return(r,e)=>(a(),n("div",null,e[0]||(e[0]=[t("h1",null,"Miscellaneous",-1),o(" test run "),t("button",null,"Test",-1)])))}});export{c as default};

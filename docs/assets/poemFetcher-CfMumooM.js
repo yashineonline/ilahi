@@ -1,4 +1,0 @@
-import{s as f}from"./main-BVZZyKik.js";function g(c){const i=c.split(`
-`),n=[];let t=null;return i.forEach(r=>{const e=r.trim();if(e.startsWith("P:")){t&&n.push(t);const o=e.substring(2).trim();t={title:o,content:[],slug:f(o)}}else t&&(e===""?t.content.push(""):t.content.push(e))}),t&&n.push(t),n}async function $(){const c="yashineonline",i="ilahiRepository",n="poems",t=[],r="v1_cachedPoems",e=localStorage.getItem(r);if(e)return JSON.parse(e);for(let o=1;o<=15;o+=1){const p=`poem-${o}.txt`,l=`https://api.github.com/repos/${c}/${i}/contents/${n}/${p}`;try{const s=await fetch(l,{headers:{Accept:"application/vnd.github.v3.raw"}});if(!s.ok){if(s.status===404)continue;throw new Error(`HTTP error! status: ${s.status}`)}const a=(await s.text()).split(`
-`),u=a[0].trim(),h=a.slice(1).join(`
-`),m=g(h);t.push({name:u,poems:m})}catch(s){console.error(`Error fetching poem-${o}.txt:`,s);break}}return localStorage.setItem(r,JSON.stringify(t)),t}export{$ as f};
