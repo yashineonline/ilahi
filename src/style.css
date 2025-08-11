@@ -29,3 +29,9 @@ h1 {
   opacity: 0;
   transform: translateY(20px) scale(0.9);
 }
+
+@media (orientation: landscape) {
+  .landscape\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

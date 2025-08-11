@@ -34,7 +34,7 @@ export function renderSong(song: SongData, options: { fontSize: number, showTran
   if (showTranslation && translationLayout === 'side' && song.translation && song.translation.length > 0) {
     // Side-by-side layout
     html += `<section class="mb-6" style="font-size: ${fontSize}px;">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 landscape:grid-cols-2 gap-6">
         <div>
           <h2 class="text-2xl font-semibold mb-4 ${textColor}">Lyrics</h2>
           ${renderStanzas(lyricsWithoutHistory, textColor)}

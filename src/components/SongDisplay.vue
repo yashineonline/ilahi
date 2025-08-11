@@ -51,7 +51,7 @@
     <!-- <div class="w-full flex flex-wrap items-center gap-2 mb-4">
       <button 
         v-if="currentSong?.translation && currentSong.translation.length > 0"
-        class="btn btn-primary btn-sm"
+        class="btn btn-primary btn-sm" 
         data-no-float-nav
         @click.stop="toggleTranslation" 
         :aria-pressed="settings.showTranslation"
@@ -78,7 +78,7 @@
           @input="updateFontSize"
         />
         <span class="normal-case">Larger</span>
-      </div> 
+      </div>
 
 
 
