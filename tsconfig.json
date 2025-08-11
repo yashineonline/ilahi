@@ -30,7 +30,7 @@
     },
     "typeRoots": ["./node_modules/@types", "./src/types"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/version.d.ts", "resetGlobal.d.ts", "src/components/Entrance with api.ignore", "src/components/Modal.yashine", "src/version.mts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/version.d.ts.ignore", "resetGlobal.d.ts", "src/components/Entrance with api.ignore", "src/components/Modal.yashine", "src/version.mts", "vite-env.d.ts"],
   
   "exclude": [
     // ... other exclusions ...

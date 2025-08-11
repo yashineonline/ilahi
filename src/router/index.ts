@@ -31,6 +31,8 @@ const HistoryView = () => import('../views/HistoryView.vue')
 const MiscellaneousView = () => import('../views/MiscellaneousView.vue')
 const AuthorPoems = () => import('../views/AuthorPoems.vue')
 const ZikrPlayer = () => import('../components/ZikrPlayer.vue')
+const GlobalToast = () => import('../components/GlobalToast.vue')
+
 
 const routes = [
   {
@@ -66,6 +68,14 @@ const routes = [
     component: SongDisplay,
   
   },
+
+  {
+    path: '/globalToast',
+    name: 'GlobalToast',
+    component: GlobalToast ,
+  
+  },
+
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',

@@ -4,15 +4,11 @@ import path from 'path'
 import { VitePWA } from 'vite-plugin-pwa'
 import tailwindcss from 'tailwindcss'
 import autoprefixer from 'autoprefixer'
+import { readFileSync } from 'fs';
+
+const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
 
 export default defineConfig({
-  define: {
-    '__BUILD_DATE__': JSON.stringify(new Date().toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-    })),
-    },
   base: '/ilahi/',
   plugins: [
     vue(),
@@ -64,7 +60,26 @@ export default defineConfig({
           { src: '180.png', sizes: '180x180', type: 'image/png' },
         ]
       }
-    })
+    }),
+
+// 🔹 Add virtual module plugin here
+{
+  name: 'virtual-build-info',
+  resolveId(id) {
+    if (id === 'virtual:build-info') return '\0virtual:build-info';
+  },
+  load(id) {
+    if (id === '\0virtual:build-info') {
+      const buildDate = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit',
+      });
+      return `export const buildDate = ${JSON.stringify(buildDate)};
+              export const version = ${JSON.stringify(pkg.version)};`;
+    }
+  }
+}
   ],
   css: {
     postcss: {

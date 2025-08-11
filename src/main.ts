@@ -31,46 +31,94 @@ app.use(router)
 
 // Register/unregister Service Worker depending on env
 const enableSWInDev = import.meta.env.VITE_SW_DEV === 'true'
-if (import.meta.env.PROD || enableSWInDev) {
-  const updateServiceWorker = registerSW({ immediate: true })
+// Only poll and prompt in production
+if (import.meta.env.PROD) {
+  setInterval(async () => {
+    const regs = await navigator.serviceWorker.getRegistrations();
 
-  // Listen for the custom event dispatched by the injected runtime when a new SW is waiting
-  // We implement a simple polling to check for a waiting SW and prompt the user
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      console.log('Service worker controller changed')
-    })
- // only poll and prompt in production
- if (import.meta.env.PROD) {
-    setInterval(async () => {
-      const regs = await navigator.serviceWorker.getRegistrations()
-      for (const reg of regs) {
-        if (reg.waiting) {
-          const accept = window.confirm('A new version of ilahi is available. Reload now?')
-          if (accept) {
-            // Ask the waiting SW to take control, then reload on controller change
-            reg.waiting.postMessage({ type: 'SKIP_WAITING' })
-            navigator.serviceWorker.addEventListener('controllerchange', () => {
-              window.location.reload()
-            }, { once: true })
-          }
-          break
+    for (const reg of regs) {
+      if (reg.waiting != null) {
+        const waitingSW = reg.waiting;
+        // Trigger the global toast
+        if (window.showGlobalToast) {
+          window.showGlobalToast(
+            'New version available! Click here to update.',
+            () => {
+              waitingSW.postMessage({ type: 'SKIP_WAITING' });
+
+              // reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+              navigator.serviceWorker.addEventListener(
+                'controllerchange',
+                () => window.location.reload(),
+                { once: true }
+              );
+            }
+          );
         }
+        break;
       }
-    }, 15000)
-  }
-    navigator.serviceWorker.getRegistrations().then(registrations => {
-      registrations.forEach(registration => registration.update())
-    })
-  }
+    }
+  }, 15000);
+
+  // Force check for new SW on load
+  navigator.serviceWorker.getRegistrations().then(registrations => {
+    registrations.forEach(registration => registration.update());
+  });
+
 } else {
-  // Development default: ensure no SW controls the page to avoid stale caches
-if ('serviceWorker' in navigator) {
+  // Development: ensure no SW controls the page to avoid stale caches
+  if ('serviceWorker' in navigator) {
     navigator.serviceWorker.getRegistrations().then(registrations => {
       registrations.forEach(registration => registration.unregister());
     });
   }
 }
+
+
+
+// if (import.meta.env.PROD || enableSWInDev) {
+//   const updateServiceWorker = registerSW({ immediate: true })
+
+
+//   if ('serviceWorker' in navigator) {
+//     navigator.serviceWorker.addEventListener('controllerchange', () => {
+//       console.log('Service worker controller changed')
+//     })
+//  // only poll and prompt in production
+//  if (import.meta.env.PROD) {
+//     setInterval(async () => {
+//       const regs = await navigator.serviceWorker.getRegistrations()
+//       for (const reg of regs) {
+//         if (reg.waiting) {
+//           const { show } = useToast()
+//           show('New version available! Click to update.', 'info', 10000)      
+//           // const accept = window.confirm('A new version of ilahi is available. Reload now?')
+//           // if (accept) {
+//             // Add a global update function
+//   window.updateApp = () => {
+//           // Ask the waiting SW to take control, then reload on controller change
+//             reg.waiting.postMessage({ type: 'SKIP_WAITING' })
+//             navigator.serviceWorker.addEventListener('controllerchange', () => {
+//               window.location.reload()
+//             }, { once: true })
+//           }
+//           break
+//         }
+//       }
+//     }, 15000)
+//   }
+//     navigator.serviceWorker.getRegistrations().then(registrations => {
+//       registrations.forEach(registration => registration.update())
+//     })
+//   }
+// } else {
+//   // Development default: ensure no SW controls the page to avoid stale caches
+// if ('serviceWorker' in navigator) {
+//     navigator.serviceWorker.getRegistrations().then(registrations => {
+//       registrations.forEach(registration => registration.unregister());
+//     });
+//   }
+// }
 
 app.mount('#app')
 
