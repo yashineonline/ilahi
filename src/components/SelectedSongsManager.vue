@@ -13,7 +13,7 @@
           type="number" 
           min="1" 
           :max="localSelectedSongs.length" 
-          class="w-16 mr-2 text-black bg-white" 
+          class="w-16 mr-2 text-black bg-base-100" 
           @input="(e) => reorderSongs(index, (e.target as HTMLInputElement).valueAsNumber)"
         >
         <span class="flex-grow text-white">{{ song.title }}</span>
@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="mt-4 space-x-2">
-      <button @click="sortAlphabetically" class="px-4 py-2 bg-white text-blue-600 border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors">
+      <button @click="sortAlphabetically" class="px-4 py-2 bg-base-100 text-base-content border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors">
         Sort Alphabetically
       </button>
     </div>

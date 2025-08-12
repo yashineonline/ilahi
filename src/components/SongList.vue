@@ -179,7 +179,7 @@
               name: 'SongDisplay',
               params: { slug: song.slug }, query: { file: songStore.currentPath }
             }"
-            class="text-blue-600 hover:text-blue-800"
+            class="hover:link-secondary"
           >
             {{ song.title }}
           </router-link>

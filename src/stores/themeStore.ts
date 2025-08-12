@@ -29,7 +29,7 @@ function toggleTheme() {
     console.log("HTML classes:", document.documentElement.className)
  
      // Set both class and data-theme for maximum compatibility
-     document.documentElement.classList.toggle('dark', theme.value === 'dark')
+    //  document.documentElement.classList.toggle('dark', theme.value === 'dark')
      document.documentElement.setAttribute('data-theme', theme.value)
 
 

@@ -89,7 +89,7 @@
 
               <div 
                 v-if="showTooltip" 
-                class="fixed-tooltip p-4 bg-base-200 rounded-lg shadow-lg text-base-content w-64 mt-2 tooltip-bounce"
+                class="fixed-tooltip p-4 bg-base-200 rounded-lg shadow-lg text-base-content w-64 mt-2 tooltip-bounce inset-x-4"
                 :class="{'bg-gray-700 text-white': themeStore.theme === 'dark'}"
                 style="height: auto; min-height: 80px;"
               >
@@ -115,7 +115,7 @@
                 
                 <div 
                   v-if="showYoutubeTooltip" 
-                  class="fixed-tooltip p-4 bg-base-200 rounded-lg shadow-lg text-base-content w-64 mt-2 tooltip-bounce"
+                  class="fixed-tooltip p-4 bg-base-200 rounded-lg shadow-lg text-base-content w-64 mt-2 tooltip-bounce inset-x-4"
                   :class="{'bg-gray-700 text-white': themeStore.theme === 'dark'}"
                   style="height: auto; min-height: 80px;"
                 >
@@ -138,7 +138,7 @@
                 
                 <div 
                   v-if="showWhatsappTooltip" 
-                  class="fixed-tooltip p-6 bg-base-200 rounded-lg shadow-lg text-base-content w-64 mt-2 tooltip-star-animation"
+                  class="fixed-tooltip p-6 bg-base-200 rounded-lg shadow-lg text-base-content w-64 mt-2 tooltip-star-animation inset-x-4"
                   :class="{'bg-gray-700 text-white': themeStore.theme === 'dark'}"
                 >
                   <div class="flex flex-col items-center">
@@ -173,7 +173,7 @@
         </button>
                 <div 
                   v-if="showInstallTooltip" 
-                  class="fixed-tooltip p-4 bg-base-200 rounded-lg shadow-lg text-base-content w-64 mt-2 tooltip-bounce"
+                  class="fixed-tooltip p-4 bg-base-200 rounded-lg shadow-lg text-base-content w-64 mt-2 tooltip-bounce inset-x-4"
                   :class="{'bg-gray-700 text-white': themeStore.theme === 'dark'}"
                   style="height: auto; min-height: 40px;"
                 >
@@ -461,7 +461,7 @@ const handleFloatingNavOpen = () => {
       if (!menuOpen.value) {
       showFloatingNav.value = false;
       }
-    }, 2000);
+    }, 4000);
   }
 }
 
@@ -489,12 +489,15 @@ defineExpose({ ilahiClasses })
     min-width: 48px;
     }
     
-     .fixed-tooltip {
-       width: 80vw; /* Use viewport width instead of fixed width */
-       left: 10vw;
-       transform: none; /* Remove the -50% transform on mobile */
-       z-index: 100;
-     }
+  .fixed-tooltip {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 20%;
+    max-width: calc(100vw - 2rem);
+    width: auto;
+    z-index: 9999;
+  }
 
  /* Larger tap area for mobile */
  .btn-circle {

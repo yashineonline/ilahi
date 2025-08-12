@@ -10,7 +10,7 @@
       <section v-if="shaykhTanerPoems" class="mb-8">
         <router-link 
           :to="{ name: 'AuthorPoems', params: { authorName: shaykhTanerPoems.name } }" 
-          class="text-2xl font-semibold text-blue-700 hover:text-red-900"
+          class="text-2xl font-semibold bg-base-100 text-base-content hover:text-red-900"
         >
         Poems on Love by Shaykh Taner and Shaykha Muzeyyen
         </router-link>
@@ -22,7 +22,7 @@
           <li v-for="author in otherAuthors" :key="author.name">
             <router-link 
               :to="{ name: 'AuthorPoems', params: { authorName: author.name } }" 
-              class="text-xl font-semibold text-blue-700 hover:text-red-900"
+              class="text-xl font-semibold bg-base-100 text-base-content hover:text-red-900"
             >
               {{ author.name }}
             </router-link>

@@ -2,7 +2,7 @@
   <transition name="slide-down">
     <div
         v-if="visible"
-        class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg cursor-pointer z-50 max-w-md w-full"
+        class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-base-100 text-base-content px-6 py-3 rounded-lg shadow-lg cursor-pointer z-50 max-w-md w-full"
         @click="handleClick"
            role="alert"
       aria-live="assertive"

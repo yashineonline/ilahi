@@ -60,6 +60,8 @@ export async function generateSingleSongPage(pdfDoc: PDFDocument, song: SongData
   const qrCodeDataUrl = await generateQRCode(`https://ilahiapp.com/songs/${song.slug}`);
   const qrCodeImage = await pdfDoc.embedPng(qrCodeDataUrl);
   const qrCodeDims = qrCodeImage.scale(0.5);
+  const x = (width - qrCodeDims.width) / 2;
+
 
   if (y - qrCodeDims.height - 50 < 50) {
     page = pdfDoc.addPage();
@@ -67,26 +69,37 @@ export async function generateSingleSongPage(pdfDoc: PDFDocument, song: SongData
   }
 
   page.drawImage(qrCodeImage, {
-    x: 50,
+    x,
     y: y - qrCodeDims.height,
     width: qrCodeDims.width,
     height: qrCodeDims.height,
   });
 
+  // at the end of each page render
+  page.drawRectangle({
+    x: 36, y: 36,
+    width: page.getWidth() - 72,
+    height: page.getHeight() - 72,
+    borderColor: rgb(0.6, 0.6, 0.6),
+    borderWidth: 1,
+  });
+
   // Add "Link to the App" text next to QR code
-  drawUnicodeText(page, 'Link to the App', {
-    x: 50 + qrCodeDims.width + 10,
-    y: y - qrCodeDims.height / 2,
+  drawUnicodeText(page, 'Link to the ilahi on the app', {
+    x: width /2,
+    y: y - qrCodeDims.height - 16,
     size: 14,
     font,
     color: rgb(0, 0, 0),
-    align: 'left'
+    align: 'center'
   });
 
   y -= qrCodeDims.height + 20;
 
   return pages;
 }
+
+
 
 function drawUnicodeText(page: PDFPage, text: string, options: {
   x: number,

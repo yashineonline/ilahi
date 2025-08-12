@@ -10,7 +10,7 @@
             params: { slug: slugify(song.title) },
             hash: '#history'
           }" 
-          class="text-blue-600 hover:text-purple-800"
+          class="bg-base-100 text-base-content hover:text-purple-800"
         >
           {{ song.title }}
         </router-link>

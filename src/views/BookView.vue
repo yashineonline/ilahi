@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full max-w-4xl mx-auto p-6 bg-blue-500 text-white rounded-lg space-y-4">
+  <div class="w-full max-w-4xl mx-auto p-6 bg-base-100 text-base-content rounded-lg space-y-4">
     <h1 class="text-2xl font-bold">ilahi Book</h1>
     <p>Download our collection of ilahis as a PDF book.</p>
     <div v-if="isLoading" class="text-center">
@@ -7,16 +7,16 @@
       <ProgressBar :progress="progress" />
     </div>
     <div v-else class="space-y-2">
-      <button @click="downloadBasicBook" :disabled="isLoading" class="px-4 py-2 bg-white text-blue-600 border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+      <button @click="downloadBasicBook" :disabled="isLoading" class="px-4 py-2 bg-base-100 text-blue-600 border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         Download {{ basicSongs.length }} Basic ilahis
       </button>
-      <button @click="downloadIntermediateBook" :disabled="isLoading" class="px-4 py-2 bg-white text-red-600 border border-red-600 rounded hover:bg-red-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+      <button @click="downloadIntermediateBook" :disabled="isLoading" class="px-4 py-2 bg-base-100 text-red-600 border border-red-600 rounded hover:bg-red-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         {{ intermediateSongs.length }} ilahis (including Basic)
       </button>
-      <button @click="showSongSelector = true" :disabled="isLoading" class="px-4 py-2 bg-white text-purple-600 border border-purple-600 rounded hover:bg-purple-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+      <button @click="showSongSelector = true" :disabled="isLoading" class="px-4 py-2 bg-base-100 text-purple-600 border border-purple-600 rounded hover:bg-purple-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         Create Custom Book
       </button>
-      <button @click="confirmDownload('all')" :disabled="isLoading" class="px-4 py-2 bg-white text-green-600 border border-green-600 rounded hover:bg-green-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+      <button @click="confirmDownload('all')" :disabled="isLoading" class="px-4 py-2 bg-base-100 text-green-600 border border-green-600 rounded hover:bg-green-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
         {{ songStore.songs.length }} ilahis
       </button>
     </div>
@@ -48,13 +48,13 @@
           v-if="selectedSongs.length > 0"
           @click="generateCustomBook"
           :disabled="isLoading"
-          class="px-4 py-2 bg-white text-green-600 border border-green-600 rounded hover:bg-green-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          class="px-4 py-2 bg-base-100 text-green-600 border border-green-600 rounded hover:bg-green-600 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Download My Custom Book
         </button>
         <button
           @click="resetSelection"
-          class="px-4 py-2 bg-white text-red-600 border border-red-600 rounded hover:bg-red-600 hover:text-white transition-colors"
+          class="px-4 py-2 bg-base-100 text-red-600 border border-red-600 rounded hover:bg-red-600 hover:text-white transition-colors"
         >
           Reset Selection
         </button>

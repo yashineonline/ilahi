@@ -12,7 +12,7 @@
 
     <!-- Naat Modal -->
     <div v-if="showNaatModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-      <div class="bg-white dark:bg-gray-900 p-6 rounded-lg max-w-4xl w-full relative">
+      <div class="bg-base-100 dark:bg-gray-900 p-6 rounded-lg max-w-4xl w-full relative">
         <button
           class="absolute top-2 right-2 text-xl"
           @click="showNaatModal = false"

@@ -11,20 +11,20 @@ import { registerSW } from 'virtual:pwa-register';
 // import { useNotificationStore } from './stores/notificationStore'; // Import your notification store
 // import { initializeGlobalHyperlinks } from '@/utils/hyperlinkParser.ts';
 
-function waitForToast(): Promise<void> {
-  return new Promise((resolve) => {
-    if (window.showGlobalToast) {
-      resolve();
-      return;
-    }
-    const interval = setInterval(() => {
-      if (window.showGlobalToast) {
-        clearInterval(interval);
-        resolve();
-      }
-    }, 100);
-  });
-}
+// function waitForToast(): Promise<void> {
+//   return new Promise((resolve) => {
+//     if (window.showGlobalToast) {
+//       resolve();
+//       return;
+//     }
+//     const interval = setInterval(() => {
+//       if (window.showGlobalToast) {
+//         clearInterval(interval);
+//         resolve();
+//       }
+//     }, 100);
+//   });
+// }
 
 
 
@@ -46,36 +46,49 @@ app.use(router)
 // Initialize global hyperlink handling
 // initializeGlobalHyperlinks();
 
+const updateSW = registerSW({
+  immediate: true,
+  onNeedRefresh() {
+    window.showGlobalToast?.('New version available. Tap to update.', () => {
+      updateSW(true);
+    });
+  },
+  onOfflineReady() {
+    window.showGlobalToast?.('App is ready to work offline.', () => {});
+  },
+});
+
+
 // Register/unregister Service Worker depending on env
 const enableSWInDev = import.meta.env.VITE_SW_DEV === 'true'
 // Only poll and prompt in production
 if (import.meta.env.PROD) {
-  waitForToast().then(() => {
-  setInterval(async () => {
-    const regs = await navigator.serviceWorker.getRegistrations();
+//   waitForToast().then(() => {
+//   setInterval(async () => {
+//     const regs = await navigator.serviceWorker.getRegistrations();
 
-    for (const reg of regs) {
-      if (reg.waiting != null) {
-        const waitingSW = reg.waiting;
-        // Trigger the global toast
-        if (window.showGlobalToast) {
-          window.showGlobalToast(
-            'New version available! Click here to update.',
-            () => {
-              waitingSW.postMessage({ type: 'SKIP_WAITING' });
-              navigator.serviceWorker.addEventListener(
-                'controllerchange',
-                () => window.location.reload(),
-                { once: true }
-              );
-            }
-          );
-        }
-        break;
-      }
-    }
-  }, 15000);
-});
+//     for (const reg of regs) {
+//       if (reg.waiting != null) {
+//         const waitingSW = reg.waiting;
+//         // Trigger the global toast
+//         if (window.showGlobalToast) {
+//           window.showGlobalToast(
+//             'New version available! Click here to update.',
+//             () => {
+//               waitingSW.postMessage({ type: 'SKIP_WAITING' });
+//               navigator.serviceWorker.addEventListener(
+//                 'controllerchange',
+//                 () => window.location.reload(),
+//                 { once: true }
+//               );
+//             }
+//           );
+//         }
+//         break;
+//       }
+//     }
+//   }, 15000);
+// });
 
   // Force check for new SW on load
   navigator.serviceWorker.getRegistrations().then(registrations => {

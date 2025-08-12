@@ -95,7 +95,7 @@ export const parseHyperlinks = (text: string): string => {
     const song = songStore.songs.find(s => s.slug === slug);
     const linkText = displayText ?? (song ? song.title : slug);
     // const displayText = song ? song.title : slug;
-    return `<a href="${url}" class="hyperlink music-link font-bold" data-url="${url}" data-slug="${slug}" aria-label="Navigate to ${linkText}" tabindex="0">${DOMPurify.sanitize(linkText)}</a>`;
+    return `<a href="${url}" class="hyperlink btn btn-xs btn-primary normal-case font-bold" data-url="${url}" data-slug="${slug}" aria-label="Navigate to ${linkText}" tabindex="0">${DOMPurify.sanitize(linkText)}</a>`;
 
     
     // return `<a href="${url}" class="hyperlink music-link font-bold" data-url="${url}" data-slug="${slug}" aria-label="Navigate to ${displayText}" tabindex="0">${displayText}</a>`;

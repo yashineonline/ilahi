@@ -6,7 +6,7 @@
      @apply bg-red-500;
    }
    .dark .dark-test {
-     @apply bg-blue-500;
+     @apply bg-blue-400;
    }
 
 
