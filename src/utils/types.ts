@@ -3,7 +3,7 @@ export interface SongData {
   lyrics: string[][];
   translation?: string[][];
   pronunciation?: string[][];
-  // history?: string[][];  // Add this line
+  history?: string[][];  // Add this line
   audioLink?: string;
   mainLinks: string[];
   alternateTunes: string[];

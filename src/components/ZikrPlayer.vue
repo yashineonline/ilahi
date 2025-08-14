@@ -31,8 +31,7 @@
         v-for="(zikr, index) in songStore.zikrItems"
         :key="index"
         :data-zikr-index="index"
-        class="card zikr-fullwidth-card bg-base-100 shadow-xl hover:shadow-2xl transition-all cursor-pointer hover:-translate-y-1"
-        :class="{'bg-gray-800/90 text-white': themeStore.theme === 'dark', 'bg-white/90 text-gray-800': themeStore.theme === 'light'}"
+class="card zikr-fullwidth-card bg-base-100 text-base-content shadow-xl hover:shadow-2xl transition-all cursor-pointer hover:-translate-y-1"
       >
         <div class="card-body">
           <h2 
@@ -174,7 +173,9 @@ onMounted(async () => {
       await songStore.fetchSongs(true);
     }
   } catch (err) {
-    error.value = "Failed to load zikr samples. Please try again later.";
+    window.showGlobalToast?.('Failed to load. Tap to try again.', () => {
+    songStore.fetchSongs(true);
+  });
   } finally {
     loading.value = false;
   }

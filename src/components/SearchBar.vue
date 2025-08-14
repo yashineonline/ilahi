@@ -12,13 +12,35 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useSongStore } from '../stores/songStore';
 
 const router = useRouter();
 const songStore = useSongStore();
-const searchQuery = ref('');
+const searchQuery = ref(localStorage.getItem('recentSearch') || '');
+
+watch(searchQuery, useDebounce((val: string) => {
+  songStore.setSearchQuery(val);
+  localStorage.setItem('recentSearch', val);
+}, 300));
+
+
+// const searchQuery = ref('');
+
+// const search = ref(localStorage.getItem('recentSearch') || '');
+// watch(search, useDebounce((val: string) => {
+//   songStore.setSearchQuery(val);
+//   localStorage.setItem('recentSearch', val);
+// }, 300));
+
+function useDebounce<T extends Function>(fn: T, ms = 300) {
+  let t: number | undefined;
+  return (...args: any[]) => {
+    clearTimeout(t);
+    t = window.setTimeout(() => fn(...args), ms);
+  };
+}
 
 const handleSearch = () => {
   songStore.setSearchQuery(searchQuery.value);

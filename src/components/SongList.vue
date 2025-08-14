@@ -1,4 +1,9 @@
 <template>
+  <div v-if="loading" class="space-y-2">
+  <div class="skeleton h-6 w-1/2"></div>
+  <div class="skeleton h-6 w-2/3"></div>
+  <div class="skeleton h-6 w-1/3"></div>
+</div>
   <div class="w-full max-w-4xl mx-auto p-4">
       <button @click="resetSearch" class="btn btn-secondary">Reset Search</button>
       <button @click="generateRandomIlahi" class="btn btn-primary">What to Sing?</button>
@@ -162,6 +167,8 @@
     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
   ></div>
 
+
+  
     <div
       v-if="paginatedSongs.length"
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
@@ -250,6 +257,7 @@ const songStore = useSongStore();
 const { filteredSongs, categories, filteredByZikr, selectedZikrs } = storeToRefs(songStore);
 
 
+const loading = ref(true);
 
 const currentPage = ref(1);
 const itemsPerPage = 12;
@@ -529,6 +537,7 @@ watch(() => props.filePath, async (newPath, oldPath) => {
 
 // On mount, load songs from filePath (or default)
 onMounted(async () => {
+  try{
   await songStore.fetchSongs(false, props.filePath || 'ilahi.txt');
   if (route.query.search) {
     songStore.setSearchQuery(String(route.query.search));
@@ -539,6 +548,9 @@ onMounted(async () => {
       : [String(route.query.categories)];
     selectedCategories.value = categories.filter(Boolean);
   }
+} finally {
+  loading.value = false;
+}
 });
 
 const resetSearch = () => {

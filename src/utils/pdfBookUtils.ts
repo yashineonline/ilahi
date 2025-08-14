@@ -87,11 +87,11 @@ export function addDraftFooter(page: PDFPage, font: PDFFont): void {
   });
 }
 
-export function addPageNumber(page: PDFPage, font: PDFFont, pageNumber: number | null): void {
+export function addPageNumber(page: PDFPage, font: PDFFont, pageNumber: number | null, bottomOffset = 0): void {
   if (pageNumber !== null) {
     page.drawText(pageNumber.toString(), {
       x: page.getWidth() / 2,
-      y: 30,
+      y: 30 + bottomOffset, // moved up
       size: 10,
       font: font,
       color: rgb(0, 0, 0),
@@ -99,11 +99,11 @@ export function addPageNumber(page: PDFPage, font: PDFFont, pageNumber: number |
   }
 }
 
-export function addPageNumbersAndFooters(pages: PDFPage[], font: PDFFont, startNumber: number = 1, skipPages: number = 0): void {
+export function addPageNumbersAndFooters(pages: PDFPage[], font: PDFFont, startNumber: number = 1, skipPages: number = 0, bottomOffset = 0): void {
   pages.forEach((page, index) => {
     addDraftFooter(page, font);
     if (index >= skipPages) {
-      addPageNumber(page, font, startNumber + index - skipPages);
+      addPageNumber(page, font, startNumber + index - skipPages, bottomOffset);
     }
   });
 }
@@ -357,10 +357,20 @@ export async function createTemporaryPlaceholderPages(pdfDoc: PDFLib, font: PDFF
 }
 
 export async function embedImage(pdfDoc: PDFLib, imageUrl: string): Promise<PDFImage> {
-  const response = await fetch(imageUrl);
-  const imageData = await response.arrayBuffer();
-  return await pdfDoc.embedPng(imageData);
+  if (imageUrl.startsWith('data:')) {
+    const mime = imageUrl.slice(5, imageUrl.indexOf(';'));
+    const base64 = imageUrl.slice(imageUrl.indexOf(',') + 1);
+    const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+    if (mime.includes('png')) return await pdfDoc.embedPng(bytes);
+    return await pdfDoc.embedJpg(bytes);
+  }
+  const res = await fetch(imageUrl);
+  const data = await res.arrayBuffer();
+  const sig = new Uint8Array(data).slice(0, 4);
+  const isPng = sig[0] === 0x89 && sig[1] === 0x50 && sig[2] === 0x4E && sig[3] === 0x47;
+  return isPng ? await pdfDoc.embedPng(data) : await pdfDoc.embedJpg(data);
 }
+
 
 // Add to pdfBookUtils.ts from SongDisplay on Aug 10, 2025
 export async function generateSongPDF(song: any): Promise<void> {

@@ -20,7 +20,7 @@ import { useSongStore } from '../stores/songStore'
 // Lazy (split chunks)
 const SongList = () => import('../components/SongList.vue')
 const SongDisplay = () => import('../components/SongDisplay.vue')
-const BookView = () => import('../views/BooksView.vue')
+const BookView = () => import('../views/BookView.vue')
 const BooksView = () => import('../views/BooksView.vue')
 const Poems = () => import('../views/Poems.vue')
 const AboutView = () => import('../views/AboutView.vue')

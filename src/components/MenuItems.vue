@@ -1,7 +1,7 @@
 <template>
     <ul 
       class="menu p-2 shadow rounded-box w-52 bg-base-100 text-base-content" 
-      :class="{
+      :class=" { 
         'bg-gray-800/90 text-white': themeStore.theme === 'dark', 
         'bg-white/90 text-gray-800': themeStore.theme === 'light'
       }"

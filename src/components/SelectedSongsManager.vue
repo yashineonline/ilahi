@@ -1,69 +1,100 @@
-<!-- src/components/SelectedSongsManager.vue -->
 <template>
-  <div>
-    <p class="text-lg mb-2">Sorry, the reordering by number is not working at the moment. So please reset, and choose again if you wish to change the order of your selected ilahis. Thank you.</p>
-    <div class="space-y-2">
-      <div class="flex items-center mb-2">
-        <span class="w-16 mr-2 font-semibold">"Order (Not working)"</span>
-        <span class="flex-grow">Title</span>
-      </div>
-      <div v-for="(song, index) in localSelectedSongs" :key="song.title" class="flex items-center">
-        <input 
-          v-model.number="song.order" 
-          type="number" 
-          min="1" 
-          :max="localSelectedSongs.length" 
-          class="w-16 mr-2 text-black bg-base-100" 
-          @input="(e) => reorderSongs(index, (e.target as HTMLInputElement).valueAsNumber)"
+    <div>
+      <p class="text-lg mb-2">Set the order for your selected ilahis.</p>
+  
+      <div class="space-y-2">
+        <div class="flex items-center mb-2 font-semibold">
+          <span class="w-24 mr-2">Order</span>
+          <span class="flex-grow">Title</span>
+          <span class="w-10"></span>
+        </div>
+  
+        <div
+          v-for="(song, index) in localSelectedSongs"
+          :key="song.title"
+          class="flex items-center"
         >
-        <span class="flex-grow text-white">{{ song.title }}</span>
-        <button @click="removeSong(index)" class="ml-2 text-red-600 hover:text-red-800">&times;</button>
+          <label :for="`order-${index}`" class="sr-only">Order for {{ song.title }}</label>
+          <input
+            :id="`order-${index}`"
+            class="input input-bordered w-24 mr-2"
+            type="number"
+            :min="1"
+            :max="localSelectedSongs.length"
+            :aria-label="`Order for ${song.title}`"
+            v-model.number="song.order"
+            @change="onOrderCommit(index)"
+            @blur="onOrderCommit(index)"
+          />
+          <span class="flex-grow text-base-content">{{ song.title }}</span>
+          <button
+            class="btn btn-ghost btn-xs text-error ml-2"
+            type="button"
+            @click="removeSong(index)"
+            aria-label="Remove {{ song.title }}"
+            title="Remove"
+          >
+            ×
+          </button>
+        </div>
+      </div>
+  
+      <div class="mt-4 flex gap-2">
+        <button @click="sortAlphabetically" class="btn btn-outline btn-primary">Sort A–Z</button>
+        <button @click="renumberSequential" class="btn btn-outline">Renumber 1..N</button>
       </div>
     </div>
-    <div class="mt-4 space-x-2">
-      <button @click="sortAlphabetically" class="px-4 py-2 bg-base-100 text-base-content border border-blue-600 rounded hover:bg-blue-600 hover:text-white transition-colors">
-        Sort Alphabetically
-      </button>
-    </div>
-  </div>
-</template>
+  </template>
   
-<script setup lang="ts">
-import { ref, watch } from 'vue';
-import { SongData } from '../utils/types';
+  <script setup lang="ts">
+  import { ref, watch } from 'vue';
+  import { SongData } from '../utils/types';
   
-const props = defineProps<{
-  selectedSongs: SongData[]
-}>();
+  const props = defineProps<{ selectedSongs: SongData[] }>();
+  const emit = defineEmits<{
+    (e: 'update:selectedSongs', value: SongData[]): void
+    (e: 'generate-book'): void
+  }>();
   
-const emit = defineEmits<{
-  (e: 'update:selectedSongs', value: SongData[]): void
-  (e: 'generate-book'): void
-}>();
+  const localSelectedSongs = ref(
+    props.selectedSongs.map((song, i) => ({ ...song, order: song.order ?? i + 1 }))
+  );
   
-const localSelectedSongs = ref(props.selectedSongs.map((song, index) => ({ ...song, order: index + 1 })));
+  watch(() => props.selectedSongs, (newSongs) => {
+    localSelectedSongs.value = newSongs.map((song, i) => ({ ...song, order: song.order ?? i + 1 }));
+  }, { deep: true });
   
-watch(() => props.selectedSongs, (newSongs) => {
-  localSelectedSongs.value = newSongs.map((song, index) => ({ ...song, order: index + 1 }));
-}, { deep: true });
+  function clamp(n: number, min: number, max: number) {
+    return Math.max(min, Math.min(max, n));
+  }
   
-function reorderSongs(index: number, newOrder: number) {
-  const newOrderArray = [...localSelectedSongs.value];
-  newOrderArray[index].order = newOrder;
-  newOrderArray.sort((a, b) => a.order - b.order);
-  localSelectedSongs.value = newOrderArray;
-  emit('update:selectedSongs', localSelectedSongs.value);
-}
+  function normalizeAndEmit() {
+    // Sort by desired order then by original index (stable), then renumber uniquely
+    const withIndex = localSelectedSongs.value.map((s, i) => ({ s, i, o: Number(s.order) || i + 1 }));
+    withIndex.sort((a, b) => a.o - b.o || a.i - b.i);
+    withIndex.forEach((item, idx) => { item.s.order = idx + 1; });
+    localSelectedSongs.value = withIndex.map(w => w.s);
+    emit('update:selectedSongs', localSelectedSongs.value);
+  }
   
-function removeSong(index: number) {
-  localSelectedSongs.value.splice(index, 1);
-  localSelectedSongs.value.forEach((song, i) => song.order = i + 1);
-  emit('update:selectedSongs', localSelectedSongs.value);
-}
+  function onOrderCommit(index: number) {
+    const n = Number(localSelectedSongs.value[index].order);
+    localSelectedSongs.value[index].order = clamp(isFinite(n) ? Math.round(n) : index + 1, 1, localSelectedSongs.value.length);
+    normalizeAndEmit();
+  }
   
-function sortAlphabetically() {
-  localSelectedSongs.value.sort((a, b) => a.title.localeCompare(b.title));
-  localSelectedSongs.value.forEach((song, i) => song.order = i + 1);
-  emit('update:selectedSongs', localSelectedSongs.value);
-}
-</script>
+  function removeSong(index: number) {
+    localSelectedSongs.value.splice(index, 1);
+    renumberSequential();
+  }
+  
+  function sortAlphabetically() {
+    localSelectedSongs.value.sort((a, b) => a.title.localeCompare(b.title));
+    renumberSequential();
+  }
+  
+  function renumberSequential() {
+    localSelectedSongs.value.forEach((s, i) => { s.order = i + 1; });
+    emit('update:selectedSongs', localSelectedSongs.value);
+  }
+  </script>

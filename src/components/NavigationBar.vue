@@ -87,7 +87,8 @@
             ilahi List
           </button>
 
-              <div 
+
+          <div ref="tooltipRef"
                 v-if="showTooltip" 
                 class="fixed-tooltip p-4 bg-base-200 rounded-lg shadow-lg text-base-content w-64 mt-2 tooltip-bounce inset-x-4"
                 :class="{'bg-gray-700 text-white': themeStore.theme === 'dark'}"
@@ -208,11 +209,12 @@
 <script setup lang="ts">
 import { useThemeStore } from '../stores/themeStore'
 import { useSongStore } from '../stores/songStore'
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Installation from './Installation.vue'
 import IlahiClasses from './IlahiClasses.vue' // Import the IlahiClasses component
 import MenuItems from './MenuItems.vue'
+import { computePosition, offset, flip, shift, autoUpdate } from '@floating-ui/dom';
 
 declare const window: Window & typeof globalThis
 
@@ -236,6 +238,21 @@ const touchedButton = ref<null | string>(null)
 
 // Add computed property to check if we're on the Home page
 const isHomePage = computed(() => route.path === '/')
+
+
+let cleanup: (() => void) | null = null;
+
+function attachTooltip(referenceEl: HTMLElement, tooltipEl: HTMLElement) {
+  cleanup = autoUpdate(referenceEl, tooltipEl, async () => {
+    const { x, y } = await computePosition(referenceEl, tooltipEl, {
+      middleware: [offset(8), flip(), shift({ padding: 8 })],
+      placement: 'top',
+    });
+    Object.assign(tooltipEl.style, { position: 'fixed', left: `${x}px`, top: `${y}px` });
+  });
+}
+
+function detachTooltip() { cleanup?.(); cleanup = null; }
 
 
 const handleFloatingNavLeave = () => {
@@ -267,14 +284,27 @@ const handleSongListClick = () => {
     }
 };
 
-// Add this to close the tooltip after 2 seconds
-watch(showTooltip, (newVal) => {
-  if (newVal && window.innerWidth >= 768) {
-    setTimeout(() => {
-      showTooltip.value = false
-    }, 2000)
+const buttonRef = ref<HTMLElement|null>(null);
+const tooltipRef = ref<HTMLElement|null>(null);
+
+watch(showTooltip, async (v) => {
+  await nextTick();
+  if (v && buttonRef.value && tooltipRef.value) {
+    attachTooltip(buttonRef.value, tooltipRef.value);
+  } else {
+    detachTooltip();
   }
-})
+});
+
+
+// Add this to close the tooltip after 2 seconds
+// watch(showTooltip, (newVal) => {
+//   if (newVal && window.innerWidth >= 768) {
+//     setTimeout(() => {
+//       showTooltip.value = false
+//     }, 2000)
+//   }
+// })
 
 
 // Toggle menu
@@ -492,9 +522,11 @@ defineExpose({ ilahiClasses })
   .fixed-tooltip {
     position: fixed;
     left: 50%;
+    right: auto;
     transform: translateX(-50%);
-    bottom: 20%;
-    max-width: calc(100vw - 2rem);
+    bottom: 10vh;
+    top: auto;
+    max-width: min(90vw, 20rem);
     width: auto;
     z-index: 9999;
   }
@@ -549,8 +581,8 @@ defineExpose({ ilahiClasses })
   transform: translateX(-50%);
   text-align: center;
   z-index: 100;
-  width: 16rem; /* w-64 equivalent */
-  height: 180px; /* Fixed height to prevent layout shifts */
+  max-width: 20rem;
+  width: max-content;
   top: calc(100% + 0.5rem);
 }
 

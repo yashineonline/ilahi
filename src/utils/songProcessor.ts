@@ -151,6 +151,7 @@ const aggregatedZikrs: ParsedZikr = {}; // This should be the grouped collection
 
 
 
+
   // Process ZikrPractice section regardless of its position
   const zikrStart = lines.findIndex(line => line.trim() === 'ZIKRPRACTICE:');
   const zikrEnd = lines.findIndex(line => line.trim() === 'ENDOFZIKRPRACTICE');
@@ -261,6 +262,7 @@ const aggregatedZikrs: ParsedZikr = {}; // This should be the grouped collection
     let currentStanza: string[] = [];
     let isInHistory = false;
     let historyStanza: string[] = [];
+
 
     for (const line of lines) {
       const trimmedLine = line.trim();
@@ -432,10 +434,12 @@ const aggregatedZikrs: ParsedZikr = {}; // This should be the grouped collection
     }
 
     // Add history to lyrics if it exists
+    let history: string[][] = [];
     if (historyStart !== -1) {
       const historyText = lines.slice(historyStart).join('\n');
-      const historyStanzas = splitStanzas(historyText);
-      lyrics.push(...historyStanzas);
+      history = splitStanzas(historyText);
+      // const historyStanzas = splitStanzas(historyText);
+      // lyrics.push(...historyStanzas);
     }
 
     const slug = slugify(title);
@@ -445,6 +449,7 @@ const aggregatedZikrs: ParsedZikr = {}; // This should be the grouped collection
       lyrics,
       translation,
       pronunciation, // Add pronunciation to returned object
+      history,
       mainLinks,
       alternateTunes,
       order: songOrder,

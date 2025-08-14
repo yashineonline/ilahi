@@ -40,12 +40,12 @@
             <li>Create and customize your own PDF book of ilahis</li>
             <li>Join our vibrant ilahi community and attend free classes</li>
             <li>Discover poems by Shaykh Taner and Shaykha Muzeyyen and their representatives and followers and lovers</li> 
+            <li>NEW!: Create your own ilahi book design</li>
           </ul>
           <h1> - </h1>
           <h2 class="text-2xl font-semibold mb-4">Upcoming Features</h2>
           <ul class="list-disc pl-5 text-left">            
             <li>ilahi lyrics with translations in other languages</li>
-            <li>Create your own ilahi book design</li>
             <li>Record yourself singing and get feedback</li>
           </ul>
 

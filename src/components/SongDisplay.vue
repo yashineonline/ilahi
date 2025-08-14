@@ -1,5 +1,10 @@
 <template>
-  <div class="w-full max-w-4xl mx-auto p-2 flex flex-col items-center bg-base-100 text-base-content">
+<div v-if="loading" class="space-y-2">
+  <div class="skeleton h-6 w-1/2"></div>
+  <div class="skeleton h-6 w-2/3"></div>
+  <div class="skeleton h-6 w-1/3"></div>
+</div>
+<div class="w-full max-w-4xl mx-auto p-2 flex flex-col items-center bg-base-100 text-base-content">
     <div class="w-full flex flex-wrap gap-1 mb-2">
       <PronunciationGuide
         v-if="currentSong"

@@ -18,15 +18,15 @@ export const useThemeStore = defineStore('theme', () => {
 function toggleTheme() {
     theme.value = theme.value === 'light' ? 'dark' : 'light'
     localStorage.setItem('theme', theme.value)
-    console.log("Dark class present:", document.documentElement.classList.contains('dark'))
+    // console.log("Dark class present:", document.documentElement.classList.contains('dark'))
 
     // Remove both classes first
-    document.documentElement.classList.remove('light', 'dark')
+    // document.documentElement.classList.remove('light', 'dark')
     // Then add the correct one
-    document.documentElement.classList.add(theme.value)
+    // document.documentElement.classList.add(theme.value)
     
-    console.log("Applied theme:", theme.value)
-    console.log("HTML classes:", document.documentElement.className)
+    // console.log("Applied theme:", theme.value)
+    // console.log("HTML classes:", document.documentElement.className)
  
      // Set both class and data-theme for maximum compatibility
     //  document.documentElement.classList.toggle('dark', theme.value === 'dark')

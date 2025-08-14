@@ -150,6 +150,13 @@ if (import.meta.env.PROD) {
 //   }
 // }
 
+// ...
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && 'serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(r => r.update()));
+  }
+});
+
 app.mount('#app')
 
 

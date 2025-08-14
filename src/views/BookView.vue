@@ -43,6 +43,33 @@
           @generate-book="generateCustomBook"
         />
       </div>
+
+<!-- 3 lines above -->
+<div class="mt-4 space-y-3">
+  <h3 class="font-semibold">Optional page border</h3>
+  <div class="flex items-center gap-3">
+    <label class="label cursor-pointer"><input type="radio" class="radio" value="none" v-model="borderMode" /> <span class="ml-2">None</span></label>
+    <label class="label cursor-pointer"><input type="radio" class="radio" value="line" v-model="borderMode" /> <span class="ml-2">Line</span></label>
+    <label class="label cursor-pointer"><input type="radio" class="radio" value="image" v-model="borderMode" /> <span class="ml-2">Image</span></label>
+  </div>
+
+  <div v-if="borderMode === 'line'" class="flex items-center gap-3">
+    <label class="label">Color</label>
+    <input type="color" v-model="borderColorHex" class="input input-bordered w-24" />
+    <label class="label ml-4">Width</label>
+    <input type="number" min="0.5" step="0.5" v-model.number="borderWidth" class="input input-bordered w-24" />
+  </div>
+
+  <div v-if="borderMode === 'image'" class="flex items-center gap-3">
+    <input type="file" accept="image/*" @change="onBorderImage" class="file-input file-input-bordered" />
+    <label class="label ml-4">Inset (px)</label>
+    <input type="number" min="0" step="1" v-model.number="imageInset" class="input input-bordered w-24" />
+  </div>
+</div>
+<!-- 3 lines below -->
+
+
+
       <div class="mt-4 space-x-2">
         <button
           v-if="selectedSongs.length > 0"
@@ -91,6 +118,27 @@ const selectedSongs = ref<SongData[]>([]);
 const isLoading = ref(false);
 const showConfirmModal = ref(false);
 const progress = ref(0);
+// data
+const borderMode = ref<'none'|'line'|'image'>('none');
+const borderColorHex = ref('#999999');
+const borderWidth = ref(1);
+const imageInset = ref(18);
+const borderImageUrl = ref<string|null>(null);
+
+// handlers
+function onBorderImage(e: Event) {
+  const file = (e.target as HTMLInputElement).files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => { borderImageUrl.value = reader.result as string; };
+  reader.readAsDataURL(file);
+}
+
+function hexToRgb01(hex: string): [number, number, number] {
+  const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  if (!m) return [0.6, 0.6, 0.6];
+  return [parseInt(m[1], 16)/255, parseInt(m[2], 16)/255, parseInt(m[3], 16)/255];
+}
 
 const basicSongs = computed(() => filterSongsByCategory(songStore.songs, ['basic']));
 const intermediateSongs = computed(() => filterSongsByCategory(songStore.songs, ['intermediate']));
@@ -192,7 +240,13 @@ const generateCustomBook = async () => {
     return;
   }
   isLoading.value = true;
-  const { pdfBytes } = await generateFullBookPDF(selectedSongs.value, true);
+  const options = borderMode.value === 'none' ? undefined : (
+    borderMode.value === 'line'
+      ? { border: { enabled: true, color: hexToRgb01(borderColorHex.value), width: borderWidth.value } }
+      : (borderImageUrl.value ? { border: { enabled: true, imageUrl: borderImageUrl.value, imageInset: imageInset.value } } : undefined)
+  );
+  const { pdfBytes } = await generateFullBookPDF(selectedSongs.value, true, undefined, options);
+  // const { pdfBytes } = await generateFullBookPDF(selectedSongs.value, true);
   await downloadPDF(pdfBytes, 'AQRT_Custom_ilahi_Book.pdf');
   isLoading.value = false;
 };
