@@ -70,7 +70,7 @@
       
       
           <!-- Main content area with centered ilahi List button and right-aligned icons -->
-        <!--           <div class="w-full grid grid-cols-3 items-center"> -->
+      
         
           <div class="w-full grid items-center" style="grid-template-columns: 1fr auto 1fr;">
             <div></div> <!-- Empty left column for spacing -->
@@ -90,7 +90,7 @@
 
           <div ref="tooltipRef"
                 v-if="showTooltip" 
-                class="fixed-tooltip p-4 bg-base-200 rounded-lg shadow-lg text-base-content w-64 mt-2 tooltip-bounce inset-x-4"
+                class="fixed-tooltip p-4 bg-base-200 rounded-lg shadow-lg text-base-content w-64"
                 :class="{'bg-gray-700 text-white': themeStore.theme === 'dark'}"
                 style="height: auto; min-height: 80px;"
               >
@@ -104,25 +104,22 @@
             <div style="display: flex; gap: 0;" class="justify-self-end" v-if="isHomePage"> 
               <div class="relative" style="margin-right: -10px; padding: 1px;">
                 <button 
+                ref="youtubeBtnRef"
                   class="btn btn-ghost btn-circle" 
                   @mouseenter="showYoutubeTooltip = true"
                   @mouseleave="showYoutubeTooltip = false"
                   @touchstart.prevent="onTooltipTouch('youtube')"
                   @click="handleIconClick('youtube')" 
-
                 >
                   <font-awesome-icon :icon="['fab', 'youtube']" style="color: #ff3d3d;" size="lg" aria-hidden="true" />
                 </button>
                 
                 <div 
                   v-if="showYoutubeTooltip" 
-                  class="fixed-tooltip p-4 bg-base-200 rounded-lg shadow-lg text-base-content w-64 mt-2 tooltip-bounce inset-x-4"
-                  :class="{'bg-gray-700 text-white': themeStore.theme === 'dark'}"
-                  style="height: auto; min-height: 80px;"
+                  ref="youtubeTipRef"
+                  class="fixed-tooltip p-4 bg-base-200 rounded-lg shadow-lg text-base-content w-64"
                 >
                   <span class="text-lg font-medium">Tap me again to play ilahis</span>
-                  <div class="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45 bg-base-200"
-                    :class="{'bg-gray-700': themeStore.theme === 'dark'}"></div>
                 </div>
               </div>
               
@@ -139,8 +136,7 @@
                 
                 <div 
                   v-if="showWhatsappTooltip" 
-                  class="fixed-tooltip p-6 bg-base-200 rounded-lg shadow-lg text-base-content w-64 mt-2 tooltip-star-animation inset-x-4"
-                  :class="{'bg-gray-700 text-white': themeStore.theme === 'dark'}"
+                  class="fixed-tooltip p-6 bg-base-200 rounded-lg shadow-lg text-base-content w-64 mt-2 tooltip-star-animation"
                 >
                   <div class="flex flex-col items-center">
                     <span class="text-xl font-bold animate-pulse-text">Tap me</span>
@@ -174,13 +170,9 @@
         </button>
                 <div 
                   v-if="showInstallTooltip" 
-                  class="fixed-tooltip p-4 bg-base-200 rounded-lg shadow-lg text-base-content w-64 mt-2 tooltip-bounce inset-x-4"
-                  :class="{'bg-gray-700 text-white': themeStore.theme === 'dark'}"
-                  style="height: auto; min-height: 40px;"
+                  class="fixed-tooltip p-4 bg-base-200 rounded-lg shadow-lg text-base-content w-64"
                 >
                   <span class="text-lg font-medium">Tap me again to install the ilahi app</span>
-                  <div class="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 rotate-45 bg-base-200"
-                    :class="{'bg-gray-700': themeStore.theme === 'dark'}"></div>
                 </div>
                 <Installation ref="installationComponent" @app-installed="isAppInstalled = true" />
               </div>
@@ -218,7 +210,9 @@ import { computePosition, offset, flip, shift, autoUpdate } from '@floating-ui/d
 
 declare const window: Window & typeof globalThis
 
-const isDesktop = computed(() => window.innerWidth >= 768);
+const windowWidth = ref(window.innerWidth);
+const isDesktop = computed(() => windowWidth.value >= 768);
+const onResize = () => (windowWidth.value = window.innerWidth);
 const themeStore = useThemeStore()
 const songStore = useSongStore()
 const route = useRoute()
@@ -238,6 +232,10 @@ const touchedButton = ref<null | string>(null)
 
 // Add computed property to check if we're on the Home page
 const isHomePage = computed(() => route.path === '/')
+
+const youtubeBtnRef = ref<HTMLElement|null>(null);
+const youtubeTipRef = ref<HTMLElement|null>(null);
+let ytCleanup: (()=>void)|null = null;
 
 
 let cleanup: (() => void) | null = null;
@@ -295,6 +293,23 @@ watch(showTooltip, async (v) => {
     detachTooltip();
   }
 });
+
+
+watch(showYoutubeTooltip, async (v) => {
+  await nextTick();
+  if (v && youtubeBtnRef.value && youtubeTipRef.value) {
+    ytCleanup = autoUpdate(youtubeBtnRef.value, youtubeTipRef.value, async () => {
+      const { x, y } = await computePosition(youtubeBtnRef.value!, youtubeTipRef.value!, {
+        placement: 'bottom',
+        middleware: [offset(8), flip(), shift({ padding: 8 })],
+      });
+      Object.assign(youtubeTipRef.value!.style, { position:'fixed', left: `${x}px`, top: `${y}px` });
+    });
+  } else {
+    ytCleanup?.(); ytCleanup = null;
+  }
+});
+onUnmounted(() => { ytCleanup?.(); });
 
 
 // Add this to close the tooltip after 2 seconds
@@ -468,7 +483,7 @@ const handleIconClick = (type: 'whatsapp' | 'youtube') => {
       title: 'Play ilahis',
       description: 'Listen to all the audio ilahis available on this app here!',
       actionText: 'Open YouTube Player',
-      action: () => router.push({ name: 'YouTubePlayer' })
+      action: () => router.push({ name: 'Playlist' })
     }
   }
   showPopup.value = true
@@ -519,17 +534,12 @@ defineExpose({ ilahiClasses })
     min-width: 48px;
     }
     
-  .fixed-tooltip {
-    position: fixed;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    bottom: 10vh;
-    top: auto;
-    max-width: min(90vw, 20rem);
-    width: auto;
-    z-index: 9999;
-  }
+    .fixed-tooltip{
+  position: fixed;           /* single source of truth */
+  max-width: min(90vw, 20rem);
+  overflow-wrap: anywhere;   /* avoid overflow on long words */
+  z-index: 9999;
+}
 
  /* Larger tap area for mobile */
  .btn-circle {

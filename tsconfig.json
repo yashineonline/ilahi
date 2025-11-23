@@ -24,7 +24,7 @@
     "allowJs": true,
     "checkJs": false,
     "skipLibCheck": true,
-    "types": ["firebase", "node"],  // Add vue and vite/client
+    "types": ["firebase", "node", "google.accounts"],  // Add vue and vite/client
     "paths": {
       "@/*": ["src/*"]
     },

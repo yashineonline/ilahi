@@ -164,14 +164,14 @@
 
   <div
     v-if="sortedFilteredSongs.length > 0"
-    class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+    class="grid grid-cols-1 lg:grid-cols-2 gap-4"
   ></div>
 
 
   
     <div
       v-if="paginatedSongs.length"
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+      class="grid grid-cols-1 lg:grid-cols-2 gap-4"
     >
       <div
         v-for="(song, index) in paginatedSongs"

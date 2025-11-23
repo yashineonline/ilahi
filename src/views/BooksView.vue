@@ -30,7 +30,7 @@
     
     <div v-else-if="error" class="text-center text-xl text-red-600">{{ error }}</div>
     
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- PDF Books -->
       <div v-for="book in pdfBooks" :key="book.id" class="shadow-lg rounded-lg p-4">
         <h2 class="text-xl font-semibold mb-2">{{ book.name }}</h2>

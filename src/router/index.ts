@@ -22,9 +22,9 @@ const SongList = () => import('../components/SongList.vue')
 const SongDisplay = () => import('../components/SongDisplay.vue')
 const BookView = () => import('../views/BookView.vue')
 const BooksView = () => import('../views/BooksView.vue')
-const Poems = () => import('../views/Poems.vue')
+// const Poems = () => import('../views/Poems.vue')
 const AboutView = () => import('../views/AboutView.vue')
-const YouTubePlayer = () => import('../components/YouTubePlayer.vue')
+const YouTubePlaylist = () => import('../components/YouTubePlaylist.vue')
 const Entrance = () => import('../components/Entrance.vue')
 const Wirds = () => import('../views/Wirds.vue')
 const HistoryView = () => import('../views/HistoryView.vue')
@@ -32,6 +32,9 @@ const MiscellaneousView = () => import('../views/MiscellaneousView.vue')
 const AuthorPoems = () => import('../views/AuthorPoems.vue')
 const ZikrPlayer = () => import('../components/ZikrPlayer.vue')
 const GlobalToast = () => import('../components/GlobalToast.vue')
+// const CustomPlaylistView = () => import('../views/CustomPlaylistView.vue')
+
+import PlaylistBuilderView from '../views/PlaylistBuilderView.vue';
 
 
 const routes = [
@@ -83,24 +86,24 @@ const routes = [
   },
   {
     path: '/youtube-player',
-    name: 'YouTubePlayer',
-    component: YouTubePlayer
+    name: 'YouTubePlaylist',
+    component: YouTubePlaylist
   },
   {
     path: '/entrance',
     name: 'Entrance',
     component: Entrance
   },
-  {
-    path: '/poems',
-    name: 'Poems',
-    component: Poems
-  },
-  {
-    path: '/poems/:authorName',
-    name: 'AuthorPoems', 
-    component: () => import('../views/AuthorPoems.vue')
-  },
+  // {
+  //   path: '/poems',
+  //   name: 'Poems',
+  //   component: Poems
+  // },
+  // {
+  //   path: '/poems/:authorName',
+  //   name: 'AuthorPoems', 
+  //   component: () => import('../views/AuthorPoems.vue')
+  // },
   {
     path: '/wirds',
     name: 'wirds',
@@ -137,6 +140,17 @@ const routes = [
     component: SongList,
     props: { filePath: 'naat.txt' }
   },
+  // {
+  //   path: '/playlist',
+  //   name: 'CustomPlaylist',
+  //   component: CustomPlaylistView
+  // },
+  {
+    path: '/playlist',
+    name: 'Playlist',
+    component: PlaylistBuilderView,
+  },
+  
   // {
   //   path: '/ilahi-classes',
   //   name: 'IlahiClasses',

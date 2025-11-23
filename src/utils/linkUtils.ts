@@ -1,3 +1,4 @@
+// linkUtils.ts
 export function buildSongUrl(slug: string): string {
     return `${window.location.origin}${import.meta.env.BASE_URL}player/${slug}`
 }

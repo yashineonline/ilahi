@@ -119,10 +119,6 @@ async function clearAppCache() {
   }
 }
 
-
-
-
-
 // Add this new function
 async function refreshPoems() {
   console.log('🔄 refreshPoems called');
@@ -153,7 +149,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', checkScroll)
 })
-
 
 </script>
 

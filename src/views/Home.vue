@@ -27,7 +27,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div class="shadow-lg rounded-lg p-6 bg-base-200">
           <h2 class="text-2xl font-semibold mb-4">Features</h2>
           <ul class="list-disc pl-5 text-left">

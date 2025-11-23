@@ -1,3 +1,4 @@
+// src/utils/types.ts
 export interface SongData {
   title: string;
   lyrics: string[][];

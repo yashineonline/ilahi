@@ -171,7 +171,8 @@
 
       <div v-if="!hideMusicPlayer && currentSong.mainLinks && currentSong.mainLinks.length > 1" class="mt-4">
         <h2 class="text-2xl font-semibold mb-2">More Versions</h2>
-        <div v-for="(link, index) in currentSong.mainLinks.slice(1)" :key="index" class="mb-2">
+                  <div v-for="link in currentSong.mainLinks.slice(1)" :key="link" class="mb-2">
+
           <audio-player
             :audio-src="link"
             :player-type="getPlayerType(link)"

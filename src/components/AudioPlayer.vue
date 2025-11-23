@@ -15,7 +15,6 @@
         :src="getGoogleDriveEmbedUrl(audioSrc)"
         frameborder="0"
         allowfullscreen
-        @load="onIframeLoad"
         class="google-drive-player"
       ></iframe>
     </div>
@@ -57,6 +56,8 @@
 import { ref, onMounted, watch, computed, onBeforeUnmount } from 'vue';
 import YouTube from 'vue3-youtube';
 import { Howl } from 'howler';
+import { parseYouTubeUrl } from '@/utils/youtubeUtils';
+
 
 
 export type PlayerType = 'youtube' | 'audio' | 'googledrive' | 'soundcloud'
@@ -72,6 +73,9 @@ const emit = defineEmits(['player-ready']);
 
 const youtubePlayer = ref<InstanceType<typeof YouTube> | null>(null);
 const howl = ref<Howl | null>(null);
+const audioElement = ref<HTMLAudioElement | null>(null);
+const driveIframe = ref<HTMLIFrameElement | null>(null);
+
 const startTime = ref(0);
 const endTime = ref(0);
 const isPlaying = ref(false);
@@ -174,7 +178,7 @@ function onYoutubeReady(event: any) {
 // Immediately stop any playback
 player.stopVideo();
 
-  const { videoId, startTime: start, endTime: end } = getYoutubeVideoId(props.audioSrc);
+  const { videoId, startTime: start, endTime: end } = parseYouTubeUrl(props.audioSrc);
   startTime.value = start;
   endTime.value = end;
 
@@ -194,7 +198,7 @@ player.stopVideo();
 watch(() => props.audioSrc, () => {
   console.log('Audio source changed:', props.audioSrc);
   if (props.playerType === 'youtube' && youtubePlayer.value) {
-    const { videoId, startTime: start, endTime: end } = getYoutubeVideoId(props.audioSrc);
+    const { videoId, startTime: start, endTime: end } = parseYouTubeUrl(props.audioSrc);
     console.log('YouTube video ID:', videoId);
     youtubePlayer.value.cueVideoById({ 
       videoId, 
@@ -231,23 +235,23 @@ function wrapHowlInstance(howl: Howl) {
   };
 }
 
-function getYoutubeVideoId(url: string): { videoId: string, startTime: number, endTime: number } {
-  // console.log('Processing URL:', url);
-  const videoIdMatch = url.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/watch\?.+&v=))([^\/&\?]{11})/);
-  const videoId = videoIdMatch ? videoIdMatch[1] : '';
+// function getYoutubeVideoId(url: string): { videoId: string, startTime: number, endTime: number } {
+//   // console.log('Processing URL:', url);
+//   const videoIdMatch = url.match(/(?:youtu\.be\/|youtube\.com(?:\/embed\/|\/v\/|\/watch\?v=|\/watch\?.+&v=))([^\/&\?]{11})/);
+//   const videoId = videoIdMatch ? videoIdMatch[1] : '';
   
-  const startTimeMatch = url.match(/[?&]t=(\d+)/);
-  const startTime = startTimeMatch ? parseInt(startTimeMatch[1], 10) : 0;
+//   const startTimeMatch = url.match(/[?&]t=(\d+)/);
+//   const startTime = startTimeMatch ? parseInt(startTimeMatch[1], 10) : 0;
 
-  const endTimeMatch = url.match(/[?&]end=(\d+)/);
-  const endTime = endTimeMatch ? parseInt(endTimeMatch[1], 10) : 0;
+//   const endTimeMatch = url.match(/[?&]end=(\d+)/);
+//   const endTime = endTimeMatch ? parseInt(endTimeMatch[1], 10) : 0;
 
-  // console.log('Extracted video ID:', videoId);
-  // console.log('Extracted start time:', startTime);
-  // console.log('Extracted end time:', endTime);
+//   // console.log('Extracted video ID:', videoId);
+//   // console.log('Extracted start time:', startTime);
+//   // console.log('Extracted end time:', endTime);
 
-  return { videoId, startTime, endTime };
-}
+//   return { videoId, startTime, endTime };
+// }
 
 function isGoogleDriveLink(url: string): boolean {
   return url.includes('drive.google.com');
@@ -273,22 +277,15 @@ function togglePlay() {
       youtubePlayer.value.playVideo();
     }
     isPlaying.value = !isPlaying.value;
-  } else if (props.playerType === 'googledrive') {
-    const iframe = document.querySelector('iframe');
-    if (iframe) {
-      if (isPlaying.value) {
-        iframe.contentWindow?.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-      } else {
-        iframe.contentWindow?.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-      }
-      isPlaying.value = !isPlaying.value;
-    }
   } else {
     if (!howl.value && !isLoaded.value) {
       initHowl();
     }
-    if (isLoaded.value) {
-      const player = howl.value ? wrapHowlInstance(howl.value) : wrapAudioElement(document.querySelector('audio')!);
+    if (isLoaded.value) return;
+      const player = howl.value ? wrapHowlInstance(howl.value)          : (audioElement.value ? wrapAudioElement(audioElement.value) : null);
+
+      if (!player) return;
+
       if (isPlaying.value) {
         player.pauseVideo();
       } else {
@@ -297,7 +294,7 @@ function togglePlay() {
       isPlaying.value = !isPlaying.value;
     }
   }
-}
+
 
 function getGoogleDriveEmbedUrl(url: string): string {
   const fileId = url.match(/[-\w]{25,}/);
@@ -307,31 +304,16 @@ function getGoogleDriveEmbedUrl(url: string): string {
   return '';
 }
 
-// Add this function to handle iframe load event
 function onIframeLoad(event: Event) {
   const iframe = event.target as HTMLIFrameElement;
-  iframe.contentWindow?.postMessage('{"event":"listening"}', '*');
   isLoaded.value = true;
-  emit('player-ready', { 
-    player: {
-      pauseVideo: () => iframe.contentWindow?.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'),
-      playVideo: () => iframe.contentWindow?.postMessage('{"event":"command","func":"playVideo","args":""}', '*'),
-      getCurrentTime: () => {
-        // Note: Getting current time from Google Drive embed is not straightforward
-        // You might need to implement a custom solution or use approximations
-        return 0;
-      },
-      seekTo: (time: number) => iframe.contentWindow?.postMessage(`{"event":"command","func":"seekTo","args":[${time},true]}`, '*'),
-      getPlaybackRate: () => 1, // Google Drive embed doesn't support playback rate control
-      setPlaybackRate: () => {} // No-op for Google Drive embed
-    }, 
-    type: 'googledrive'
-  });
+  emit('player-ready', { player: null, type: 'googledrive' });
 }
+
 
 const playSegment = () => {
   if (youtubePlayer.value && props.playerType === 'youtube') {
-    const { videoId, startTime, endTime } = getYoutubeVideoId(props.audioSrc);
+    const { videoId, startTime, endTime } = parseYouTubeUrl(props.audioSrc);
     youtubePlayer.value.cueVideoById({
       videoId: videoId,
       startSeconds: startTime,
@@ -348,21 +330,30 @@ const seekBackward = () => {
   if (props.playerType === 'youtube' && youtubePlayer.value) {
     const currentTime = youtubePlayer.value.getCurrentTime()
     youtubePlayer.value.seekTo(currentTime - 5, true)
-  } else if (props.playerType === 'audio' && howl.value) {
+  } else if (props.playerType === 'audio') {
+    if (howl.value) {
     const currentTime = howl.value.seek() as number
     howl.value.seek(currentTime - 5)
-  }
+  } else if (audioElement.value) {
+      audioElement.value.currentTime = Math.max(0, audioElement.value.currentTime - 5);
+    }
 }
+};
 
 const seekForward = () => {
   if (props.playerType === 'youtube' && youtubePlayer.value) {
     const currentTime = youtubePlayer.value.getCurrentTime()
     youtubePlayer.value.seekTo(currentTime + 5, true)
-  } else if (props.playerType === 'audio' && howl.value) {
+  } else if (props.playerType === 'audio' ){
+  if (howl.value) {
     const currentTime = howl.value.seek() as number
-    howl.value.seek(currentTime + 5)
+    howl.value.seek(currentTime + 5);
   }
-}
+  else if (audioElement.value) {
+      audioElement.value.currentTime = audioElement.value.currentTime + 5;
+    }
+  }
+};
 
 const decreaseSpeed = () => {
   playbackRate.value = Math.max(0.25, playbackRate.value - 0.25)
@@ -377,10 +368,14 @@ const increaseSpeed = () => {
 const setPlaybackRate = () => {
   if (props.playerType === 'youtube' && youtubePlayer.value) {
     youtubePlayer.value.setPlaybackRate(playbackRate.value)
-  } else if (props.playerType === 'audio' && howl.value) {
-    howl.value.rate(playbackRate.value)
+  } else if (props.playerType === 'audio') {
+    if (howl.value) {
+      howl.value.rate(playbackRate.value);
+    } else if (audioElement.value) {
+      audioElement.value.playbackRate = playbackRate.value;
+    }
   }
-}
+};
 
 const getSoundCloudEmbedUrl = (url: string) => {
   const trackUrl = encodeURIComponent(url);
@@ -430,10 +425,10 @@ onBeforeUnmount(() => {
   // }
 
   // Clean up Google Drive iframe
-  const iframe = document.getElementById('google-drive-iframe');
-  if (iframe) {
-    iframe.remove();
-  }
+  // const iframe = document.getElementById('google-drive-iframe');
+  // if (iframe) {
+  //   iframe.remove();
+  // }
 
   // Clean up timers
   if (progressInterval.value) {
